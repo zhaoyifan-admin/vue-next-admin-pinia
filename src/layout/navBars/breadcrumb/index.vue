@@ -114,6 +114,6 @@ export default defineComponent({
 	display: flex;
 	align-items: center;
 	background: var(--next-bg-topBar);
-	border-bottom: 1px solid var(--next-border-color-light);
+  border-radius: 5px 5px 0 5px;
 }
 </style>

@@ -30,9 +30,9 @@ export const useThemeConfig = defineStore('themeConfig', {
 			 * 代码位置：/@/layout/navBars/breadcrumb/setings.vue
 			 */
 			// 默认顶栏导航背景颜色
-			topBar: '#ffffff',
+			topBar: '#0A569A',
 			// 默认顶栏导航字体颜色
-			topBarColor: '#606266',
+			topBarColor: '#ffffff',
 			// 是否开启顶栏背景颜色渐变
 			isTopBarColorGradual: false,
 			// 默认菜单导航背景颜色
@@ -54,9 +54,9 @@ export const useThemeConfig = defineStore('themeConfig', {
 			// 是否开启菜单水平折叠效果
 			isCollapse: false,
 			// 是否开启菜单手风琴效果
-			isUniqueOpened: false,
+			isUniqueOpened: true,
 			// 是否开启固定 Header
-			isFixedHeader: false,
+			isFixedHeader: true,
 			// 初始化变量，用于更新菜单 el-scrollbar 的高度，请勿删除
 			isFixedHeaderChange: false,
 			// 是否开启经典布局分割菜单（仅经典布局生效）
@@ -70,7 +70,7 @@ export const useThemeConfig = defineStore('themeConfig', {
 			 * 界面显示
 			 */
 			// 是否开启侧边栏 Logo
-			isShowLogo: false,
+			isShowLogo: true,
 			// 初始化变量，用于 el-scrollbar 的高度更新，请勿删除
 			isShowLogoChange: false,
 			// 是否开启 Breadcrumb，强制经典、横向布局不显示
@@ -116,8 +116,8 @@ export const useThemeConfig = defineStore('themeConfig', {
 			 * 注意：为了演示，切换布局时，颜色会被还原成默认，代码位置：/@/layout/navBars/breadcrumb/setings.vue
 			 * 中的 `initSetLayoutChange(设置布局切换，重置主题样式)` 方法
 			 */
-			// 布局切换：可选值"<defaults|classic|transverse|columns>"，默认 defaults
-			layout: 'defaults',
+			// 布局切换：可选值"<defaults|classic|transverse|columns>"，默认 classic
+			layout: 'classic',
 
 			/**
 			 * 后端控制路由

@@ -164,7 +164,9 @@ export default defineComponent({
 						// 使用 reload 时，不需要调用 resetRoute() 重置路由
 						window.location.reload();
 					})
-					.catch(() => {});
+					.catch(() => {
+            console.log(12321312)
+          });
 			} else if (path === 'wareHouse') {
 				window.open('https://gitee.com/lyt-top/vue-next-admin');
 			} else {

@@ -52,3 +52,12 @@ export default defineComponent({
 	},
 });
 </script>
+
+<style lang="scss" scoped>
+::v-deep(.el-menu-item.is-active) {
+  border-radius: 5px;
+}
+::v-deep(.el-menu-item:hover) {
+  border-radius: 5px;
+}
+</style>

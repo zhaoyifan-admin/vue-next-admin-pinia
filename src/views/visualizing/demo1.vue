@@ -1099,7 +1099,7 @@ $titleWidth: 240px;
 					&::after {
 						content: '';
 						position: absolute;
-						width: 36px;
+						width: 56px;
 						height: 17px;
 						top: -8px;
 						border-bottom: 2px solid rgba(22, 207, 208, 0.7);

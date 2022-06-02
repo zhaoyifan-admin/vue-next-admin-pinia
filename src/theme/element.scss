@@ -56,19 +56,22 @@
 ------------------------------- */
 // 鼠标 hover 时颜色
 .el-menu-hover-bg-color {
+	border-radius: 8px;
+	color: var(--next-color-menu-text-hover) !important;
 	background-color: var(--next-color-menu-hover) !important;
 }
 // 默认样式修改
 .el-menu {
 	border-right: none !important;
-	width: 220px;
+	width: 100%;
 }
 .el-menu-item {
-	height: 56px !important;
-	line-height: 56px !important;
+	height: 45px !important;
+	line-height: 45px !important;
 }
 .el-menu-item,
 .el-sub-menu__title {
+	font-weight: bold;
 	color: var(--next-bg-menuBarColor);
 }
 // 修复点击左侧菜单折叠再展开时，宽度不跟随问题
@@ -90,11 +93,19 @@
 .el-sub-menu .fa {
 	@include generalIcon;
 }
+.el-menu--horizontal>.el-sub-menu.is-active .el-sub-menu__title {
+	border-bottom: none!important;
+}
 // 水平菜单、横向菜单高亮 背景色，鼠标 hover 时，有子级菜单的背景色
 .el-menu-item.is-active,
 .el-sub-menu.is-active .el-sub-menu__title,
 .el-sub-menu:not(.is-opened):hover .el-sub-menu__title {
 	@extend .el-menu-hover-bg-color;
+	i,
+	span {
+		font-weight: bold;
+		color: var(--next-menu-active-color) !important;
+	}
 }
 .el-sub-menu.is-active.is-opened .el-sub-menu__title {
 	background-color: unset !important;
@@ -110,6 +121,7 @@
 }
 // 水平菜单、横向菜单折叠背景色
 .el-popper.is-pure.is-light {
+	border: none;
 	// 水平菜单
 	.el-menu--vertical {
 		background: var(--next-bg-menuBar);
@@ -130,15 +142,17 @@
 	}
 	// 横向菜单
 	.el-menu--horizontal {
+		border-radius: 5px !important;
+		overflow: hidden;
 		background: var(--next-bg-topBar);
 		.el-menu-item,
 		.el-sub-menu {
-			height: 50px !important;
-			line-height: 50px !important;
+			height: 45px !important;
+			line-height: 45px !important;
 			color: var(--next-bg-topBarColor);
 			.el-sub-menu__title {
-				height: 50px !important;
-				line-height: 50px !important;
+				height: 45px !important;
+				line-height: 45px !important;
 				color: var(--next-bg-topBarColor);
 			}
 			.el-popper.is-pure.is-light {
@@ -166,12 +180,18 @@
 	.el-menu-item,
 	.el-sub-menu__title {
 		height: 50px !important;
-		color: var(--next-bg-topBarColor);
+		color: var(--next-bg-topBarColor) !important;
 	}
 	.el-menu-item:not(.is-active):hover,
 	.el-sub-menu:not(.is-active):hover .el-sub-menu__title {
+		border-radius: 5px;
 		color: var(--next-bg-topBarColor);
 	}
+}
+
+.el-menu-item:hover,
+.el-sub-menu__title:hover {
+	@extend .el-menu-hover-bg-color;
 }
 
 /* Tabs 标签页

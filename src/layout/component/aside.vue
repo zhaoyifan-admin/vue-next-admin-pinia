@@ -58,11 +58,11 @@ export default defineComponent({
 				if (layout === 'columns') {
 					// 分栏布局，菜单收起时宽度给 1px
 					if (isCollapse) return [asideBrColor, 'layout-aside-pc-1'];
-					else return [asideBrColor, 'layout-aside-pc-220'];
+					else return [asideBrColor, 'layout-aside-pc-256'];
 				} else {
 					// 其它布局给 64px
 					if (isCollapse) return [asideBrColor, 'layout-aside-pc-64'];
-					else return [asideBrColor, 'layout-aside-pc-220'];
+					else return [asideBrColor, 'layout-aside-pc-256'];
 				}
 			}
 		});

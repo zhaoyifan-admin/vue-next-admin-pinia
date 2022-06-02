@@ -604,7 +604,8 @@ export default defineComponent({
 <style scoped lang="scss">
 .layout-navbars-tagsview {
 	background-color: var(--el-color-white);
-	border-bottom: 1px solid var(--next-border-color-light);
+  border-radius: 0 0 7px 7px;
+  box-shadow: 0px 0px 10px #888888 !important;
 	position: relative;
 	z-index: 4;
 	::v-deep(.el-scrollbar__wrap) {
@@ -722,8 +723,8 @@ export default defineComponent({
 		}
 		.is-active {
 			@extend .tags-style-five-svg;
-			background: var(--el-color-primary-light-9) !important;
-			color: var(--el-color-primary) !important;
+			background: var(--next-color-primary-light-9) !important;
+			color: var(--next-color-primary) !important;
 			z-index: 1;
 		}
 	}

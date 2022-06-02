@@ -17,11 +17,15 @@
 	--next-color-warning-lighter: #fdf6ec;
 	--next-color-danger-lighter: #fef0f0;
 	--next-color-dark-hover: #0000001a;
-	--next-color-menu-hover: rgba(0, 0, 0, 0.2);
+	--next-color-menu-hover: rgba(255, 254, 250, 0.17);
 	--next-color-user-hover: rgba(0, 0, 0, 0.04);
 	--next-color-seting-main: #e9eef3;
 	--next-color-seting-aside: #d3dce6;
 	--next-color-seting-header: #b3c0d1;
+	--next-color-primary: #ffffff;
+	--next-color-primary-light-9: #0A569A;
+	--next-menu-active-color: #ffffff;
+	--next-color-menu-text-hover: #ffffff;
 }
 
 html,
@@ -83,8 +87,8 @@ body,
 		border-right: 1px solid var(--el-border-color-light, #ebeef5);
 	}
 	// pc端左侧导航样式
-	.layout-aside-pc-220 {
-		width: 220px !important;
+	.layout-aside-pc-256 {
+		width: 256px !important;
 		transition: width 0.3s ease;
 	}
 	.layout-aside-pc-64 {
