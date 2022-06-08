@@ -1,7 +1,4 @@
 <template>
-  <div class="menu-left-close-btn">
-    <i class="iconfont icon-xiangzuojiantou"></i>
-  </div>
 	<el-menu
 		router
 		:default-active="defaultActive"
@@ -103,14 +100,5 @@ export default defineComponent({
 });
 </script>
 <style scoped lang="scss">
-.menu-left-close-btn{
-  width: 20px;
-  height: 135px;
-  background: #0A569A;
-  position: absolute;
-  right: 0px;
-  top: 50%;
-  transform: translate( -50% 0);
-  z-index: 99;
-}
+
 </style>
