@@ -10,6 +10,7 @@ import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
 import '/@/theme/index.scss';
 import mitt from 'mitt';
+import 'animate.css';
 import VueGridLayout from 'vue-grid-layout';
 
 const app = createApp(App);

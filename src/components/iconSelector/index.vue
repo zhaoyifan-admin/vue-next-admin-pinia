@@ -4,6 +4,7 @@
 			placement="bottom"
 			:width="fontIconWidth"
 			trigger="click"
+      v-model:visible="visible"
 			transition="el-zoom-in-top"
 			popper-class="icon-selector-popper"
 			@show="onPopoverShow"
@@ -119,6 +120,7 @@ export default defineComponent({
 		const inputWidthRef = ref();
 		const selectorScrollbarRef = ref();
 		const state = reactive({
+      visible: false,
 			fontIconPrefix: '',
 			fontIconWidth: 0,
 			fontIconSearch: '',
@@ -130,12 +132,14 @@ export default defineComponent({
 		});
 		// 处理 input 获取焦点时，modelValue 有值时，改变 input 的 placeholder 值
 		const onIconFocus = () => {
+      state.visible = true;
 			if (!props.modelValue) return false;
 			state.fontIconSearch = '';
 			state.fontIconPlaceholder = props.modelValue;
 		};
 		// 处理 input 失去焦点时，为空将清空 input 值，为点击选中图标时，将取原先值
 		const onIconBlur = () => {
+      state.visible = false;
 			setTimeout(() => {
 				const icon = state.fontIconSheetsList.filter((icon: string) => icon === state.fontIconSearch);
 				if (icon.length <= 0) state.fontIconSearch = '';
@@ -205,16 +209,19 @@ export default defineComponent({
 		};
 		// 获取当前点击的 icon 图标
 		const onColClick = (v: any) => {
-			state.fontIconPlaceholder = v;
+      state.fontIconSearch = v;
+      state.fontIconPlaceholder = v;
 			state.fontIconPrefix = v;
 			emit('get', state.fontIconPrefix);
 			emit('update:modelValue', state.fontIconPrefix);
+      onIconBlur();
 		};
 		// 清空当前点击的 icon 图标
 		const onClearFontIcon = () => {
 			state.fontIconPrefix = '';
 			emit('clear', state.fontIconPrefix);
 			emit('update:modelValue', state.fontIconPrefix);
+      onIconFocus();
 		};
 		// 监听 Popover 打开，用于双向绑定值回显
 		const onPopoverShow = () => {
