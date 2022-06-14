@@ -52,6 +52,7 @@
 						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 							<el-form-item label="菜单图标">
 								<IconSelector placeholder="请输入菜单图标" v-model="ruleForm.meta.icon" type="all" />
+<!--                <avue-input-icon v-model="form" placeholder="请选择图标" :icon-list="iconList"></avue-input-icon>-->
 							</el-form-item>
 						</el-col>
 						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">

@@ -12,12 +12,14 @@ import '/@/theme/index.scss';
 import mitt from 'mitt';
 import 'animate.css';
 import VueGridLayout from 'vue-grid-layout';
+import Avue from '@smallwei/avue';
+import '@smallwei/avue/lib/index.css';
 
 const app = createApp(App);
 
 directive(app);
 other.elSvg(app);
 
-app.use(pinia).use(router).use(ElementPlus, { i18n: i18n.global.t }).use(i18n).use(VueGridLayout).mount('#app');
+app.use(Avue).use(pinia).use(router).use(ElementPlus, { i18n: i18n.global.t }).use(i18n).use(VueGridLayout).mount('#app');
 
 app.config.globalProperties.mittBus = mitt();

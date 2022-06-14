@@ -11,6 +11,7 @@
 	},
 	"dependencies": {
 		"@element-plus/icons-vue": "^2.0.3",
+		"@smallwei/avue": "^3.0.15",
 		"@wangeditor/editor": "^5.1.1",
 		"animate.css": "^4.1.1",
 		"ant-design-vue": "^3.2.5",
