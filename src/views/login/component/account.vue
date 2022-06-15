@@ -1,13 +1,13 @@
 <template>
-	<el-form size="large" class="login-content-form">
-		<el-form-item class="login-animation1">
+	<el-form size="large" class="login-content-form" ref="loginFormRef" :model="ruleForm" :rules="loginRules">
+		<el-form-item class="login-animation1" prop="userName">
 			<el-input type="text" :placeholder="$t('message.account.accountPlaceholder1')" v-model="ruleForm.userName" clearable autocomplete="off">
 				<template #prefix>
 					<el-icon class="el-input__icon"><ele-User /></el-icon>
 				</template>
 			</el-input>
 		</el-form-item>
-		<el-form-item class="login-animation2">
+		<el-form-item class="login-animation2" prop="password">
 			<el-input
 				:type="isShowPassword ? 'text' : 'password'"
 				:placeholder="$t('message.account.accountPlaceholder2')"
@@ -53,63 +53,107 @@
 			</el-button>
 		</el-form-item>
 	</el-form>
+  <Verify
+      :captchaType="'blockPuzzle'"
+      @success="verifySuccess"
+      @close="close"
+      ref="verify"/>
 </template>
 
 <script lang="ts">
-import { toRefs, reactive, defineComponent, computed } from 'vue';
+import { toRefs, reactive, defineComponent, computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElNotification } from 'element-plus';
 import { useI18n } from 'vue-i18n';
 import Cookies from 'js-cookie';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '/@/stores/themeConfig';
 import { initFrontEndControlRoutes } from '/@/router/frontEnd';
 import { initBackEndControlRoutes } from '/@/router/backEnd';
-import { Session } from '/@/utils/storage';
+import { Session, setStore } from '/@/utils/storage';
 import { formatAxis } from '/@/utils/formatTime';
 import { NextLoading } from '/@/utils/loading';
+import { useUserInfo } from '/@/stores/userInfo';
+// 图片滑块组件
+import Verify from '/@/components/verifition/Verify.vue';
+
+import { tenantCode } from '/@/api/login';
 
 export default defineComponent({
 	name: 'loginAccount',
+  components: {
+    Verify
+  },
 	setup() {
 		const { t } = useI18n();
+    const verify = ref();
+    const loginFormRef = ref();
 		const storesThemeConfig = useThemeConfig();
 		const { themeConfig } = storeToRefs(storesThemeConfig);
 		const route = useRoute();
 		const router = useRouter();
+    const store = useUserInfo();
 		const state = reactive({
 			isShowPassword: false,
 			ruleForm: {
-				userName: 'admin',
-				password: '123456',
-				code: '1234',
+        tenantCode: '',
+        userName: '',
+        password: '',
+        randomStr: "blockPuzzle",
 			},
 			loading: {
 				signIn: false,
 			},
 		});
+    // 自定义验证规则
+    const validatetenantCode = (rule:any, value:any, callback:any) => {
+      if (!value) {
+        callback(new Error('租户号不能为空'))
+      } else {
+        tenantCode(state.ruleForm.tenantCode).then((res) => {
+          let result:any = res;
+          if (result.code === 0) {
+            setStore({name: "tenantId", content: result.data.id, type: 'session'});
+            callback();
+          } else {
+            callback(new Error('租户号不存在'))
+          }
+        }).catch((error) => {
+          console.log(error)
+          callback(new Error('租户号不存在'));
+        })
+      }
+    }
+    // 定义校验规则
+    const loginRules = reactive({
+      tenantCode: [
+        {required: true, message: '租户号不能为空', trigger: 'blur'},
+        {validator: validatetenantCode, trigger: 'blur'},
+        {validator: validatetenantCode, trigger: 'change'},
+      ],
+      userName: [
+        {required: true, message: '用户名不能为空', trigger: 'blur'},
+      ],
+      password: [
+        {required: true, message: '密码不能为空', trigger: 'blur'},
+      ]
+    })
 		// 时间获取
 		const currentTime = computed(() => {
 			return formatAxis(new Date());
 		});
 		// 登录
 		const onSignIn = async () => {
-			state.loading.signIn = true;
-			// 存储 token 到浏览器缓存
-			Session.set('token', Math.random().toString(36).substr(0));
-			// 模拟数据，对接接口时，记得删除多余代码及对应依赖的引入。用于 `/src/stores/userInfo.ts` 中不同用户登录判断（模拟数据）
-			Cookies.set('userName', state.ruleForm.userName);
-			if (!themeConfig.value.isRequestRoutes) {
-				// 前端控制路由，2、请注意执行顺序
-				await initFrontEndControlRoutes();
-				signInSuccess();
-			} else {
-				// 模拟后端控制路由，isRequestRoutes 为 true，则开启后端控制路由
-				// 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
-				await initBackEndControlRoutes();
-				// 执行完 initBackEndControlRoutes，再执行 signInSuccess
-				signInSuccess();
-			}
+      loginFormRef.value.validate(async (valid:any) => {
+        if (valid) {
+          verify.value.show();
+          state.loading.signIn = true;
+        } else {
+          console.log('error submit!!')
+          return false;
+        }
+      })
+      console.log(store)
 		};
 		// 登录成功后的跳转
 		const signInSuccess = () => {
@@ -133,8 +177,78 @@ export default defineComponent({
 			// 添加 loading，防止第一次进入界面时出现短暂空白
 			NextLoading.start();
 		};
+    const close = (params:any) => {
+      state.loading.signIn = params;
+      ElNotification({
+        title: ('message.account.verifyTips'),
+        message: ('message.account.verifyWarning'),
+        type: 'warning',
+      })
+    };
+    const verifySuccess = async (params:any) => {
+      state.ruleForm.code = params.captchaVerification;
+      store.LoginByUsername(state.ruleForm).then(async () => {
+        state.loading.signIn = false;
+        // 模拟数据
+        let defaultRoles: Array<string>;
+        let defaultAuthBtnList: Array<string>;
+        // admin 页面权限标识，对应路由 meta.roles，用于控制路由的显示/隐藏
+        let adminRoles: Array<string> = ['admin'];
+        // admin 按钮权限标识
+        let adminAuthBtnList: Array<string> = ['btn.add', 'btn.del', 'btn.edit', 'btn.link'];
+        // test 页面权限标识，对应路由 meta.roles，用于控制路由的显示/隐藏
+        let testRoles: Array<string> = ['common'];
+        // test 按钮权限标识
+        let testAuthBtnList: Array<string> = ['btn.add', 'btn.link'];
+        // 不同用户模拟不同的用户权限
+        if (state.ruleForm.userName === 'admin') {
+          defaultRoles = adminRoles;
+          defaultAuthBtnList = adminAuthBtnList;
+        } else {
+          defaultRoles = testRoles;
+          defaultAuthBtnList = testAuthBtnList;
+        }
+        // 用户信息模拟数据
+        const userInfos = {
+          userName: state.ruleForm.userName,
+          photo:
+              state.ruleForm.userName === 'admin'
+                  ? 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1813762643,1914315241&fm=26&gp=0.jpg'
+                  : 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=317673774,2961727727&fm=26&gp=0.jpg',
+          time: new Date().getTime(),
+          roles: defaultRoles,
+          authBtnList: defaultAuthBtnList,
+        };
+        // 存储 token 到浏览器缓存
+        Session.set('token', Math.random().toString(36).substr(0));
+        // 存储用户信息到浏览器缓存
+        Session.set('userInfo', userInfos);
+        // 1、请注意执行顺序(存储用户信息到vuex)
+        store.dispatch('userInfos/setUserInfos', userInfos);
+        if (!store.state.themeConfig.themeConfig.isRequestRoutes) {
+          // 前端控制路由，2、请注意执行顺序
+          await initFrontEndControlRoutes();
+          signInSuccess();
+        } else {
+          // 模拟后端控制路由，isRequestRoutes 为 true，则开启后端控制路由
+          // 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
+          await initBackEndControlRoutes();
+          // 执行完 initBackEndControlRoutes，再执行 signInSuccess
+          signInSuccess();
+        }
+      }).catch((error)=>{
+        console.log(error)
+        state.loading.signIn = false;
+      });
+    };
 		return {
+      store,
+      verify,
+      loginRules,
+      loginFormRef,
 			onSignIn,
+      close,
+      verifySuccess,
 			...toRefs(state),
 		};
 	},

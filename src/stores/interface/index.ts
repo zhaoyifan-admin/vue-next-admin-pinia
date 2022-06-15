@@ -12,6 +12,16 @@ export interface UserInfosState {
 	userName: string;
 }
 export interface UserInfosStates {
+	userInfo: object;
+	isLock: boolean;
+	tenant_code: string;
+	access_token: string;
+	refresh_token: string;
+	expires_in: string;
+	employee: object;
+	opcard: object;
+	permissions: object;
+	systemlist: string;
 	userInfos: UserInfosState;
 }
 

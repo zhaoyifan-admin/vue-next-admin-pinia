@@ -139,7 +139,7 @@ export default defineComponent({
 		right: 135px;
 		top: 50%;
 		transform: translateY(-50%) translate3d(0, 0, 0);
-		background-color: var(--el-color-white);
+    background-color: var(--el-color-white);
 		border: 5px solid #1990FF;
 		border-radius: 5px;
 		overflow: hidden;

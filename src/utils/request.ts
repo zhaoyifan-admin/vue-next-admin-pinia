@@ -1,18 +1,28 @@
 import axios from 'axios';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { Session } from '/@/utils/storage';
-
+import {getStore, Session} from '/@/utils/storage';
+const baseURL = `/api`
 // 配置新建一个 axios 实例
 const service = axios.create({
-	baseURL: import.meta.env.VITE_API_URL as any,
-	timeout: 50000,
+	baseURL: baseURL,
+	timeout: 10000,
 	headers: { 'Content-Type': 'application/json' },
 });
 
 // 添加请求拦截器
 service.interceptors.request.use(
-	(config) => {
+	(config:any) => {
 		// 在发送请求之前做些什么 token
+		const language = getStore({name: 'language'});
+		const tenant_Id = getStore({ name: 'tenantId' });
+		if (tenant_Id) {
+			config.headers['TENANT-ID'] = tenant_Id;
+		}
+		if (language) {
+			config.headers['rtdp-language'] = language;
+		} else {
+			config.headers['rtdp-language'] = 'zh-CN';
+		}
 		if (Session.get('token')) {
 			(<any>config.headers).common['Authorization'] = `${Session.get('token')}`;
 		}

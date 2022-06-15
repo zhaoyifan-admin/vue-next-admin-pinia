@@ -129,6 +129,7 @@ export default defineComponent({
     };
     // 处理 input 失去焦点时，为空将清空 input 值，为点击选中图标时，将取原先值
     const onIconBlur = () => {
+      state.fontIconVisible = false;
       setTimeout(() => {
         const icon = state.fontIconSheetsList.filter((icon: string) => icon === state.fontIconSearch);
         if (icon.length <= 0) state.fontIconSearch = '';

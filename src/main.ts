@@ -14,6 +14,7 @@ import 'animate.css';
 import VueGridLayout from 'vue-grid-layout';
 import Avue from '@smallwei/avue';
 import '@smallwei/avue/lib/index.css';
+import '@icon-park/vue/styles/index.css';
 
 const app = createApp(App);
 
