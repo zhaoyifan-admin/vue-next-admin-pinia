@@ -1,9 +1,17 @@
 <template>
 	<el-form size="large" class="login-content-form" ref="loginFormRef" :model="ruleForm" :rules="loginRules">
+    <el-form-item class="login-animation0" prop="tenantCode">
+      <el-input type="number" :placeholder="$t('message.account.accountPlaceholder0')"
+                v-model="ruleForm.tenantCode" clearable autocomplete="off">
+        <template #prefix>
+          <connection-box theme="outline" size="16" fill="#333" strokeLinejoin="miter" strokeLinecap="square"/>
+        </template>
+      </el-input>
+    </el-form-item>
 		<el-form-item class="login-animation1" prop="userName">
 			<el-input type="text" :placeholder="$t('message.account.accountPlaceholder1')" v-model="ruleForm.userName" clearable autocomplete="off">
 				<template #prefix>
-					<el-icon class="el-input__icon"><ele-User /></el-icon>
+          <user theme="outline" size="16" fill="#333" strokeLinejoin="miter" strokeLinecap="square"/>
 				</template>
 			</el-input>
 		</el-form-item>
@@ -12,43 +20,20 @@
 				:type="isShowPassword ? 'text' : 'password'"
 				:placeholder="$t('message.account.accountPlaceholder2')"
 				v-model="ruleForm.password"
+        clearable
 				autocomplete="off"
 			>
 				<template #prefix>
-					<el-icon class="el-input__icon"><ele-Unlock /></el-icon>
+          <lock theme="outline" size="16" fill="#333" strokeLinejoin="miter" strokeLinecap="square"/>
 				</template>
 				<template #suffix>
-					<i
-						class="iconfont el-input__icon login-content-password"
-						:class="isShowPassword ? 'icon-yincangmima' : 'icon-xianshimima'"
-						@click="isShowPassword = !isShowPassword"
-					>
-					</i>
+          <preview-open v-if="isShowPassword" theme="outline" size="16" fill="#333" strokeLinejoin="miter" strokeLinecap="square" @click="isShowPassword = !isShowPassword"/>
+          <preview-close v-else theme="outline" size="16" fill="#333" strokeLinejoin="miter" strokeLinecap="square" @click="isShowPassword = !isShowPassword"/>
 				</template>
 			</el-input>
 		</el-form-item>
-		<el-form-item class="login-animation3">
-			<el-col :span="15">
-				<el-input
-					type="text"
-					maxlength="4"
-					:placeholder="$t('message.account.accountPlaceholder3')"
-					v-model="ruleForm.code"
-					clearable
-					autocomplete="off"
-				>
-					<template #prefix>
-						<el-icon class="el-input__icon"><ele-Position /></el-icon>
-					</template>
-				</el-input>
-			</el-col>
-			<el-col :span="1"></el-col>
-			<el-col :span="8">
-				<el-button class="login-content-code">1234</el-button>
-			</el-col>
-		</el-form-item>
 		<el-form-item class="login-animation4">
-			<el-button type="primary" class="login-content-submit" round @click="onSignIn" :loading="loading.signIn">
+			<el-button type="primary" class="login-content-submit" @click="onSignIn" :loading="loading.signIn">
 				<span>{{ $t('message.account.accountBtnText') }}</span>
 			</el-button>
 		</el-form-item>
@@ -74,6 +59,7 @@ import { Session, setStore } from '/@/utils/storage';
 import { formatAxis } from '/@/utils/formatTime';
 import { NextLoading } from '/@/utils/loading';
 import { useUserInfo } from '/@/stores/userInfo';
+import { User, Lock, PreviewOpen, PreviewClose, ConnectionBox } from '@icon-park/vue-next';
 // 图片滑块组件
 import Verify from '/@/components/verifition/Verify.vue';
 
@@ -82,7 +68,12 @@ import { tenantCode } from '/@/api/login';
 export default defineComponent({
 	name: 'loginAccount',
   components: {
-    Verify
+    Verify,
+    User,
+    Lock,
+    PreviewOpen,
+    PreviewClose,
+    ConnectionBox
   },
 	setup() {
 		const { t } = useI18n();
@@ -96,6 +87,7 @@ export default defineComponent({
 		const state = reactive({
 			isShowPassword: false,
 			ruleForm: {
+        code: '',
         tenantCode: '',
         userName: '',
         password: '',
@@ -188,44 +180,12 @@ export default defineComponent({
     const verifySuccess = async (params:any) => {
       state.ruleForm.code = params.captchaVerification;
       store.LoginByUsername(state.ruleForm).then(async () => {
-        state.loading.signIn = false;
-        // 模拟数据
-        let defaultRoles: Array<string>;
-        let defaultAuthBtnList: Array<string>;
-        // admin 页面权限标识，对应路由 meta.roles，用于控制路由的显示/隐藏
-        let adminRoles: Array<string> = ['admin'];
-        // admin 按钮权限标识
-        let adminAuthBtnList: Array<string> = ['btn.add', 'btn.del', 'btn.edit', 'btn.link'];
-        // test 页面权限标识，对应路由 meta.roles，用于控制路由的显示/隐藏
-        let testRoles: Array<string> = ['common'];
-        // test 按钮权限标识
-        let testAuthBtnList: Array<string> = ['btn.add', 'btn.link'];
-        // 不同用户模拟不同的用户权限
-        if (state.ruleForm.userName === 'admin') {
-          defaultRoles = adminRoles;
-          defaultAuthBtnList = adminAuthBtnList;
-        } else {
-          defaultRoles = testRoles;
-          defaultAuthBtnList = testAuthBtnList;
-        }
-        // 用户信息模拟数据
-        const userInfos = {
-          userName: state.ruleForm.userName,
-          photo:
-              state.ruleForm.userName === 'admin'
-                  ? 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1813762643,1914315241&fm=26&gp=0.jpg'
-                  : 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=317673774,2961727727&fm=26&gp=0.jpg',
-          time: new Date().getTime(),
-          roles: defaultRoles,
-          authBtnList: defaultAuthBtnList,
-        };
+        state.loading.signIn = true;
         // 存储 token 到浏览器缓存
         Session.set('token', Math.random().toString(36).substr(0));
-        // 存储用户信息到浏览器缓存
-        Session.set('userInfo', userInfos);
-        // 1、请注意执行顺序(存储用户信息到vuex)
-        store.dispatch('userInfos/setUserInfos', userInfos);
-        if (!store.state.themeConfig.themeConfig.isRequestRoutes) {
+        // 模拟数据，对接接口时，记得删除多余代码及对应依赖的引入。用于 `/src/stores/userInfo.ts` 中不同用户登录判断（模拟数据）
+        Cookies.set('userName', state.ruleForm.userName);
+        if (!themeConfig.value.isRequestRoutes) {
           // 前端控制路由，2、请注意执行顺序
           await initFrontEndControlRoutes();
           signInSuccess();
@@ -286,6 +246,10 @@ export default defineComponent({
 		letter-spacing: 2px;
 		font-weight: 300;
 		margin-top: 15px;
+    span {
+      color: #FFFFFF;
+      font-weight: bold;
+    }
 	}
 }
 </style>

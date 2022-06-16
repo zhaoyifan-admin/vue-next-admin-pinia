@@ -4,7 +4,6 @@
       <div class="login-icon-group">
         <div class="login-icon-group-title">
           <img :src="logoMini" />
-          <div class="login-icon-group-title-text font25">{{ getThemeConfig.globalViceTitle }}</div>
         </div>
         <img :src="loginIconTwo" class="login-icon-group-icon" />
       </div>
@@ -139,8 +138,6 @@ export default defineComponent({
 		right: 135px;
 		top: 50%;
 		transform: translateY(-50%) translate3d(0, 0, 0);
-    background-color: var(--el-color-white);
-		border: 5px solid #1990FF;
 		border-radius: 5px;
 		overflow: hidden;
 		z-index: 1;

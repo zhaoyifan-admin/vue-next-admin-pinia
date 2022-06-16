@@ -80,6 +80,7 @@ export const useUserInfo = defineStore('userInfo', {
 				key: 'pigxpigxpigxpigx',
 				param: ['password']
 			})
+			console.log(user)
 			return new Promise<void>((resolve, reject) => {
 				loginByUsername({
 					username: user.userName,
