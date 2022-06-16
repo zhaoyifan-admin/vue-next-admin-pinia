@@ -8,8 +8,11 @@
         <img :src="loginIconTwo" class="login-icon-group-icon" />
       </div>
       <div class="login-content">
+        <div class="login-content-img">
+          <img src="/public/login-header.png" alt="">
+          <el-avatar :size="90" :src="circleUrl" />
+        </div>
         <div class="login-content-main">
-          <h4 class="login-content-title ml15">{{ getThemeConfig.globalTitle }}后台模板</h4>
           <Account />
         </div>
       </div>
@@ -30,6 +33,7 @@ import Scan from '/@/views/login/component/scan.vue';
 
 // 定义接口来定义对象的类型
 interface LoginState {
+  circleUrl: string;
 	tabsActiveName: string;
 	isScan: boolean;
 }
@@ -41,6 +45,7 @@ export default defineComponent({
 		const storesThemeConfig = useThemeConfig();
 		const { themeConfig } = storeToRefs(storesThemeConfig);
 		const state = reactive<LoginState>({
+      circleUrl: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1813762643,1914315241&fm=26&gp=0.jpg',
 			tabsActiveName: 'account',
 			isScan: false,
 		});
@@ -132,18 +137,32 @@ export default defineComponent({
 		}
 	}
 	.login-content {
-		width: 500px;
+		width: 475px;
 		padding: 20px;
 		position: absolute;
 		right: 135px;
 		top: 50%;
 		transform: translateY(-50%) translate3d(0, 0, 0);
 		border-radius: 5px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .3);
 		overflow: hidden;
 		z-index: 1;
+    .login-content-img {
+      position: relative;
+      .el-avatar {
+        position: absolute;
+        bottom: -50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
 		//height: 90%;
 		.login-content-main {
-			margin: 0 auto;
+			margin: 60px auto;
 			width: 80%;
 			.login-content-title {
 				color: var(--el-text-color-primary);

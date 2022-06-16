@@ -1,4 +1,24 @@
 <template>
+  <div class="tips">
+    <ul>
+      <li>
+        <helpcenter theme="outline" size="20" fill="#FFFFFF" strokeLinejoin="miter" strokeLinecap="square"/>
+        <p>帮助文档</p>
+      </li>
+      <li>
+        <windows theme="outline" size="20" fill="#FFFFFF" strokeLinejoin="miter" strokeLinecap="square"/>
+        <p>选择系统</p>
+      </li>
+      <li>
+        <neutral-face theme="outline" size="20" fill="#FFFFFF" strokeLinejoin="miter" strokeLinecap="square"/>
+        <p>暂无功能</p>
+      </li>
+      <li>
+        <neutral-face theme="outline" size="20" fill="#FFFFFF" strokeLinejoin="miter" strokeLinecap="square"/>
+        <p>暂无功能</p>
+      </li>
+    </ul>
+  </div>
 	<component :is="themeConfig.layout" />
 </template>
 
@@ -7,10 +27,14 @@ import { onBeforeMount, onUnmounted, getCurrentInstance, defineComponent, define
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '/@/stores/themeConfig';
 import { Local } from '/@/utils/storage';
+import { Helpcenter, Windows, NeutralFace } from '@icon-park/vue-next';
 
 export default defineComponent({
 	name: 'layout',
 	components: {
+    Helpcenter,
+    Windows,
+    NeutralFace,
 		defaults: defineAsyncComponent(() => import('/@/layout/main/defaults.vue')),
 		classic: defineAsyncComponent(() => import('/@/layout/main/classic.vue')),
 		transverse: defineAsyncComponent(() => import('/@/layout/main/transverse.vue')),

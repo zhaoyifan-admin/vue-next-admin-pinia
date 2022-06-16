@@ -14,6 +14,7 @@ export default {
 		accountPlaceholder2: 'Please input a password',
 		accountPlaceholder3: 'Please enter the verification code',
 		accountBtnText: 'Sign in',
+		verifyTips: "提示",
 	},
 	mobile: {
 		placeholder1: 'Please input mobile phone number',

@@ -14,6 +14,7 @@ export default {
 		accountPlaceholder2: '請輸入密碼',
 		accountPlaceholder3: '請輸入驗證碼',
 		accountBtnText: '登入',
+		verifyTips: "提示",
 	},
 	mobile: {
 		placeholder1: '請輸入手機號',
