@@ -22,8 +22,7 @@
     </el-dropdown>
     <el-dropdown :show-timeout="70" :hide-timeout="50" trigger="click" @command="onLanguageChange">
       <div class="layout-navbars-breadcrumb-user-icon">
-        <i class="iconfont" :class="disabledI18n === 'en' ? 'icon-fuhao-yingwen' : 'icon-fuhao-zhongwen'"
-           :title="$t('message.user.title1')"></i>
+        <international theme="outline" size="16" :title="$t('message.user.title1')" fill="#FFFFFF" strokeLinecap="butt"/>
       </div>
       <template #dropdown>
         <el-dropdown-menu>
@@ -34,20 +33,16 @@
       </template>
     </el-dropdown>
     <div class="layout-navbars-breadcrumb-user-icon" @click="onSearchClick">
-      <el-icon :title="$t('message.user.title2')">
-        <ele-Search/>
-      </el-icon>
+      <search theme="outline" size="16" :title="$t('message.user.title2')" fill="#FFFFFF" strokeLinecap="butt"/>
     </div>
     <div class="layout-navbars-breadcrumb-user-icon" @click="onLayoutSetingClick">
-      <i class="icon-skin iconfont" :title="$t('message.user.title3')"></i>
+      <setting-three theme="outline" :title="$t('message.user.title3')" size="16" fill="#FFFFFF"/>
     </div>
     <div class="layout-navbars-breadcrumb-user-icon">
       <el-popover placement="bottom" trigger="click" transition="el-zoom-in-top" :width="300" :persistent="false">
         <template #reference>
           <el-badge :is-dot="true">
-            <el-icon :title="$t('message.user.title4')">
-              <ele-Bell/>
-            </el-icon>
+            <message-unread theme="filled" :title="$t('message.user.title4')" size="16" fill="#ffffff" strokeLinecap="butt"/>
           </el-badge>
         </template>
         <template #default>
@@ -56,11 +51,6 @@
       </el-popover>
     </div>
     <div class="layout-navbars-breadcrumb-user-icon mr10" @click="onScreenfullClick">
-      <!--      <i-->
-      <!--          class="iconfont"-->
-      <!--          :title="isScreenfull ? $t('message.user.title6') : $t('message.user.title5')"-->
-      <!--          :class="!isScreenfull ? 'icon-fullscreen' : 'icon-tuichuquanping'"-->
-      <!--      ></i>-->
       <full-screen theme="outline" v-if="!isScreenfull"
                    :title="isScreenfull ? $t('message.user.title6') : $t('message.user.title5')" size="16"
                    fill="#FFFFFF" strokeLinejoin="miter" strokeLinecap="square"/>
@@ -90,7 +80,6 @@
         </el-dropdown-menu>
       </template>
     </el-dropdown>
-    <Search ref="searchRef"/>
   </div>
 </template>
 
@@ -106,12 +95,11 @@ import {useThemeConfig} from '/@/stores/themeConfig';
 import other from '/@/utils/other';
 import {Session, Local} from '/@/utils/storage';
 import UserNews from '/@/layout/navBars/breadcrumb/userNews.vue';
-import Search from '/@/layout/navBars/breadcrumb/search.vue';
-import {FullScreen, OffScreen} from '@icon-park/vue-next';
+import {FullScreen, OffScreen, Search, MessageUnread, SettingThree, International} from '@icon-park/vue-next';
 
 export default defineComponent({
   name: 'layoutBreadcrumbUser',
-  components: {UserNews, Search, FullScreen, OffScreen},
+  components: {UserNews, Search, FullScreen, OffScreen, MessageUnread, SettingThree, International},
   setup() {
     const {t} = useI18n();
     const {proxy} = <any>getCurrentInstance();

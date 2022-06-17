@@ -1,19 +1,19 @@
 <template>
   <div class="tips">
     <ul>
-      <li>
+      <li @click="helpBtn">
         <helpcenter theme="outline" size="20" fill="#FFFFFF" strokeLinejoin="miter" strokeLinecap="square"/>
         <p>帮助文档</p>
       </li>
-      <li>
+      <li @click="systemBtn">
         <windows theme="outline" size="20" fill="#FFFFFF" strokeLinejoin="miter" strokeLinecap="square"/>
         <p>选择系统</p>
       </li>
-      <li>
+      <li @click="otherBtn">
         <neutral-face theme="outline" size="20" fill="#FFFFFF" strokeLinejoin="miter" strokeLinecap="square"/>
         <p>暂无功能</p>
       </li>
-      <li>
+      <li @click="otherBtn">
         <neutral-face theme="outline" size="20" fill="#FFFFFF" strokeLinejoin="miter" strokeLinecap="square"/>
         <p>暂无功能</p>
       </li>
@@ -28,6 +28,7 @@ import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '/@/stores/themeConfig';
 import { Local } from '/@/utils/storage';
 import { Helpcenter, Windows, NeutralFace } from '@icon-park/vue-next';
+import {ElMessage} from "element-plus";
 
 export default defineComponent({
 	name: 'layout',
@@ -61,6 +62,24 @@ export default defineComponent({
 				});
 			}
 		};
+		const helpBtn = () => {
+      ElMessage({
+        message: '正在开发中...敬请期待！',
+        type: 'warning',
+      })
+    };
+		const systemBtn = () => {
+      ElMessage({
+        message: '正在开发中...敬请期待！',
+        type: 'warning',
+      })
+    };
+		const otherBtn = () => {
+      ElMessage({
+        message: '暂无功能...敬请期待！',
+        type: 'warning',
+      })
+    };
 		// 页面加载前
 		onBeforeMount(() => {
 			onLayoutResize();
@@ -71,6 +90,9 @@ export default defineComponent({
 			window.removeEventListener('resize', onLayoutResize);
 		});
 		return {
+      helpBtn,
+      systemBtn,
+      otherBtn,
 			themeConfig,
 		};
 	},

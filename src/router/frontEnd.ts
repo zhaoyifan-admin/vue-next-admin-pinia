@@ -73,19 +73,21 @@ export function setFilterRouteEnd() {
  * @link 参考：https://next.router.vuejs.org/zh/api/#addroute
  * @param chil dynamicRoutes（/@/router/route）第一个顶级 children 的下路由集合
  * @returns 返回有当前用户权限标识的路由数组
+ * @forEach 取消权限组的标识路由，全部返回路由数组
  */
 export function setFilterRoute(chil: any) {
 	const stores = useUserInfo(pinia);
 	const { userInfos } = storeToRefs(stores);
 	let filterRoute: any = [];
 	chil.forEach((route: any) => {
-		if (route.meta.roles) {
-			route.meta.roles.forEach((metaRoles: any) => {
-				userInfos.value.roles.forEach((roles: any) => {
-					if (metaRoles === roles) filterRoute.push({ ...route });
-				});
-			});
-		}
+		// if (route.meta.roles) {
+		// 	route.meta.roles.forEach((metaRoles: any) => {
+		// 		userInfos.value.roles.forEach((roles: any) => {
+		// 			if (metaRoles === roles) filterRoute.push({ ...route });
+		// 		});
+		// 	});
+		// }
+		filterRoute.push({ ...route });
 	});
 	return filterRoute;
 }
@@ -138,10 +140,8 @@ export function setFilterHasRolesMenu(routes: any, roles: any) {
 	const menu: any = [];
 	routes.forEach((route: any) => {
 		const item = { ...route };
-		if (hasRoles(roles, item)) {
-			if (item.children) item.children = setFilterHasRolesMenu(item.children, roles);
-			menu.push(item);
-		}
+		if (item.children) item.children = setFilterHasRolesMenu(item.children, roles);
+		menu.push(item);
 	});
 	return menu;
 }

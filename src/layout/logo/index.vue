@@ -1,7 +1,7 @@
 <template>
 	<div class="layout-logo" v-if="setShowLogo" @click="onThemeConfigChange">
-		<img :src="logoMini" class="layout-logo-medium-img" />
-		<span>{{ themeConfig.globalTitle }}</span>
+    <windows theme="filled" size="28" fill="#ffffff" strokeLinecap="butt"/>
+		<span style="margin-left: 5px">{{ themeConfig.globalTitle }}</span>
 	</div>
 	<div class="layout-logo-size" v-else @click="onThemeConfigChange">
 		<img :src="logoMini" class="layout-logo-size-img" />
@@ -9,14 +9,18 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import {computed, defineAsyncComponent, defineComponent} from 'vue';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '/@/stores/themeConfig';
+import { Windows } from '@icon-park/vue-next';
 
 import logoMini from '/@/assets/logo-mini.svg';
 
 export default defineComponent({
 	name: 'layoutLogo',
+  components: {
+    Windows
+  },
 	setup() {
 		const storesThemeConfig = useThemeConfig();
 		const { themeConfig } = storeToRefs(storesThemeConfig);
@@ -48,7 +52,7 @@ export default defineComponent({
 	align-items: center;
 	justify-content: center;
 	box-shadow: rgb(0 21 41 / 2%) 0px 1px 4px;
-	color: var(--el-color-primary);
+	color: #ffffff;
 	font-size: 16px;
 	cursor: pointer;
 	animation: logoAnimation 0.3s ease-in-out;

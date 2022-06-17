@@ -151,7 +151,7 @@
 				<div class="layout-breadcrumb-seting-bar-flex mt15">
 					<div class="layout-breadcrumb-seting-bar-flex-label">{{ $t('message.layout.threeIsLockScreen') }}</div>
 					<div class="layout-breadcrumb-seting-bar-flex-value">
-						<el-switch v-model="getThemeConfig.isLockScreen" size="small" @change="setLocalThemeConfig"></el-switch>
+						<el-switch v-model="getThemeConfig.isLockScreen" size="small" :before-change="setLock" @change="setLocalThemeConfig"></el-switch>
 					</div>
 				</div>
 				<div class="layout-breadcrumb-seting-bar-flex mt11">
@@ -433,6 +433,9 @@ export default defineComponent({
 		const getThemeConfig = computed(() => {
 			return themeConfig.value;
 		});
+		const setLock = () => {
+      setLocalThemeConfig();
+    };
 		// 1、全局主题
 		const onColorPickerChange = () => {
 			if (!getThemeConfig.value.primary) return ElMessage.warning('全局主题 primary 颜色值不能为空');
@@ -646,6 +649,7 @@ export default defineComponent({
 			proxy.mittBus.off('layoutMobileResize', () => {});
 		});
 		return {
+      setLock,
 			openDrawer,
 			onColorPickerChange,
 			onBgColorPickerChange,

@@ -554,7 +554,7 @@
         <template #empty>
           <div class="table-empty">
             <img :src="tableNull" alt="暂无数据" style="width: 250px;height: auto;">
-            <span style="margin-bottom: 35px;font-style: bold;">暂无数据</span>
+            <span style="margin-bottom: 35px;font-weight: bold;">暂无数据</span>
           </div>
         </template>
         <el-table-column v-if="option.AllSelectBtn" type="selection" width="55"/>
@@ -841,7 +841,7 @@ export default defineComponent({
       page: props.option.Paginations.page || {pageNum: 1, pageSize: 10},
     });
     onBeforeMount(() => {
-      props.option.column.forEach((item: object, index: number) => {
+      props.option.column.forEach((item: any, index: number) => {
         if (item.search) {
           if (item.span) {
             searchSpan.value += item.span;
@@ -891,7 +891,7 @@ export default defineComponent({
         },
       },
     ];
-    const rowStyle = ({row,rowIndex }) => {
+    const rowStyle = ({rowIndex }) => {
       if (rowIndex % 2 === 0) {
         return {
           backgroundColor: "#FDF5E6",
@@ -952,7 +952,7 @@ export default defineComponent({
       }
 
       function filterParams(obj: any) { // 剔除对象的空属性
-        var _newObj = {};
+        var _newObj:object = {};
         for (var key in obj) {
           if (obj.hasOwnProperty(key)) { // 判断对象中是否有这个属性
             if (isEmpty(obj[key])) continue;
@@ -979,7 +979,6 @@ export default defineComponent({
       tableLoading.value = true;
       let page = state.page;
       let params = state.searchForm;
-      console.log(params)
       context.emit("searchChange", page, params, getCurrentInstances.proxy.done);
     };
     // 清空表单
