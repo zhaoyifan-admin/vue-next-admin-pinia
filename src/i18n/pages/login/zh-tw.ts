@@ -14,6 +14,8 @@ export default {
 		accountPlaceholder2: '請輸入密碼',
 		accountPlaceholder3: '請輸入驗證碼',
 		accountBtnText: '登入',
+		verifySuccess: "登陸成功",
+		verifyWarning: "已取消登錄系統！",
 		verifyTips: "提示",
 	},
 	mobile: {

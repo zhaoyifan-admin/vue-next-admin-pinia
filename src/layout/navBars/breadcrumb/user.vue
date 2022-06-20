@@ -80,6 +80,7 @@
         </el-dropdown-menu>
       </template>
     </el-dropdown>
+    <SearchComponent ref="searchRef" />
   </div>
 </template>
 
@@ -95,11 +96,12 @@ import {useThemeConfig} from '/@/stores/themeConfig';
 import other from '/@/utils/other';
 import {Session, Local} from '/@/utils/storage';
 import UserNews from '/@/layout/navBars/breadcrumb/userNews.vue';
+import SearchComponent from '/@/layout/navBars/breadcrumb/search.vue';
 import {FullScreen, OffScreen, Search, MessageUnread, SettingThree, International} from '@icon-park/vue-next';
 
 export default defineComponent({
   name: 'layoutBreadcrumbUser',
-  components: {UserNews, Search, FullScreen, OffScreen, MessageUnread, SettingThree, International},
+  components: {UserNews, SearchComponent, Search, FullScreen, OffScreen, MessageUnread, SettingThree, International},
   setup() {
     const {t} = useI18n();
     const {proxy} = <any>getCurrentInstance();

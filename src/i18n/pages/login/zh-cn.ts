@@ -14,7 +14,9 @@ export default {
 		accountPlaceholder2: '密码',
 		accountPlaceholder3: '请输入验证码',
 		accountBtnText: '登 录',
-		verifyTips: "提示",
+		verifySuccess: "登录成功",
+		verifyWarning: "已取消系统登录！",
+		verifyTips: "提示"
 	},
 	mobile: {
 		placeholder1: '请输入手机号',

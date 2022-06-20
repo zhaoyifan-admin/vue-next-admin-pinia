@@ -54,11 +54,14 @@ service.interceptors.response.use(
 		}
 	},
 	(error) => {
+        console.log(error)
 		// 对响应错误做点什么
 		if (error.message.indexOf('timeout') != -1) {
-			ElMessage.error('网络超时');
+			ElMessage.error('网络连接请求超时，请重试。');
 		} else if (error.message == 'Network Error') {
 			ElMessage.error('网络连接错误');
+		} else if (error.message.indexOf('503') != -1) {
+			ElMessage.error('服务不可用，请联系管理员	');
 		} else {
 			if (error.response.data) ElMessage.error(error.response.statusText);
 			else ElMessage.error('接口路径找不到');
