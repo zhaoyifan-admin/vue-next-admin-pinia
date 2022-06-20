@@ -490,7 +490,8 @@
         </el-form>
       </div>
       <div class="system-menu-btn mb15">
-        <span class="mr5" v-if="actionBar ==='text'">
+        <div class="system-menu-btn-box system-menu-btn-box-left">
+          <span class="mr5" v-if="actionBar ==='text'">
           <el-button :size="Size" type="primary" title="新增" ref="addFormBtn"
                      v-if="option.addBtn == null || option.addBtn" @click="onOpenAddMenu">
             <i class="iconfont iconna-xinzeng"></i>
@@ -501,7 +502,7 @@
             <span class="ml5">清空选项</span>
           </el-button>
         </span>
-        <span class="mr5" v-else>
+          <span class="mr5" v-else>
           <el-button :size="Size" type="primary" title="新增" ref="addFormBtn"
                      v-if="option.addBtn == null || option.addBtn" @click="onOpenAddMenu">
             <i class="iconfont iconna-xinzeng"></i>
@@ -511,22 +512,25 @@
             <span class="ml5">清空选项</span>
           </el-button>
         </span>
-        <!--        左插槽-->
-        <slot name="menuLeft" :zyfsolt="{size: Size}"></slot>
-        <div class="flr">
-          <!--          右插槽-->
-          <slot name="menuRight" :zyfsolt="{size: Size}"></slot>
-          <el-button-group class="ml-4 ml5 actionBar">
-            <el-button :size="Size" title="查询表单显隐" @click="showForm">
-              <i class="iconfont iconna-sousuo"></i>
-            </el-button>
-            <el-button :size="Size" title="刷新表格数据" @click="onLoad">
-              <i class="iconfont iconna-shuaxin1"></i>
-            </el-button>
-            <el-button :size="Size" title="表格配置" @click="onColumnDrawer">
-              <i class="iconfont iconna-kongzhi"></i>
-            </el-button>
-          </el-button-group>
+          <!--        左插槽-->
+          <slot name="menuLeft" :zyfsolt="{size: Size}"></slot>
+        </div>
+        <div class="system-menu-btn-box system-menu-btn-box-right">
+          <div class="flr">
+            <!--          右插槽-->
+            <slot name="menuRight" :zyfsolt="{size: Size}"></slot>
+            <el-button-group class="ml-4 ml5 actionBar">
+              <el-button :size="Size" title="查询表单显隐" @click="showForm">
+                <i class="iconfont iconna-sousuo"></i>
+              </el-button>
+              <el-button :size="Size" title="刷新表格数据" @click="onLoad">
+                <i class="iconfont iconna-shuaxin1"></i>
+              </el-button>
+              <el-button :size="Size" title="表格配置" @click="onColumnDrawer">
+                <i class="iconfont iconna-kongzhi"></i>
+              </el-button>
+            </el-button-group>
+          </div>
         </div>
       </div>
       <el-table
@@ -786,7 +790,6 @@ import {
 } from 'vue';
 import {RouteRecordRaw} from 'vue-router';
 import {ElMessage, ElMessageBox} from 'element-plus';
-import {useStore} from '/@/store/index';
 
 import tableNull from '/@/assets/null.svg';
 
@@ -802,7 +805,6 @@ export default defineComponent({
   // components: {EditMenu},
   setup: function (props, context) {
     const {TableData, option} = toRefs(props);
-    const store = useStore();
     let formRef = ref();
     const getCurrentInstances = getCurrentInstance(); // 实例
     const showspan = ref(24);
@@ -1106,6 +1108,20 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.system-menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .system-menu-btn-box {
+    flex: 1
+  }
+  .system-menu-btn-box-left {
+    text-align: left;
+  }
+  .system-menu-btn-box-right {
+    text-align: right;
+  }
+}
 .cell {
   height: 30px;
   padding: 3px 0;

@@ -57,6 +57,7 @@ export default {
 		pagesLazyImg: '图片懒加载',
 		makeIndex: '组件封装',
 		makeSelector: '图标选择器',
+		crud: 'crud',
 		makeNoticeBar: '滚动通知栏',
 		makeSvgDemo: 'svgIcon 演示',
 		paramsIndex: '路由参数',

@@ -57,6 +57,7 @@ export default {
 		pagesLazyImg: 'Image lazy loading',
 		makeIndex: 'makeIndex',
 		makeSelector: 'Icon selector',
+		crud: 'crud',
 		makeNoticeBar: 'notification bar',
 		makeSvgDemo: 'Svgicon demo',
 		paramsIndex: 'Routing parameters',

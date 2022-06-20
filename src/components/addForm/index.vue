@@ -162,13 +162,11 @@
 
 <script>
 import {reactive, toRefs, onMounted, defineComponent} from 'vue';
-import {useStore} from '/@/store/index';
 
 export default defineComponent({
   name: "addForm",
   props: ['option', 'Size'],
   setup: function (props, context) {
-    const store = useStore();
     const state = reactive({
       isShowDialog: false,
       fullscreen: false,

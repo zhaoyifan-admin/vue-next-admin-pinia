@@ -837,6 +837,20 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 						},
 					},
 					{
+						path: '/make/ceshi',
+						name: 'ceshi',
+						component: () => import('/@/views/make/ceshi/index.vue'),
+						meta: {
+							title: 'message.router.crud',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							icon: 'iconfont icon-xuanzeqi',
+						},
+					},
+					{
 						path: '/make/noticeBar',
 						name: 'makeNoticeBar',
 						component: () => import('/@/views/make/noticeBar/index.vue'),
