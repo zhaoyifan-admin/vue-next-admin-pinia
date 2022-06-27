@@ -1,13 +1,14 @@
 import { defineStore } from 'pinia';
 import Cookies from 'js-cookie';
 import { UserInfosStates } from './interface';
-import {getStore, Session} from '/@/utils/storage';
+import {getStore, Session, setStore} from '/@/utils/storage';
 import { encryption } from '/@/utils/util';
 import {authLogin, loginByUsername} from '/@/api/login/index';
 
 /**
  * 用户信息
  * @methods setUserInfos 设置用户信息
+ * @methods LoginByUsername 设置登录配置
  */
 export const useUserInfo = defineStore('userInfo', {
 	state: (): UserInfosStates => {
@@ -101,6 +102,51 @@ export const useUserInfo = defineStore('userInfo', {
 					this.permissions = list;
 					this.systemlist = data.system_info || {};
 					this.userInfo = data.user_info || {};
+					setStore({
+						name: 'tenant_code',
+						content: this.tenant_code,
+						type: 'session'
+					})
+					setStore({
+						name: 'access_token',
+						content: this.access_token,
+						type: 'session'
+					})
+					setStore({
+						name: 'refresh_token',
+						content: this.refresh_token,
+						type: 'session'
+					})
+					setStore({
+						name: 'expires_in',
+						content: this.expires_in,
+						type: 'session'
+					})
+					setStore({
+						name: 'userInfo',
+						content: data.userInfo,
+						type: 'session'
+					})
+					setStore({
+						name: 'employee',
+						content: this.employee,
+						type: 'session'
+					})
+					setStore({
+						name: 'opcard',
+						content: this.opcard,
+						type: 'session'
+					})
+					setStore({
+						name: 'permissions',
+						content: this.permissions,
+						type: 'session'
+					})
+					setStore({
+						name: 'system_list',
+						content: this.systemlist,
+						type: 'session'
+					})
 					// commit('CLEAR_LOCK')
 					resolve();
 				}).catch(error => {

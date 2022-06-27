@@ -23,8 +23,8 @@ service.interceptors.request.use(
 		} else {
 			config.headers['rtdp-language'] = 'zh-CN';
 		}
-		if (Session.get('token')) {
-			(<any>config.headers).common['Authorization'] = `${Session.get('token')}`;
+		if (getStore({name: "access_token"})) {
+			(<any>config.headers).common['Authorization'] = 'Bearer' + getStore({name: "access_token"});
 		}
 		return config;
 	},

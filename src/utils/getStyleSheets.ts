@@ -8,6 +8,7 @@ const getAlicdnIconfont = () => {
 			const styles: any = document.styleSheets;
 			let sheetsList = [];
 			let sheetsIconList = [];
+			let sheetsIconnaList = [];
 			for (let i = 0; i < styles.length; i++) {
 				if (styles[i].href && styles[i].href.indexOf('at.alicdn.com') > -1) {
 					sheetsList.push(styles[i]);
@@ -17,6 +18,10 @@ const getAlicdnIconfont = () => {
 				for (let j = 0; j < sheetsList[i].cssRules.length; j++) {
 					if (sheetsList[i].cssRules[j].selectorText && sheetsList[i].cssRules[j].selectorText.indexOf('.icon-') > -1) {
 						sheetsIconList.push(
+							`${sheetsList[i].cssRules[j].selectorText.substring(1, sheetsList[i].cssRules[j].selectorText.length).replace(/\:\:before/gi, '')}`
+						);
+					} else if (sheetsList[i].cssRules[j].selectorText && sheetsList[i].cssRules[j].selectorText.indexOf('.iconna-') > -1) {
+						sheetsIconnaList.push(
 							`${sheetsList[i].cssRules[j].selectorText.substring(1, sheetsList[i].cssRules[j].selectorText.length).replace(/\:\:before/gi, '')}`
 						);
 					}

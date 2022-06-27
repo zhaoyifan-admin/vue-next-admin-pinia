@@ -12,17 +12,24 @@ import '/@/theme/index.scss';
 import mitt from 'mitt';
 import 'animate.css';
 import VueGridLayout from 'vue-grid-layout';
-import Avue from '@smallwei/avue';
 import '@smallwei/avue/lib/index.css';
 import '@icon-park/vue/styles/index.css';
 import install from '/@/components/index';
 
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+
+
+
 const app = createApp(App);
+
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component)
+}
 
 directive(app);
 other.elSvg(app);
 
-app.use(Avue).use(pinia).use(router)
+app.use(pinia).use(router)
     .use(install).use(ElementPlus, { i18n: i18n.global.t }).use(i18n).use(VueGridLayout).mount('#app');
 
 app.config.globalProperties.mittBus = mitt();

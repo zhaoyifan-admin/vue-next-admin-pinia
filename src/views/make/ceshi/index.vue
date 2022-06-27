@@ -1,72 +1,42 @@
 <template>
   <systemTable
       :option="option"
-      :TableData="tableData"
+      :tableData.sync="tableData"
       :tableLoading="tableLoading"
+      :page.sync="page"
       @onLoad="getTable"
       @searchChange="searchChange"
   >
-
-    <template #menuLeft="{zyfsolt}">
-      <el-button :size="zyfsolt.size">测试左插槽按钮</el-button>
-    </template>
-    <template #menuRight="{zyfsolt}">
-      <el-button :size="zyfsolt.size">测试右插槽按钮</el-button>
-    </template>
-    <!--    <template #opcardNoLabel>
-          <span>测试Label姓名</span>
-        </template>
-        <template #title="{ zyfslot }">
-          <SvgIcon :name="zyfslot.row.meta.icon" />
-          <span class="ml10">{{ $t(zyfslot.row.meta.title) }}</span>
-        </template>-->
-    <!--    <template #opcardNoHeader="{ zyfslot }">
-          测试header
-        </template>-->
-    <!--    <template #employeeName="{ zyfslot }">
-          <el-tag effect="dark" size="small" type="success">
-            菜单
-          </el-tag>
-        </template>-->
   </systemTable>
 </template>
 
 <script lang="ts">
+import {ElMessage, ElMessageBox } from 'element-plus';
 import {ref, toRefs, reactive, computed, defineComponent, onMounted, onBeforeMount, h, shallowRef} from 'vue';
+import { RouteRecordRaw } from 'vue-router';
+import { fetchList } from '/@/api/ceshi';
 export default {
   name: "index",
   setup() {
     const state = reactive({
       num: "",
-      tableLoading: true, // crud loading加载动画（可自定义字段）
+      tableLoading: false, // crud loading加载动画（可自定义字段）
       tableData: [], // 接口数据
       option: {
         AllSelectBtn: true, // 全选框
         Pagination: true, // 分页
-        Paginations: { // 分页配置项
-          background: true, // 是否为分页按钮添加背景色
-          // small: true, // 是否使用小型分页样式
-          pagerCount: 5, // 设置最大页码按钮数。 页码按钮的数量，当总页数超过该值时会折叠。
-          pageSizes: [5, 10, 20, 30], // 每页显示个数选择器的选项设置
-          page: {
-            pageNum: 1, // 当前页码数
-            pageSize: 10, // 每页显示条目个数，支持 v-model 双向绑定
-            total: 0 // 总条目数
-          },
-        },
         addBtn: true, // crud 新增按钮
         searchLabelWidth: 150, // 搜索框的标题宽度 默认值：80
         stripe: true, // 斑马线
         // ShowIndex: true, // table 索引
         searchIcon: true, // 表单 (展示、收缩按钮)  显示
         operations: false, // 操作栏固定
-        maxHeight: 600, // 表格最大高度（默认值： 600）
-        headerAlign: "center",
+        maxHeight: 450, // 表格最大高度（默认值： 600）
         column: [
           {
-            label: '操作员卡编号',
+            label: '车型编号',
             type: 'input',
-            prop: 'opcardNo',
+            prop: 'modelCode',
             search: true,
             labelslot: true,
             addDisplay: true,
@@ -76,53 +46,39 @@ export default {
             columnSlotname: "测试自定义列名"  // 自定义 列显隐配置 列名
           },
           {
-            label: '读卡器类型',
+            label: '车型名称',
             type: 'input',
-            prop: 'readerType',
-            span: 6,
-            search: true,
+            prop: 'modelName',
+            sortable: true
           },
           {
-            label: '密码',
+            label: '燃油类型',
             type: 'password',
-            prop: 'posOpcardPwd',
-            span: 6,
-            // search: true,
+            prop: 'fuelType',
           },
           {
-            label: '所属员工',
-            type: 'number',
-            maxlength: 10,
-            // showWordLimit: true,
-            prop: 'employeeName',
+            label: '数量',
+            type: 'input',
+            prop: 'modelNum',
             span: 6,
             search: true,
             slot: true,
           },
           {
-            label: '测试组件脚本',
-            type: 'select',
-            prop: 'date',
-            all: true,
-            dicData: [{
-              label: '男',
-              value: 0
-            }, {
-              label: '女',
-              value: 1
-            }, {
-              label: '未知',
-              value: ''
-            }],
-            // prefixIcon:shallowRef({
-            //   render() {
-            //     return h('p', 'pre')
-            //   },
-            // }),
-            search: true,
-            slot: true,
+            label: '备注',
+            type: 'input',
+            prop: 'note',
           }
         ]
+      },
+      page: {
+        pageNum: 1, // 当前页码数
+        pageSize: 10, // 每页显示条目个数，支持 v-model 双向绑定
+        total: 0, // 总条目数
+        background: true, // 是否为分页按钮添加背景色
+        // small: true, // 是否使用小型分页样式
+        pagerCount: 5, // 设置最大页码按钮数。 页码按钮的数量，当总页数超过该值时会折叠。
+        pageSizes: [5, 10, 20, 30], // 每页显示个数选择器的选项设置
       },
     });
     // 查询表单
@@ -163,7 +119,7 @@ export default {
         const data = res.data;
         state.tableLoading = false;
         state.tableData = data.records;
-        state.option.Paginations.page.total = data.total;
+        state.page.total = data.total;
       }).catch((error) => {
         state.tableLoading = false;
         console.log(error)

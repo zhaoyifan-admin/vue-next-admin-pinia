@@ -320,3 +320,33 @@
 		text-overflow:ellipsis;
 	}
 }
+
+/** 修改table border 默认颜色*/
+.el-table--border:after,
+.el-table--group:after,
+.el-table__inner-wrapper::after,
+.el-table__inner-wrapper::before,
+.el-table__border-left-patch,
+.el-table:before {
+	background-color: #cecece;
+}
+
+.el-table--border,
+.el-table--group {
+	border-color: #cecece;
+}
+
+.el-table td,
+.el-table th.is-leaf {
+	border-color:  #cecece;
+}
+
+.el-table--border th,
+.el-table--border th.gutter:last-of-type {
+	border-color:  #cecece;
+}
+
+.el-table--border td,
+.el-table--border th {
+	border-color:  #cecece;
+}

@@ -148,7 +148,6 @@ export default defineComponent({
           return false;
         }
       })
-      console.log(store)
     };
     // 登录成功后的跳转
     const signInSuccess = () => {
