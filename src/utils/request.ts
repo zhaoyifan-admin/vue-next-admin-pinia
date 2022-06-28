@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ElMessage, ElMessageBox } from 'element-plus';
+import { ElNotification, ElMessage, ElMessageBox } from 'element-plus';
 import {getStore, Session} from '/@/utils/storage';
 const baseURL = `/api`
 // 配置新建一个 axios 实例
@@ -57,11 +57,23 @@ service.interceptors.response.use(
         console.log(error)
 		// 对响应错误做点什么
 		if (error.message.indexOf('timeout') != -1) {
-			ElMessage.error('网络连接请求超时，请重试。');
+			ElNotification({
+				title: '错误警示',
+				message: '网络连接请求超时，请稍后重试。',
+				type: 'error',
+			})
 		} else if (error.message == 'Network Error') {
-			ElMessage.error('网络连接错误');
+			ElNotification({
+				title: '错误警示',
+				message: '网络连接错误。',
+				type: 'error',
+			})
 		} else if (error.message.indexOf('503') != -1) {
-			ElMessage.error('服务不可用，请联系管理员	');
+			ElNotification({
+				title: '错误警示',
+				message: '服务不可用，请联系管理员。',
+				type: 'error',
+			})
 		} else {
 			if (error.response.data) ElMessage.error(error.response.statusText);
 			else ElMessage.error('接口路径找不到');

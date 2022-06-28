@@ -4,7 +4,7 @@
       <div class="system-table-btns-left">
         <div class="system-table-btns-left-iconbtn">
           <el-tooltip class="box-item" effect="dark" content="刷新表格数据" placement="top">
-            <el-button type="warning" :size="size">
+            <el-button type="warning" :size="size" @click="refreshChange">
               <i class="iconfont icon-shuaxin"></i>
             </el-button>
           </el-tooltip>
@@ -47,12 +47,17 @@
     </div>
     <div class="system-table-box">
       <el-table
+          v-loading="tableLoading"
+          element-loading-text="Loading ..."
+          :element-loading-spinner="svg"
+          element-loading-svg-view-box="-10, -10, 50, 50"
           :size="size"
           :data="tableData"
+          :row-style="rowStyle"
           :max-height="option.maxHeight?option.maxHeight:600"
           :table-layout="option.tableLayout?option.tableLayout:'fixed'"
-          :stripe="option.stripe?option.stripe:false"
-          :border="option.border?option.border:true"
+          :stripe="option.stripe"
+          :border="option.border"
           :header-cell-style="{'text-align':'center','background':'#0967AA','color':'#ffffff','border-color':'#cecece'}"
           :cell-style="{'text-align':'center','border-color':'#cecece'}"
           cell-class-name="cell-class-name"
@@ -61,8 +66,8 @@
         <template #empty>
           <el-empty :image="nullData" :image-size="200"/>
         </template>
-        <el-table-column type="selection" width="55" v-if="option.showSelect || false" />
-        <el-table-column type="index" label="序号" width="60" v-if="option.showIndex || true" />
+        <el-table-column type="selection" width="55" v-if="option.showSelect" />
+        <el-table-column type="index" label="序号" width="60" v-if="option.showIndex" />
         <template v-for="(colitem, coli) in option.column" :key="coli">
           <el-table-column
               v-if="!colitem.hide && !colitem.filter"
@@ -141,14 +146,83 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-drawer v-model="actionBarDrawer" :size="option.actionBarDrawerWidth || '35%'" :show-close="false">
+      <el-drawer v-model="actionBarDrawer" :size="option.actionBarDrawerWidth || '45%'" :show-close="false">
         <template #header="{ close, titleId, titleClass }">
           <h4 :id="titleId" :class="titleClass">
             <i class="fa fa-table" aria-hidden="true"></i> 表格配置项
           </h4>
           <i class="fa fa-times" aria-hidden="true" title="关闭" @click="close"></i>
         </template>
-        This is drawer content.
+        <template #default>
+          <div class="drawer-box">
+            <el-card class="box-card">
+              <el-collapse v-model="activeNames">
+                <el-collapse-item title="表格基础配置项" name="1">
+                  <el-row>
+                    <el-col :xs="24" :sm="12" :md="8" :lg="6" class="mt10">
+                      <span>显示索引：</span>
+                      <el-switch v-model="option.showIndex" :size="size" width="50" inline-prompt active-text="是"
+                                 inactive-text="否"></el-switch>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="8" :lg="6" class="mt10">
+                      <span>显示多选框：</span>
+                      <el-switch v-model="option.showSelect" :size="size" width="50" inline-prompt active-text="是"
+                                 inactive-text="否"></el-switch>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="8" :lg="6" class="mt10">
+                      <span>显示边框：</span>
+                      <el-switch v-model="option.border" :size="size" width="50" inline-prompt active-text="是"
+                                 inactive-text="否"></el-switch>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="8" :lg="6" class="mt10">
+                      <span>卡片模式：</span>
+                      <el-switch
+                          v-model="option.CardMode"
+                          :size="size"
+                          width="50"
+                          active-color="#01D06E"
+                          inactive-color="#EC372C"
+                          inline-prompt active-text="开启"
+                          inactive-text="关闭"></el-switch>
+                    </el-col>
+                    <el-col :span="24" class="mt10">
+                      <div style="display: flex;align-items: center">
+                        <span style="display: block;width: 130px;">显示大小：</span>
+                        <el-radio-group v-model="size" :size="size">
+                          <el-radio-button :size="size" :label="'large'">Large(大)</el-radio-button>
+                          <el-radio-button :size="size" :label="'default'">Default(中)</el-radio-button>
+                          <el-radio-button :size="size" :label="'small'">Small(小)</el-radio-button>
+                        </el-radio-group>
+                      </div>
+                    </el-col>
+                    <el-col :span="24" class="mt10">
+                      <div style="display: flex;align-items: center">
+                        <span style="display: block;width: 130px;">操作栏按钮类型：</span>
+                        <el-radio-group v-model="actionBar" :size="size">
+                          <el-radio-button :size="size" :label="'menu'">
+                            菜单按钮
+                          </el-radio-button>
+                          <el-radio-button :size="size" :label="'text'">
+                            文本按钮
+                          </el-radio-button>
+                          <el-radio-button :size="size" :label="'merge'">
+                            合并菜单
+                          </el-radio-button>
+                        </el-radio-group>
+                      </div>
+                    </el-col>
+                  </el-row>
+                </el-collapse-item>
+                <el-collapse-item title="表格列配置项" name="2">
+
+                </el-collapse-item>
+                <el-collapse-item title="表格其他配置项" name="3">
+
+                </el-collapse-item>
+              </el-collapse>
+            </el-card>
+          </div>
+        </template>
       </el-drawer>
     </div>
   </div>
@@ -161,21 +235,53 @@ import nullData from "/@/components/table/static/images/null.svg";
 
 export default defineComponent({
   name: 'systemTable',
-  props: ['option', 'page', 'tableData'],
+  props: {
+    option: {
+      type: Object
+    },
+    page: {
+      type: Array<any>
+    },
+    tableData: {
+      type: Array<any>
+    },
+    tableLoading: {
+      type: Boolean
+    },
+    rowStyle: {
+      type: Function
+    }
+  },
   components: {},
   setup: function (props:any, context) {
     const actionBarDrawer = ref(false);
+    const tableLoading = ref(false);
     const colcheckdList = ref([]as any[]);
+    const activeNames = ref([]);
+    const svg = `
+        <path class="path" d="
+          M 30 15
+          L 28 17
+          M 25.61 25.61
+          A 15 15, 0, 0, 1, 15 30
+          A 15 15, 0, 1, 1, 27.99 7.5
+          L 15 15
+        " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
+      `;
     const state = reactive<tableStates>({
       colcheckList: [],
-      size: props.option.size || 'medium',
+      size: props.option.size || 'default',
       nullData: nullData,
-      tableLoading: false,
       tableData: [],
       searchForm: {},
       option: props.option,
       page: props.page
-    })
+    });
+    const rowStyle = ({ row, rowIndex }:any) => {
+      if(props.rowStyle != undefined) {
+        return props.rowStyle({ row, rowIndex });
+      }
+    };
     onMounted(() => {
       props.option.column.forEach((v:any)=>{
         state.colcheckList.push(v.label);
@@ -185,6 +291,7 @@ export default defineComponent({
     });
     /*监听props*/
     watch(props, (newProps, oldProps) => {
+      tableLoading.value = props.tableLoading;
       state.tableData = newProps.tableData;
     }, {immediate: true});
     const filters = (data: any) => {
@@ -207,6 +314,9 @@ export default defineComponent({
       let params = state.searchForm;
       context.emit("onLoad", page, params);
     };
+    const refreshChange = () => {
+      context.emit("refreshChange");
+    };
     const colcheckdListChanged = (value:any) => {
       let columList:any = state.option;
       columList.column.forEach((v:any)=>{
@@ -220,10 +330,15 @@ export default defineComponent({
     return {
       onLoad,
       showActionBarDrawer,
+      rowStyle,
+      svg,
       colcheckdList,
       actionBarDrawer,
+      tableLoading,
+      activeNames,
       filters,
       filterMethod,
+      refreshChange,
       colcheckdListChanged,
       ...toRefs(state),
     };
@@ -236,6 +351,9 @@ export default defineComponent({
   .el-checkbox {
     margin: 0 15px 0 10px!important;
   }
+}
+.el-drawer__title {
+  font-size: 18px;
 }
 .system-menu-container {
   width: 100%;
@@ -333,5 +451,8 @@ export default defineComponent({
     //  background-color: #ED4A3D;
     //}
   }
+}
+.drawer-box {
+  padding: 15px;
 }
 </style>

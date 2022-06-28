@@ -18,13 +18,11 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
         plugins: [
             vue(),
             [
-                'import',
                 {
                     libraryName: '@icon-park/vue-next',
                     libraryDirectory: 'es/icons',
                     camel2DashComponentName: false
                 },
-                'icon'      // 多个组件库时需要加上这个属性,不重复即可。
             ]
         ],
         root: process.cwd(),

@@ -58,7 +58,7 @@ import {storeToRefs} from 'pinia';
 import {useThemeConfig} from '/@/stores/themeConfig';
 import {initFrontEndControlRoutes} from '/@/router/frontEnd';
 import {initBackEndControlRoutes} from '/@/router/backEnd';
-import {Session, setStore} from '/@/utils/storage';
+import {getStore, Session, setStore} from '/@/utils/storage';
 import {formatAxis} from '/@/utils/formatTime';
 import {NextLoading} from '/@/utils/loading';
 import {useUserInfo} from '/@/stores/userInfo';
@@ -91,7 +91,7 @@ export default defineComponent({
       isShowPassword: false,
       ruleForm: {
         code: '',
-        tenantCode: '',
+        tenantCode: getStore('tenantCode') || "",
         userName: '',
         password: '',
         randomStr: "blockPuzzle",
@@ -124,7 +124,6 @@ export default defineComponent({
       tenantCode: [
         {required: true, message: '租户号不能为空', trigger: 'blur'},
         {validator: validatetenantCode, trigger: 'blur'},
-        {validator: validatetenantCode, trigger: 'change'},
       ],
       userName: [
         {required: true, message: '用户名不能为空', trigger: 'blur'},

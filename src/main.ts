@@ -16,9 +16,7 @@ import '@smallwei/avue/lib/index.css';
 import '@icon-park/vue/styles/index.css';
 import install from '/@/components/index';
 
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-
-
+import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 
 const app = createApp(App);
 

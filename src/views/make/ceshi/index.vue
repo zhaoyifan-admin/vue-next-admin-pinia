@@ -2,10 +2,12 @@
   <systemTable
       :option="option"
       :tableData.sync="tableData"
-      :tableLoading="tableLoading"
+      :tableLoading.sync="tableLoading"
       :page.sync="page"
+      :row-style="rowStyle"
       @onLoad="getTable"
       @searchChange="searchChange"
+      @refreshChange="refreshChange"
   >
   </systemTable>
 </template>
@@ -20,7 +22,7 @@ export default {
   setup() {
     const state = reactive({
       num: "",
-      tableLoading: false, // crud loading加载动画（可自定义字段）
+      tableLoading: true, // crud loading加载动画（可自定义字段）
       tableData: [], // 接口数据
       option: {
         AllSelectBtn: true, // 全选框
@@ -81,10 +83,21 @@ export default {
         pageSizes: [5, 10, 20, 30], // 每页显示个数选择器的选项设置
       },
     });
+    const rowStyle = ({ row, rowIndex }:any) => {
+      if (rowIndex % 2 === 0) {
+        return {
+          backgroundColor: "#FDF5E6",
+        };
+      }
+    };
     // 查询表单
     const searchChange = async (page: object, params: object, done: any) => {
       getTable(page, params);
       done();
+    };
+    // 刷新table
+    const refreshChange = async () => {
+      getTable(state.page);
     };
     // 打开新增菜单弹窗
     const onOpenAddMenu = () => {
@@ -127,10 +140,12 @@ export default {
     };
     return {
       getTable,
+      refreshChange,
       searchChange,
       onOpenAddMenu,
       onOpenEditMenu,
       onTabelRowDel,
+      rowStyle,
       ...toRefs(state),
     };
   },
@@ -138,5 +153,7 @@ export default {
 </script>
 
 <style scoped>
-
+::v-deep(.el-table__body-wrapper tr td.el-table-fixed-column--right) {
+  background: none;
+}
 </style>
