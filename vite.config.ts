@@ -64,11 +64,12 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
         },
         css: {
             postcss: {
+				preprocessorOptions: { css: { charset: false },
                 plugins: [
                     {
                         postcssPlugin: 'internal:charset-removal',
                         AtRule: {
-                            charset: (atRule) => {
+                            charset: (atRule:any) => {
                                 if (atRule.name === 'charset') {
                                     atRule.remove();
                                 }
