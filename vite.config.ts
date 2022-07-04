@@ -12,6 +12,7 @@ const alias: Record<string, string> = {
     'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
 };
 const url = 'http://rtdp-gateway:9999';
+// @ts-ignore
 const viteConfig = defineConfig((mode: ConfigEnv) => {
     const env = loadEnv(mode.mode, process.cwd());
     return {
@@ -64,27 +65,29 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
         },
         css: {
             postcss: {
-				preprocessorOptions: { css: { charset: false },
-                plugins: [
-                    {
-                        postcssPlugin: 'internal:charset-removal',
-                        AtRule: {
-                            charset: (atRule:any) => {
-                                if (atRule.name === 'charset') {
-                                    atRule.remove();
-                                }
+                preprocessorOptions: {
+                    css: {charset: false},
+                    plugins: [
+                        {
+                            postcssPlugin: 'internal:charset-removal',
+                            AtRule: {
+                                charset: (atRule: any) => {
+                                    if (atRule.name === 'charset') {
+                                        atRule.remove();
+                                    }
+                                },
                             },
                         },
-                    },
-                ],
+                    ],
+                },
             },
-        },
-        define: {
-            __VUE_I18N_LEGACY_API__: JSON.stringify(false),
-            __VUE_I18N_FULL_INSTALL__: JSON.stringify(false),
-            __INTLIFY_PROD_DEVTOOLS__: JSON.stringify(false),
-        },
-    };
+            define: {
+                __VUE_I18N_LEGACY_API__: JSON.stringify(false),
+                __VUE_I18N_FULL_INSTALL__: JSON.stringify(false),
+                __INTLIFY_PROD_DEVTOOLS__: JSON.stringify(false),
+            },
+        }
+    }
 });
 
 export default viteConfig;

@@ -6,4 +6,5 @@ export interface tableStates {
     searchForm: object
     option: object
     page: object
+    viewshowData: object
 }

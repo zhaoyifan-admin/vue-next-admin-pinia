@@ -68,40 +68,47 @@
         </template>
         <el-table-column type="selection" width="55" v-if="option.showSelect" />
         <el-table-column type="index" label="序号" width="60" v-if="option.showIndex" />
+        <el-table-column type="redio" label="单选" width="60" >
+          <template #default="scope">
+            <el-radio-group v-model="colcheckdList" :size="size" >
+              <el-radio :label="scope.row" size="large"></el-radio>
+            </el-radio-group>
+          </template>
+        </el-table-column>
         <template v-for="(colitem, coli) in option.column" :key="coli">
           <el-table-column
               v-if="!colitem.hide && !colitem.filter"
-              :prop="colitem.prop"
+              :prop="colitem.dataIndex"
               :label="colitem.label"
               :fixed="colitem.fixed"
               :sortable="colitem.sortable">
             <template #header="{ column, $index }">
-              <slot :name="colitem.prop+'Header'" :scope="{ column, $index }">
+              <slot :name="colitem.dataIndex+'Header'" :scope="{ column, $index }">
                 {{ colitem.label }}
               </slot>
             </template>
             <template #default="{ row, column, $index }">
-              <slot :name="colitem.prop" :scope="{ row, column, $index }">
-                {{ row[colitem.prop] }}
+              <slot :name="colitem.dataIndex" :scope="{ row, column, $index }">
+                {{ row[colitem.dataIndex] }}
               </slot>
             </template>
           </el-table-column>
           <el-table-column
               v-if="!colitem.hide && colitem.filter"
-              :prop="colitem.prop"
+              :prop="colitem.dataIndex"
               :label="colitem.label"
               :fixed="colitem.fixed"
               :sortable="colitem.sortable"
               :filters="filters"
               :filter-method="filterMethod">
             <template #header="{ column, $index }">
-              <slot :name="colitem.prop+'Header'" :systemscope="{ column, $index }">
+              <slot :name="colitem.dataIndex+'Header'" :systemscope="{ column, $index }">
                 {{ colitem.label }}
               </slot>
             </template>
             <template #default="{ row, column, $index }">
-              <slot :name="colitem.prop" :systemscope="{ row, column, $index }">
-                {{ row[colitem.prop] }}
+              <slot :name="colitem.dataIndex" :systemscope="{ row, column, $index }">
+                {{ row[colitem.dataIndex] }}
               </slot>
             </template>
           </el-table-column>
@@ -110,7 +117,7 @@
           <template #header>
             <i class="fa fa-filter" aria-hidden="true"></i> 操作栏
           </template>
-          <template #default>
+          <template #default="scope">
             <div class="action-bar">
               <el-tooltip
                   class="box-item"
@@ -118,7 +125,7 @@
                   content="查看"
                   placement="top"
               >
-                <el-button type="info" :size="size">
+                <el-button type="info" :size="size" @click="showView(scope.row)">
                   <i class="fa fa-search-plus" aria-hidden="true"></i>
                 </el-button>
               </el-tooltip>
@@ -225,6 +232,30 @@
         </template>
       </el-drawer>
     </div>
+    <el-dialog v-model="viewDialog" :show-close="false" width="55%" custom-class="table-dialog-flag">
+      <template #header="{ close, titleId, titleClass }">
+        <div class="my-view-dia-header dia-header">
+          <h4 :id="titleId" :class="titleClass">详情</h4>
+          <close theme="outline" size="16" fill="#606266" strokeLinejoin="miter" strokeLinecap="square" style="cursor: pointer" @click="close"/>
+        </div>
+      </template>
+      <el-form label-width="120px">
+        <el-row :gutter="20">
+          <template v-for="(colitem, coli) in option.column" :key="coli">
+            <el-col :span="colitem.span || option.span || 24">
+              <el-form-item :label="colitem.label + '：'">
+                {{ viewshowData[colitem.dataIndex] }}
+              </el-form-item>
+            </el-col>
+          </template>
+        </el-row>
+      </el-form>
+      <template #footer>
+      <span class="dialog-footer">
+        <el-button :size="size" type="primary" @click="viewDialog = false">关闭</el-button>
+      </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -232,6 +263,7 @@
 import {defineComponent, onMounted, reactive, ref, toRefs, watch} from "vue";
 import {tableStates} from "/@/components/table/index";
 import nullData from "/@/components/table/static/images/null.svg";
+import {Close} from '@icon-park/vue-next';
 
 export default defineComponent({
   name: 'systemTable',
@@ -252,8 +284,9 @@ export default defineComponent({
       type: Function
     }
   },
-  components: {},
+  components: {Close},
   setup: function (props:any, context) {
+    const viewDialog = ref(false);
     const actionBarDrawer = ref(false);
     const tableLoading = ref(false);
     const colcheckdList = ref([]as any[]);
@@ -275,7 +308,8 @@ export default defineComponent({
       tableData: [],
       searchForm: {},
       option: props.option,
-      page: props.page
+      page: props.page,
+      viewshowData: {}
     });
     const rowStyle = ({ row, rowIndex }:any) => {
       if(props.rowStyle != undefined) {
@@ -297,7 +331,7 @@ export default defineComponent({
     const filters = (data: any) => {
       let Array: any = [];
       state.tableData.forEach((item: any) => {
-        Array.push({text: item[data.prop], value: item[data.prop]})
+        Array.push({text: item[data.dataIndex], value: item[data.dataIndex]})
       })
       return Array;
     };
@@ -327,7 +361,12 @@ export default defineComponent({
         }
       })
     };
+    const showView = (row:object) => {
+      viewDialog.value = true;
+      state.viewshowData = row;
+    };
     return {
+      viewDialog,
       onLoad,
       showActionBarDrawer,
       rowStyle,
@@ -340,6 +379,7 @@ export default defineComponent({
       filterMethod,
       refreshChange,
       colcheckdListChanged,
+      showView,
       ...toRefs(state),
     };
   },
@@ -352,8 +392,26 @@ export default defineComponent({
     margin: 0 15px 0 10px!important;
   }
 }
+.dia-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.el-button-group>.el-dropdown>.el-button {
+  border-left-color: var(--el-button-border-color)!important;
+}
 .el-drawer__title {
   font-size: 18px;
+}
+::v-deep(.table-dialog-flag) {
+  --el-dialog-border-radius: 5px!important;
+  .el-form-item__label {
+    font-weight: bold!important;
+  }
+  .el-dialog__footer {
+    border-top: 1px solid #0967AA!important;
+    padding: 10px 20px!important;
+  }
 }
 .system-menu-container {
   width: 100%;
@@ -409,6 +467,18 @@ export default defineComponent({
     }
     ::v-deep(.el-table th.el-table__cell>.cell.highlight) {
       color: #ffffff;
+    }
+    ::v-deep(.el-radio__label){
+      display: none;
+    }
+    ::v-deep(.el-radio.el-radio--large) {
+      height: auto;
+    }
+    ::v-deep(.el-radio__inner) {
+      border-radius: 0;
+    }
+    ::v-deep(.el-radio__inner::after) {
+      border-radius: 0;
     }
     border-radius: 8px;
     overflow: hidden;

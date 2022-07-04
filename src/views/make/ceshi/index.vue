@@ -38,11 +38,11 @@ export default {
           {
             label: '车型编号',
             type: 'input',
-            prop: 'modelCode',
+            dataIndex: 'modelCode',
             search: true,
             labelslot: true,
             addDisplay: true,
-            span: 6, // 栅栏布局（默认值： 6）
+            span: 24, // 栅栏布局（默认值： 6）
             headerslot: true, // 自定义表头
             columnSlot: true,  // (开启/关闭)自定义 列显隐配置 列名
             columnSlotname: "测试自定义列名"  // 自定义 列显隐配置 列名
@@ -50,18 +50,18 @@ export default {
           {
             label: '车型名称',
             type: 'input',
-            prop: 'modelName',
+            dataIndex: 'modelName',
             sortable: true
           },
           {
             label: '燃油类型',
             type: 'password',
-            prop: 'fuelType',
+            dataIndex: 'fuelType',
           },
           {
             label: '数量',
             type: 'input',
-            prop: 'modelNum',
+            dataIndex: 'modelNum',
             span: 6,
             search: true,
             slot: true,
@@ -69,7 +69,7 @@ export default {
           {
             label: '备注',
             type: 'input',
-            prop: 'note',
+            dataIndex: 'note',
           }
         ]
       },

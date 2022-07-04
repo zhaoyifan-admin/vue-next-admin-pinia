@@ -15,6 +15,14 @@ import VueGridLayout from 'vue-grid-layout';
 import '@smallwei/avue/lib/index.css';
 import '@icon-park/vue/styles/index.css';
 import install from '/@/components/index';
+import ArcoVue from '@arco-design/web-vue';
+import '@arco-design/web-vue/dist/arco.css';
+import ArcoVueIcon from '@arco-design/web-vue/es/icon';
+import VueBMap, {initBMapApiLoader} from 'vue-bmap-gl';
+import 'vue-bmap-gl/dist/style.css'
+initBMapApiLoader({
+    ak: 'Gy3wGRpQM9LonttmjZLyljZpVRvza4Ak'
+})
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 
@@ -27,7 +35,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 directive(app);
 other.elSvg(app);
 
-app.use(pinia).use(router)
+app.use(pinia).use(router).use(VueBMap).use(ArcoVue).use(ArcoVueIcon)
     .use(install).use(ElementPlus, { i18n: i18n.global.t }).use(i18n).use(VueGridLayout).mount('#app');
 
 app.config.globalProperties.mittBus = mitt();
