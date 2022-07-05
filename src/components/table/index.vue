@@ -68,7 +68,7 @@
         </template>
         <el-table-column type="selection" width="55" v-if="option.showSelect" />
         <el-table-column type="index" label="序号" width="60" v-if="option.showIndex" />
-        <el-table-column type="redio" label="单选" width="60" >
+        <el-table-column type="redio" label="单选" width="60" v-if="option.showradio">
           <template #default="scope">
             <el-radio-group v-model="colcheckdList" :size="size" >
               <el-radio :label="scope.row" size="large"></el-radio>
@@ -232,27 +232,24 @@
         </template>
       </el-drawer>
     </div>
-    <el-dialog v-model="viewDialog" :show-close="false" width="55%" custom-class="table-dialog-flag">
+    <el-dialog v-model="viewDialog" :show-close="false" width="45%" :top="option.viedTop || '10vh'" custom-class="table-dialog-flag">
       <template #header="{ close, titleId, titleClass }">
         <div class="my-view-dia-header dia-header">
           <h4 :id="titleId" :class="titleClass">详情</h4>
           <close theme="outline" size="16" fill="#606266" strokeLinejoin="miter" strokeLinecap="square" style="cursor: pointer" @click="close"/>
         </div>
       </template>
-      <el-form label-width="120px">
-        <el-row :gutter="20">
-          <template v-for="(colitem, coli) in option.column" :key="coli">
-            <el-col :span="colitem.span || option.span || 24">
-              <el-form-item :label="colitem.label + '：'">
-                {{ viewshowData[colitem.dataIndex] }}
-              </el-form-item>
-            </el-col>
-          </template>
-        </el-row>
-      </el-form>
+      <el-descriptions class="margin-top" :column="2" :size="size" border>
+        <template v-for="(colitem, coli) in option.column" :key="coli">
+          <el-descriptions-item :label="colitem.label" :span="colitem.span" :width="colitem.width" :min-width="100">{{ viewshowData[colitem.dataIndex] }}</el-descriptions-item>
+        </template>
+      </el-descriptions>
       <template #footer>
       <span class="dialog-footer">
-        <el-button :size="size" type="primary" @click="viewDialog = false">关闭</el-button>
+        <el-button :size="size" type="primary" @click="viewDialog = false">
+          <close-one theme="outline" size="16" fill="#ffffff" strokeLinejoin="miter" strokeLinecap="square"/>
+          <span style="margin-left: 7px">关闭</span>
+        </el-button>
       </span>
       </template>
     </el-dialog>
@@ -263,7 +260,7 @@
 import {defineComponent, onMounted, reactive, ref, toRefs, watch} from "vue";
 import {tableStates} from "/@/components/table/index";
 import nullData from "/@/components/table/static/images/null.svg";
-import {Close} from '@icon-park/vue-next';
+import {Close, CloseOne} from '@icon-park/vue-next';
 
 export default defineComponent({
   name: 'systemTable',
@@ -284,7 +281,7 @@ export default defineComponent({
       type: Function
     }
   },
-  components: {Close},
+  components: {Close, CloseOne},
   setup: function (props:any, context) {
     const viewDialog = ref(false);
     const actionBarDrawer = ref(false);
@@ -409,7 +406,6 @@ export default defineComponent({
     font-weight: bold!important;
   }
   .el-dialog__footer {
-    border-top: 1px solid #0967AA!important;
     padding: 10px 20px!important;
   }
 }
