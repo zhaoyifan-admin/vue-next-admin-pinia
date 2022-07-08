@@ -31,7 +31,7 @@
 ------------------------------- */
 .el-form {
 	.el-form-item:last-of-type {
-		margin-bottom: 0 !important;
+		margin-bottom: 10px !important;
 	}
 }
 
@@ -250,6 +250,7 @@
 	margin-right: 0;
 }
 .el-dialog__body {
+	padding: 10px 15px;
 	max-height: calc(90vh - 165px) !important;
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -323,34 +324,4 @@
 		overflow:hidden;
 		text-overflow:ellipsis;
 	}
-}
-
-/** 修改table border 默认颜色*/
-.el-table--border:after,
-.el-table--group:after,
-.el-table__inner-wrapper::after,
-.el-table__inner-wrapper::before,
-.el-table__border-left-patch,
-.el-table:before {
-	background-color: #cecece;
-}
-
-.el-table--border,
-.el-table--group {
-	border-color: #cecece;
-}
-
-.el-table td,
-.el-table th.is-leaf {
-	border-color:  #cecece;
-}
-
-.el-table--border th,
-.el-table--border th.gutter:last-of-type {
-	border-color:  #cecece;
-}
-
-.el-table--border td,
-.el-table--border th {
-	border-color:  #cecece;
 }

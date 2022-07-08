@@ -55,8 +55,13 @@ export default {
           },
           {
             label: '燃油类型',
-            type: 'password',
+            type: 'select',
             dataIndex: 'fuelType',
+            dicUrl: '/admin/dict/type/fuels_type',
+            props: {
+              label: 'label',
+              value: 'value'
+            },
           },
           {
             label: '数量',

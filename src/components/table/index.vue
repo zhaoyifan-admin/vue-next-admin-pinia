@@ -4,12 +4,12 @@
       <div class="system-table-btns-left">
         <div class="system-table-btns-left-iconbtn">
           <el-tooltip class="box-item" effect="dark" content="刷新表格数据" placement="top">
-            <el-button type="warning" :size="size" @click="refreshChange">
+            <el-button :size="size" @click="refreshChange">
               <i class="iconfont icon-shuaxin"></i>
             </el-button>
           </el-tooltip>
         </div>
-        <el-button type="success" :size="size">
+        <el-button type="primary" :size="size" @click="showaddDialog">
           <i class="fa fa-plus" aria-hidden="true"></i> 新 增
         </el-button>
         <el-button type="primary" :size="size" disabled>
@@ -25,12 +25,15 @@
           <el-button-group class="table-search-button-group">
             <el-dropdown>
               <el-button :size="size" title="列显隐">
-                <el-icon><Grid /></el-icon>
+                <el-icon>
+                  <Grid/>
+                </el-icon>
               </el-button>
               <template #dropdown>
-                <el-checkbox-group class="system-table-btns-right-setting-checkbox-group" :size="size" v-model="colcheckdList" @change="colcheckdListChanged">
+                <el-checkbox-group class="system-table-btns-right-setting-checkbox-group" :size="size"
+                                   v-model="colcheckdList" @change="colcheckdListChanged">
                   <template v-for="(colcheck, index) in colcheckList" :key="index">
-                    <el-checkbox :label="colcheck" />
+                    <el-checkbox :label="colcheck"/>
                   </template>
                 </el-checkbox-group>
               </template>
@@ -58,19 +61,19 @@
           :table-layout="option.tableLayout?option.tableLayout:'fixed'"
           :stripe="option.stripe"
           :border="option.border"
-          :header-cell-style="{'text-align':'center','background':'#0967AA','color':'#ffffff','border-color':'#cecece'}"
-          :cell-style="{'text-align':'center','border-color':'#cecece'}"
+          :header-cell-style="{'text-align':'center','background':'#0A7CFA','color':'#ffffff',}"
+          :cell-style="{'text-align':'center'}"
           cell-class-name="cell-class-name"
           style="width: 100%">
         <!--   自定义空数据   -->
         <template #empty>
           <el-empty :image="nullData" :image-size="200"/>
         </template>
-        <el-table-column type="selection" width="55" v-if="option.showSelect" />
-        <el-table-column type="index" label="序号" width="60" v-if="option.showIndex" />
+        <el-table-column type="selection" width="55" v-if="option.showSelect"/>
+        <el-table-column type="index" label="序号" width="60" v-if="option.showIndex"/>
         <el-table-column type="redio" label="单选" width="60" v-if="option.showradio">
           <template #default="scope">
-            <el-radio-group v-model="colcheckdList" :size="size" >
+            <el-radio-group v-model="colcheckdList" :size="size">
               <el-radio :label="scope.row" size="large"></el-radio>
             </el-radio-group>
           </template>
@@ -232,25 +235,80 @@
         </template>
       </el-drawer>
     </div>
-    <el-dialog v-model="viewDialog" :show-close="false" width="45%" :top="option.viedTop || '10vh'" custom-class="table-dialog-flag">
+    <el-dialog v-model="addDialog" :show-close="false" width="45%" :top="option.top || '15vh'"
+               custom-class="table-dialog-flag">
       <template #header="{ close, titleId, titleClass }">
         <div class="my-view-dia-header dia-header">
-          <h4 :id="titleId" :class="titleClass">详情</h4>
-          <close theme="outline" size="16" fill="#606266" strokeLinejoin="miter" strokeLinecap="square" style="cursor: pointer" @click="close"/>
+          <h4 :id="titleId" :class="titleClass">新 增</h4>
+          <close theme="outline" size="16" fill="#606266" strokeLinejoin="miter" strokeLinecap="square"
+                 style="cursor: pointer" @click="close"/>
+        </div>
+      </template>
+      <el-form :model="addForm" :size="size" label-width="120px">
+        <el-row :gutter="20">
+          <template v-for="(colitem, coli) in option.column" :key="coli">
+            <el-col :span="colitem.span || 12">
+              <el-form-item :label="colitem.label + '：'">
+                <el-input
+                    v-model="addForm[colitem.dataIndex]"
+                    v-if="colitem.type === 'input'"
+                    :size="size"
+                    :placeholder="colitem.placeholder || '请输入 ' + colitem.label"
+                    clearable
+                    style="width: 100%"/>
+                <el-select
+                    v-model="addForm[colitem.dataIndex]"
+                    v-if="colitem.type === 'select'"
+                    :size="size"
+                    :placeholder="colitem.placeholder || '请选择 ' + colitem.label"
+                    @visible-change="visibleChange"
+                    clearable
+                    style="width: 100%">
+                  <el-option
+                      v-for="(item, index) in options[colitem.dataIndex]"
+                      :key="index"
+                      :label="item[colitem.props.label] || item.label"
+                      :value="item[colitem.props.value] || item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </template>
+        </el-row>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button :size="size" type="primary" @click="addDialog = false">
+            <i class="iconfont icon-zhengque-correct"></i>提 交
+          </el-button>
+          <el-button :size="size" @click="handleClose">
+            <i class="iconfont icon-guanbi"></i>关 闭
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <el-dialog v-model="viewDialog" :show-close="false" width="45%" :top="option.top || '15vh'"
+               custom-class="table-dialog-flag">
+      <template #header="{ close, titleId, titleClass }">
+        <div class="my-view-dia-header dia-header">
+          <h4 :id="titleId" :class="titleClass">{{option.viewTitle || '详 情'}}</h4>
+          <close theme="outline" size="16" fill="#606266" strokeLinejoin="miter" strokeLinecap="square"
+                 style="cursor: pointer" @click="close"/>
         </div>
       </template>
       <el-descriptions class="margin-top" :column="2" :size="size" border>
         <template v-for="(colitem, coli) in option.column" :key="coli">
-          <el-descriptions-item :label="colitem.label" :span="colitem.span" :width="colitem.width" :min-width="100">{{ viewshowData[colitem.dataIndex] }}</el-descriptions-item>
+          <el-descriptions-item :label="colitem.label" :span="colitem.span" :min-width="colitem.width || 80">
+            {{ viewshowData[colitem.dataIndex] }}
+          </el-descriptions-item>
         </template>
       </el-descriptions>
       <template #footer>
-      <span class="dialog-footer">
-        <el-button :size="size" type="primary" @click="viewDialog = false">
-          <close-one theme="outline" size="16" fill="#ffffff" strokeLinejoin="miter" strokeLinecap="square"/>
-          <span style="margin-left: 7px">关闭</span>
-        </el-button>
-      </span>
+        <span class="dialog-footer">
+          <el-button :size="size" @click="viewDialog = false">
+            <i class="iconfont icon-guanbi"></i>关 闭
+          </el-button>
+        </span>
       </template>
     </el-dialog>
   </div>
@@ -260,7 +318,8 @@
 import {defineComponent, onMounted, reactive, ref, toRefs, watch} from "vue";
 import {tableStates} from "/@/components/table/index";
 import nullData from "/@/components/table/static/images/null.svg";
-import {Close, CloseOne} from '@icon-park/vue-next';
+import {Close} from '@icon-park/vue-next';
+import request from "/@/utils/request";
 
 export default defineComponent({
   name: 'systemTable',
@@ -281,12 +340,13 @@ export default defineComponent({
       type: Function
     }
   },
-  components: {Close, CloseOne},
-  setup: function (props:any, context) {
+  components: {Close},
+  setup: function (props: any, context) {
+    const addDialog = ref(false);
     const viewDialog = ref(false);
     const actionBarDrawer = ref(false);
     const tableLoading = ref(false);
-    const colcheckdList = ref([]as any[]);
+    const colcheckdList = ref([] as any[]);
     const activeNames = ref([]);
     const svg = `
         <path class="path" d="
@@ -299,24 +359,43 @@ export default defineComponent({
         " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
       `;
     const state = reactive<tableStates>({
+      options: {},
       colcheckList: [],
       size: props.option.size || 'default',
       nullData: nullData,
       tableData: [],
       searchForm: {},
+      addForm: {},
       option: props.option,
       page: props.page,
       viewshowData: {}
     });
-    const rowStyle = ({ row, rowIndex }:any) => {
-      if(props.rowStyle != undefined) {
-        return props.rowStyle({ row, rowIndex });
+    const rowStyle = ({row, rowIndex}: any) => {
+      if (props.rowStyle != undefined) {
+        return props.rowStyle({row, rowIndex});
       }
     };
-    onMounted(() => {
-      props.option.column.forEach((v:any)=>{
+    const visibleChange = (val: any) => {
+      console.log(val)
+    };
+    onMounted(async () => {
+      for (const v of props.option.column) {
         state.colcheckList.push(v.label);
-      });
+        if(v.type === 'select' && typeof(v.dicUrl)=='string') {
+          let result:any = [];
+          function f() {
+            return request({
+              url: v.dicUrl,
+              method: 'get',
+            })
+          }
+          await f().then((res)=>{
+            console.log(res)
+            result = res.data;
+          })
+          state.options[v.dataIndex] = result;
+        }
+      }
       colcheckdList.value = state.colcheckList;
       onLoad();
     });
@@ -335,7 +414,7 @@ export default defineComponent({
     const showActionBarDrawer = () => {
       actionBarDrawer.value = true;
     };
-    const filterMethod = (value:any, row:any, column:any) => {
+    const filterMethod = (value: any, row: any, column: any) => {
       const property = column['property']
       return row[property] === value
     };
@@ -348,25 +427,35 @@ export default defineComponent({
     const refreshChange = () => {
       context.emit("refreshChange");
     };
-    const colcheckdListChanged = (value:any) => {
-      let columList:any = state.option;
-      columList.column.forEach((v:any)=>{
-        if(value.includes(v.label)) {
+    const colcheckdListChanged = (value: any) => {
+      let columList: any = state.option;
+      columList.column.forEach((v: any) => {
+        if (value.includes(v.label)) {
           v.hide = false;
         } else {
           v.hide = true;
         }
       })
     };
-    const showView = (row:object) => {
+    const showaddDialog = () => {
+      addDialog.value = true;
+    };
+    const showView = (row: object) => {
       viewDialog.value = true;
       state.viewshowData = row;
     };
+    const handleClose = () => {
+      state.addForm = {};
+      addDialog.value = false;
+      viewDialog.value = false;
+    };
     return {
+      addDialog,
       viewDialog,
       onLoad,
       showActionBarDrawer,
       rowStyle,
+      visibleChange,
       svg,
       colcheckdList,
       actionBarDrawer,
@@ -377,6 +466,8 @@ export default defineComponent({
       refreshChange,
       colcheckdListChanged,
       showView,
+      showaddDialog,
+      handleClose,
       ...toRefs(state),
     };
   },
@@ -385,30 +476,38 @@ export default defineComponent({
 <style lang="scss" scoped>
 .system-table-btns-right-setting-checkbox-group {
   display: grid;
+
   .el-checkbox {
-    margin: 0 15px 0 10px!important;
+    margin: 0 15px 0 10px !important;
   }
 }
+
 .dia-header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
-.el-button-group>.el-dropdown>.el-button {
-  border-left-color: var(--el-button-border-color)!important;
+
+.el-button-group > .el-dropdown > .el-button {
+  border-left-color: var(--el-button-border-color) !important;
 }
+
 .el-drawer__title {
   font-size: 18px;
 }
+
 ::v-deep(.table-dialog-flag) {
-  --el-dialog-border-radius: 5px!important;
+  --el-dialog-border-radius: 5px !important;
+
   .el-form-item__label {
-    font-weight: bold!important;
+    font-weight: bold !important;
   }
+
   .el-dialog__footer {
-    padding: 10px 20px!important;
+    padding: 10px 20px !important;
   }
 }
+
 .system-menu-container {
   width: 100%;
   height: 100%;
@@ -416,82 +515,104 @@ export default defineComponent({
   overflow: hidden;
   background-color: #ffffff;
   padding: 20px;
+
   .system-table-btns {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+
     .system-table-btns-left,
     .system-table-btns-right {
       flex: 1;
     }
+
     .system-table-btns-left {
       display: flex;
       align-items: center;
+
       .system-table-btns-left-iconbtn {
         margin-right: 10px;
+
         .iconfont,
         .el-icon {
-          margin: 0!important;
+          margin: 0 !important;
         }
       }
     }
+
     .system-table-btns-right {
       text-align: right;
       display: contents;
       align-items: center;
+
       .system-table-btns-right-setting {
         .table-search-button-group {
           display: flex;
+
           .el-dropdown {
             .el-button {
               border-radius: 4px 0 0 4px;
-              border-right: none!important;
+              border-right: none !important;
             }
           }
         }
+
         margin-left: 10px;
+
         .iconfont,
         .el-icon {
-          margin: 0!important;
+          margin: 0 !important;
         }
       }
     }
   }
+
   .system-table-box {
     ::v-deep(.el-table__column-filter-trigger i) {
       color: #ffffff;
     }
+
     ::v-deep(.el-table th.el-table__cell>.cell.highlight) {
       color: #ffffff;
     }
-    ::v-deep(.el-radio__label){
+
+    ::v-deep(.el-radio__label) {
       display: none;
     }
+
     ::v-deep(.el-radio.el-radio--large) {
       height: auto;
     }
+
     ::v-deep(.el-radio__inner) {
       border-radius: 0;
     }
+
     ::v-deep(.el-radio__inner::after) {
       border-radius: 0;
     }
+
     border-radius: 8px;
     overflow: hidden;
+
     .action-bar {
       display: inline-flex;
       align-items: center;
+
       .el-button {
-        padding: 5px 6px!important;
+        padding: 5px 6px !important;
+
         i.fa {
-          margin: 0!important;
+          margin: 0 !important;
         }
       }
+
       .el-button,
       .el-button--large {
         height: auto;
       }
     }
+
     //.action-bar-view,
     //.action-bar-edit,
     //.action-bar-delete {
@@ -518,6 +639,7 @@ export default defineComponent({
     //}
   }
 }
+
 .drawer-box {
   padding: 15px;
 }
