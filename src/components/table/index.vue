@@ -5,7 +5,7 @@
         <div class="system-table-btns-left-iconbtn">
           <el-tooltip class="box-item" effect="dark" content="刷新表格数据" placement="top">
             <el-button :size="size" @click="refreshChange">
-              <i class="iconfont icon-shuaxin"></i>
+              <i class="iconfont icon-shuaxin1"></i>
             </el-button>
           </el-tooltip>
         </div>
@@ -15,8 +15,17 @@
         <el-button type="primary" :size="size" disabled>
           <i class="fa fa-pencil" aria-hidden="true"></i> 批量修改
         </el-button>
+        <el-button type="primary" :size="size" disabled>
+          <i class="fa fa-pencil" aria-hidden="true"></i> 修改
+        </el-button>
         <el-button type="danger" :size="size" disabled>
           <i class="fa fa-trash" aria-hidden="true"></i> 批量删除
+        </el-button>
+        <el-button type="danger" :size="size" disabled>
+          <i class="fa fa-trash" aria-hidden="true"></i> 删除
+        </el-button>
+        <el-button plain :size="size">
+          <i class="iconfont icon-qingkong" aria-hidden="true"></i> 取消选择
         </el-button>
       </div>
       <div class="system-table-btns-right">
@@ -61,7 +70,7 @@
           :table-layout="option.tableLayout?option.tableLayout:'fixed'"
           :stripe="option.stripe"
           :border="option.border"
-          :header-cell-style="{'text-align':'center','background':'#0A7CFA','color':'#ffffff',}"
+          :header-cell-style="{'text-align':'center','background':'#409EFF','color':'#ffffff',}"
           :cell-style="{'text-align':'center'}"
           cell-class-name="cell-class-name"
           style="width: 100%">
@@ -92,7 +101,10 @@
             </template>
             <template #default="{ row, column, $index }">
               <slot :name="colitem.dataIndex" :scope="{ row, column, $index }">
-                {{ row[colitem.dataIndex] }}
+                <div v-if="colitem.type == 'select'">
+                  {{ getpamentType(colitem.dataIndex, row[colitem.dataIndex]) }}
+                </div>
+                <div v-else>{{ row[colitem.dataIndex] }}</div>
               </slot>
             </template>
           </el-table-column>
@@ -111,7 +123,10 @@
             </template>
             <template #default="{ row, column, $index }">
               <slot :name="colitem.dataIndex" :systemscope="{ row, column, $index }">
-                {{ row[colitem.dataIndex] }}
+                <div v-if="colitem.type == 'select'">
+                  {{ getpamentType(colitem.dataIndex, row[colitem.dataIndex]) }}
+                </div>
+                <div v-else>{{ row[colitem.dataIndex] }}</div>
               </slot>
             </template>
           </el-table-column>
@@ -236,7 +251,7 @@
       </el-drawer>
     </div>
     <el-dialog v-model="addDialog" :show-close="false" width="45%" :top="option.top || '15vh'"
-               custom-class="table-dialog-flag">
+               :before-close="handleClose" custom-class="table-dialog-flag">
       <template #header="{ close, titleId, titleClass }">
         <div class="my-view-dia-header dia-header">
           <h4 :id="titleId" :class="titleClass">新 增</h4>
@@ -244,10 +259,10 @@
                  style="cursor: pointer" @click="close"/>
         </div>
       </template>
-      <el-form :model="addForm" :size="size" label-width="120px">
+      <el-form :model="addForm" :size="size" label-width="120px" :disabled="addDisabled">
         <el-row :gutter="20">
           <template v-for="(colitem, coli) in option.column" :key="coli">
-            <el-col :span="colitem.span || 12">
+            <el-col :span="colitem.searchSpan || 12">
               <el-form-item :label="colitem.label + '：'">
                 <el-input
                     v-model="addForm[colitem.dataIndex]"
@@ -256,12 +271,22 @@
                     :placeholder="colitem.placeholder || '请输入 ' + colitem.label"
                     clearable
                     style="width: 100%"/>
+                <el-input
+                    v-model="addForm[colitem.dataIndex]"
+                    v-if="colitem.type === 'textarea'"
+                    :size="size"
+                    type="textarea"
+                    :placeholder="colitem.placeholder || '请输入 ' + colitem.label"
+                    clearable
+                    :autosize="{ minRows: 4, maxRows: 8}"
+                    style="width: 100%"/>
                 <el-select
                     v-model="addForm[colitem.dataIndex]"
                     v-if="colitem.type === 'select'"
                     :size="size"
                     :placeholder="colitem.placeholder || '请选择 ' + colitem.label"
                     @visible-change="visibleChange"
+                    @change="selectChange"
                     clearable
                     style="width: 100%">
                   <el-option
@@ -278,11 +303,11 @@
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button :size="size" type="primary" @click="addDialog = false">
-            <i class="iconfont icon-zhengque-correct"></i>提 交
-          </el-button>
           <el-button :size="size" @click="handleClose">
             <i class="iconfont icon-guanbi"></i>关 闭
+          </el-button>
+          <el-button :size="size" type="primary" :loading="addBtnLoading" @click="handleSave(addForm)">
+            <i v-show="!addBtnLoading" class="iconfont icon-zhengque-correct"></i>提 交
           </el-button>
         </span>
       </template>
@@ -291,7 +316,7 @@
                custom-class="table-dialog-flag">
       <template #header="{ close, titleId, titleClass }">
         <div class="my-view-dia-header dia-header">
-          <h4 :id="titleId" :class="titleClass">{{option.viewTitle || '详 情'}}</h4>
+          <h4 :id="titleId" :class="titleClass">{{ option.viewTitle || '详 情' }}</h4>
           <close theme="outline" size="16" fill="#606266" strokeLinejoin="miter" strokeLinecap="square"
                  style="cursor: pointer" @click="close"/>
         </div>
@@ -299,7 +324,10 @@
       <el-descriptions class="margin-top" :column="2" :size="size" border>
         <template v-for="(colitem, coli) in option.column" :key="coli">
           <el-descriptions-item :label="colitem.label" :span="colitem.span" :min-width="colitem.width || 80">
-            {{ viewshowData[colitem.dataIndex] }}
+            <div v-if="colitem.type == 'select'">
+              {{ getpamentType(colitem.dataIndex, viewshowData[colitem.dataIndex]) }}
+            </div>
+            <div v-else>{{ viewshowData[colitem.dataIndex] }}</div>
           </el-descriptions-item>
         </template>
       </el-descriptions>
@@ -343,11 +371,13 @@ export default defineComponent({
   components: {Close},
   setup: function (props: any, context) {
     const addDialog = ref(false);
+    const addDisabled = ref(false);
+    const addBtnLoading = ref(false);
     const viewDialog = ref(false);
     const actionBarDrawer = ref(false);
     const tableLoading = ref(false);
     const colcheckdList = ref([] as any[]);
-    const activeNames = ref([]);
+    const activeNames = ref(['1', '2', '3']);
     const svg = `
         <path class="path" d="
           M 30 15
@@ -375,29 +405,46 @@ export default defineComponent({
         return props.rowStyle({row, rowIndex});
       }
     };
+    const getpamentType = (key: any, val: any) => {
+      let pamentTypeName = ''
+      state.options[key].filter(item => {
+        if (val == item.value) {
+          pamentTypeName = item.label
+        }
+      })
+      return pamentTypeName
+    };
     const visibleChange = (val: any) => {
+
+    };
+    const selectChange = (val: any) => {
       console.log(val)
     };
     onMounted(async () => {
       for (const v of props.option.column) {
         state.colcheckList.push(v.label);
-        if(v.type === 'select' && typeof(v.dicUrl)=='string') {
-          let result:any = [];
+      }
+      colcheckdList.value = state.colcheckList;
+      onLoad();
+      for (const v of props.option.column) {
+        if (v.type === 'select' && typeof (v.dicUrl) == 'string') {
+          let result: any = [];
+
           function f() {
             return request({
               url: v.dicUrl,
               method: 'get',
             })
           }
-          await f().then((res)=>{
-            console.log(res)
+
+          await f().then((res) => {
             result = res.data;
+          }).catch((error) => {
+            console.log(error)
           })
           state.options[v.dataIndex] = result;
         }
       }
-      colcheckdList.value = state.colcheckList;
-      onLoad();
     });
     /*监听props*/
     watch(props, (newProps, oldProps) => {
@@ -445,17 +492,38 @@ export default defineComponent({
       state.viewshowData = row;
     };
     const handleClose = () => {
-      state.addForm = {};
       addDialog.value = false;
       viewDialog.value = false;
+      state.addForm = {};
+    };
+    const handleSave = (form) => {
+      console.log(form);
+      addDisabled.value = true;
+      addBtnLoading.value = true;
+      context.emit("handleSave", form, Loading, done);
+    };
+    const done = () => {
+      addDialog.value = false;
+      addDisabled.value = false;
+      addBtnLoading.value = false;
+    };
+    const Loading = () => {
+      addDisabled.value = false;
+      addBtnLoading.value = false;
     };
     return {
       addDialog,
+      addDisabled,
+      addBtnLoading,
       viewDialog,
+      done,
+      Loading,
       onLoad,
       showActionBarDrawer,
       rowStyle,
+      getpamentType,
       visibleChange,
+      selectChange,
       svg,
       colcheckdList,
       actionBarDrawer,
@@ -468,6 +536,7 @@ export default defineComponent({
       showView,
       showaddDialog,
       handleClose,
+      handleSave,
       ...toRefs(state),
     };
   },

@@ -7,16 +7,18 @@
       :row-style="rowStyle"
       @onLoad="getTable"
       @searchChange="searchChange"
+      @handleSave="handleSave"
       @refreshChange="refreshChange"
   >
   </systemTable>
 </template>
 
 <script lang="ts">
-import {ElMessage, ElMessageBox } from 'element-plus';
+import {ElMessage, ElMessageBox} from 'element-plus';
 import {ref, toRefs, reactive, computed, defineComponent, onMounted, onBeforeMount, h, shallowRef} from 'vue';
-import { RouteRecordRaw } from 'vue-router';
-import { fetchList } from '/@/api/ceshi';
+import {RouteRecordRaw} from 'vue-router';
+import {fetchList} from '/@/api/ceshi';
+
 export default {
   name: "index",
   setup() {
@@ -30,6 +32,7 @@ export default {
         addBtn: true, // crud 新增按钮
         searchLabelWidth: 150, // 搜索框的标题宽度 默认值：80
         stripe: true, // 斑马线
+        showradio: true,
         // ShowIndex: true, // table 索引
         searchIcon: true, // 表单 (展示、收缩按钮)  显示
         operations: false, // 操作栏固定
@@ -57,6 +60,7 @@ export default {
             label: '燃油类型',
             type: 'select',
             dataIndex: 'fuelType',
+            dataType: 'string',
             dicUrl: '/admin/dict/type/fuels_type',
             props: {
               label: 'label',
@@ -73,7 +77,7 @@ export default {
           },
           {
             label: '备注',
-            type: 'input',
+            type: 'textarea',
             dataIndex: 'note',
           }
         ]
@@ -88,7 +92,7 @@ export default {
         pageSizes: [5, 10, 20, 30], // 每页显示个数选择器的选项设置
       },
     });
-    const rowStyle = ({ row, rowIndex }:any) => {
+    const rowStyle = ({row, rowIndex}: any) => {
       if (rowIndex % 2 === 0) {
         return {
           backgroundColor: "#FDF5E6",
@@ -104,6 +108,13 @@ export default {
     const refreshChange = async () => {
       getTable(state.page);
     };
+    // 保存（新增）回调
+    const handleSave = async (form: object, Loading: any, done: any) => {
+      setTimeout(() => {
+        Loading();
+      }, 3000)
+      // getTable(state.page);
+    };
     // 打开新增菜单弹窗
     const onOpenAddMenu = () => {
       // addFormRef.value.openDialog();
@@ -118,12 +129,11 @@ export default {
         confirmButtonText: '删除',
         cancelButtonText: '取消',
         type: 'warning',
-      })
-          .then(() => {
-            ElMessage.success('删除成功');
-          })
-          .catch(() => {
-          });
+      }).then((res) => {
+        ElMessage.success('删除成功');
+      }).catch((error) => {
+        console.log(error)
+      });
     };
     // 获取主列表数据
     const getTable = async (page?: object, params?: object) => {
@@ -145,6 +155,7 @@ export default {
     };
     return {
       getTable,
+      handleSave,
       refreshChange,
       searchChange,
       onOpenAddMenu,
