@@ -608,7 +608,7 @@ export default defineComponent({
   box-shadow: 0px 0px 10px #888888 !important;
 	position: relative;
 	z-index: 4;
-	::v-deep(.el-scrollbar__wrap) {
+	:deep(.el-scrollbar__wrap) {
 		overflow-x: auto !important;
 	}
 	&-ul {
