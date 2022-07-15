@@ -6,6 +6,7 @@ export interface tableStates {
     tableData: Array<any>
     searchForm: object
     addForm: object
+    editForm: object
     option: object
     page: object
     viewshowData: object

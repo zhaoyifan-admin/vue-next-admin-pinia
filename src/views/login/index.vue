@@ -72,13 +72,13 @@ export default defineComponent({
 	width: 100%;
 	height: 100%;
 	position: relative;
-  background-image: url("@public/login_background.svg");
+  background-image: url("@public/login_background.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   .login-box {
     width: 95%;
     height: 90%;
-    background-color: #ffffffd9;
+    background-color: rgba(255, 255, 255, 0.2);
     border-radius: 10px;
     overflow: hidden;
     position: absolute;

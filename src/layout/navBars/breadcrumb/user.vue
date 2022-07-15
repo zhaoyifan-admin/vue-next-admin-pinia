@@ -77,7 +77,6 @@
 				</el-dropdown-menu>
 			</template>
 		</el-dropdown>
-		<Search ref="searchRef" />
 	</div>
 </template>
 

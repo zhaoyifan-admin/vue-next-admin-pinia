@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 import {validatenull} from "/@/utils/util";
-const keyName = 'rtdp-'
+const StorageKeyName = 'tjeh_'
 /**
  * window.localStorage 浏览器永久缓存
  * @method set 设置永久缓存
@@ -67,10 +67,9 @@ export const Session = {
  * @method clearStore 移除全部临时缓存
  * 存储localStorage
  */
-export const setStore = (params = {}) => {
-	let name: any, content: any, type: any;
-	({name, content, type} = params);
-	name = keyName + name
+export const setStore = (params:any = {}) => {
+	let {name, content, type} = params;
+	name = StorageKeyName + name
 	const obj = {
 		dataType: typeof (content),
 		content: content,
@@ -83,11 +82,11 @@ export const setStore = (params = {}) => {
 		window.localStorage.setItem(name, JSON.stringify(obj))
 	}
 }
-export const getStore = (params = {}) => {
+export const getStore = (params:any = {}) => {
 	let name: any, debug: any;
 	({name, debug} = params);
-	name = keyName + name
-	let obj = {}
+	name = StorageKeyName + name
+	let obj: any = {}
 	let content
 	obj = window.sessionStorage.getItem(name)
 	if (validatenull(obj)) obj = window.localStorage.getItem(name)
@@ -111,19 +110,20 @@ export const getStore = (params = {}) => {
 	}
 	return content
 }
-export const removeStore = (params = {}) => {
+export const removeStore = (params:any = {}) => {
 	let name: any, type: any;
 	({name, type} = params);
-	name = keyName + name
+	name = StorageKeyName + name
 	if (type) {
 		window.sessionStorage.removeItem(name)
 	} else {
 		window.localStorage.removeItem(name)
 	}
 }
-export const getAllStore = (params = {}) => {
+export const getAllStore = (params:any = {}) => {
 	const list = []
-	const {type}: {} = params
+	let type: any;
+	({type} = params);
 	if (type) {
 		for (let i = 0; i <= window.sessionStorage.length; i++) {
 			list.push({
@@ -146,8 +146,9 @@ export const getAllStore = (params = {}) => {
 	}
 	return list
 }
-export const clearStore = (params = {}) => {
-	const { type }: {} = params
+export const clearStore = (params:any = {}) => {
+	let type: any;
+	({type} = params);
 	if (type) {
 		window.sessionStorage.clear()
 	} else {

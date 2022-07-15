@@ -8,6 +8,7 @@
       @onLoad="getTable"
       @searchChange="searchChange"
       @handleSave="handleSave"
+      @handleDel="handleDel"
       @refreshChange="refreshChange"
   >
   </systemTable>
@@ -45,6 +46,7 @@ export default {
             search: true,
             labelslot: true,
             addDisplay: true,
+            filter: true,
             span: 24, // 栅栏布局（默认值： 6）
             headerslot: true, // 自定义表头
             columnSlot: true,  // (开启/关闭)自定义 列显隐配置 列名
@@ -60,7 +62,7 @@ export default {
             label: '燃油类型',
             type: 'select',
             dataIndex: 'fuelType',
-            dataType: 'string',
+            dataType: 'number',
             dicUrl: '/admin/dict/type/fuels_type',
             props: {
               label: 'label',
@@ -115,6 +117,12 @@ export default {
       }, 3000)
       // getTable(state.page);
     };
+    const handleDel = async (form: object, callback: any) => {
+      setTimeout(() => {
+        callback(0);
+      }, 3000)
+      // getTable(state.page);
+    };
     // 打开新增菜单弹窗
     const onOpenAddMenu = () => {
       // addFormRef.value.openDialog();
@@ -136,7 +144,7 @@ export default {
       });
     };
     // 获取主列表数据
-    const getTable = async (page?: object, params?: object) => {
+    const getTable = async (page?: any, params?: object) => {
       state.tableLoading = true;
       fetchList(
           Object.assign({
@@ -156,6 +164,7 @@ export default {
     return {
       getTable,
       handleSave,
+      handleDel,
       refreshChange,
       searchChange,
       onOpenAddMenu,
