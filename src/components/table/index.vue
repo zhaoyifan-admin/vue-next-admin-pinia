@@ -66,12 +66,13 @@
           element-loading-svg-view-box="-10, -10, 50, 50"
           :size="size"
           :data="tableData"
+          :border="option.border"
           row-key="index"
           :row-style="rowStyle"
           :max-height="option.maxHeight?option.maxHeight:600"
           :table-layout="option.tableLayout?option.tableLayout:'fixed'"
           :stripe="option.stripe"
-          :header-cell-style="{'text-align':'center','background':'#409EFF','color':'#ffffff'}"
+          :header-cell-style="{'text-align':'center','background':'#5872E4','color':'#ffffff'}"
           :cell-style="{'text-align':'center'}"
           :cell-class-name="cellClassName"
           style="width: 100%"
@@ -81,8 +82,7 @@
         <template #empty>
           <el-empty :image="nullData" :image-size="200"/>
         </template>
-        <el-table-column type="index" label="序号" width="60" v-if="option.showIndex"
-                         :index="indexMethod"/>
+        <el-table-column v-if="option.showIndex" :index="indexMethod" type="index" label="序号" width="60"/>
         <el-table-column type="selection" width="55" v-if="option.showSelect"/>
         <el-table-column type="redio" label="单选" width="60" v-if="option.showradio">
           <template #default="scope">
@@ -129,6 +129,23 @@
           </template>
         </el-table-column>
       </el-table>
+      <!--      分页器-->
+      <el-pagination
+          background
+          class="mt15"
+          style="justify-content: left;"
+          :small="small"
+          :total="total"
+          :pager-count="pagerCount"
+          :page-sizes="pageSizes"
+          :current-page="page.pageNum"
+          :page-size="page.pageSize"
+          :hide-on-single-page="page.hidePage || false"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="onHandleSizeChange"
+          @current-change="onHandleCurrentChange"
+      >
+      </el-pagination>
       <configuration-bar ref="configurationbar" v-model:size="size" :option="option"/>
     </div>
     <table-viewdialog ref="tableViewdialog" :option="option" :size="size" :viewshowData="viewshowData"
@@ -218,10 +235,19 @@ export default defineComponent({
       editForm: {},
       option: props.option,
       page: props.page,
+      small: props.page.small || false,
+      total: props.page.total || 0,
+      pagerCount: props.page.pagerCount || 5,
+      pageSizes: props.page.pageSizes || [10, 20, 30],
       viewshowData: {}
     });
     const indexMethod = (index: number) => {
-      return index + 1;
+      if(props.page.pageNum && props.page.pageSize) {
+        index = (index + 1) + (props.page.pageNum - 1) * props.page.pageSize
+      } else {
+        index = index + 1
+      }
+      return index;
     };
     const rowStyle = ({row, rowIndex}: any) => {
       if (props.rowStyle != undefined) {
@@ -256,13 +282,13 @@ export default defineComponent({
                              rowIndex,
                              columnIndex
                            }: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
-      row.index = rowIndex + 1;
-      column.index = columnIndex + 1;
+      row.$index = rowIndex + 1;
+      column.$index = columnIndex + 1;
     };
     const cellDblclick = (row: any, column: any, cell: any, event: any) => {
       tabClickLabel.value = column.property;
-      tabClickRowIndex.value = row.index;
-      tabClickColIndex.value = column.index;
+      tabClickRowIndex.value = row.$index;
+      tabClickColIndex.value = column.$index;
       setTimeout(() => {
         const findEditNode = tableColumn.value.find((item: any) => {
           return item.colitem.dataIndex == column.property
@@ -272,8 +298,22 @@ export default defineComponent({
     };
     const cellMouseEnter = (row: any, column: any, cell: any, event: any) => {
       mouseHoverLabel.value = column.property;
-      mouseHoverRowIndex.value = row.index;
-      mouseHoverColIndex.value = column.index;
+      mouseHoverRowIndex.value = row.$index;
+      mouseHoverColIndex.value = column.$index;
+    };
+    // 分页改变
+    const onHandleSizeChange = (val: number) => {
+      props.page.pageSize = val;
+      let params = state.searchForm;
+      let page = state.page;
+      context.emit("onLoad", page, params);
+    };
+    // 分页改变
+    const onHandleCurrentChange = (val: number) => {
+      props.page.pageNum = val;
+      let params = state.searchForm;
+      let page = state.page;
+      context.emit("onLoad", page, params);
     };
     onMounted(async () => {
       for (const v of props.option.column) {
@@ -305,6 +345,8 @@ export default defineComponent({
     watch(props, (newProps, oldProps) => {
       tableLoading.value = props.tableLoading;
       state.tableData = newProps.tableData;
+      state.total = newProps.page.total;
+      state.page = newProps.page;
     }, {immediate: true});
     const filters = (data: any) => {
       let Array: any = [];
@@ -471,6 +513,8 @@ export default defineComponent({
       cellClassName,
       cellDblclick,
       cellMouseEnter,
+      onHandleSizeChange,
+      onHandleCurrentChange,
       done,
       callback,
       Loading,
@@ -614,6 +658,9 @@ export default defineComponent({
 
     ::v-deep(.el-radio__inner::after) {
       border-radius: 0;
+    }
+    ::v-deep(.el-pagination.is-background .el-pager li:not(.is-disabled).is-active) {
+      background-color: #5872E4;
     }
 
     border-radius: 8px;

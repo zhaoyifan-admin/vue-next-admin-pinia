@@ -11,7 +11,7 @@
     </template>
     <el-descriptions class="margin-top" :column="2" :size="size" border>
       <template v-for="(colitem, coli) in viewArray" :key="coli">
-        <el-descriptions-item :label="colitem.label" :span="colitem.span" :min-width="colitem.width || 80">
+        <el-descriptions-item :label="colitem.label" label-align="center" align="center" :span="colitem.span" :min-width="colitem.width || 80">
           <template #label>
             <slot :name="colitem.dataIndex + 'viewLabel'" :ehscope="{row:colitem, size:size, $index:coli}">
               {{colitem.label}}

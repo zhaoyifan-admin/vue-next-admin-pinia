@@ -7,6 +7,7 @@
     </template>
     <template #default="scope">
       <slot :name="colitem.dataIndex + 'Edit'" :ehscope="{row:colitem, size:size}">
+        <!--        输入框-->
         <el-input
             v-model="addForm[colitem.dataIndex]"
             v-if="colitem.type === 'input'"
@@ -23,6 +24,7 @@
             clearable
             :autosize="{ minRows: 4, maxRows: 8}"
             style="width: 100%"/>
+        <!--        下拉选-->
         <el-select
             v-model="addForm[colitem.dataIndex]"
             v-if="colitem.type === 'select'"

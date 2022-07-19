@@ -71,19 +71,60 @@
                 </el-col>
               </el-row>
             </el-collapse-item>
-            <el-collapse-item title="表格列配置项" name="2">
+            <el-collapse-item name="2">
+              <template #title>
+                <span style="margin-right: 5px;">表格列配置项</span>
+              </template>
+              <span>极简布局：</span><el-switch :disabled="showDisabled" :size="size" v-model="show" />
               <el-table
+                  v-show="show"
                   :data="option.column"
                   :size="size"
                   border
                   style="width: 100%"
                   row-key="dataIndex"
-                  :header-cell-style="{'text-align':'center','background':'#F5F7FA'}"
+                  :header-cell-style="{'text-align':'center','background':'#845DFF','color':'#ffffff'}"
                   :cell-style="{'text-align':'center'}"
               >
                 <el-table-column prop="label" label="列名">
                   <template #default="scope">
                     <span>{{ scope.row.configure || scope.row.label }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="隐藏">
+                  <template #default="scope">
+                    <el-checkbox v-model="scope.row.hide" :size="size"></el-checkbox>
+                  </template>
+                </el-table-column>
+                <el-table-column label="冻结">
+                  <template #default="scope">
+                    <el-checkbox v-model="scope.row.fixed" :size="size"></el-checkbox>
+                  </template>
+                </el-table-column>
+                <el-table-column label="过滤(筛选)">
+                  <template #default="scope">
+                    <el-checkbox v-model="scope.row.filter" :size="size"></el-checkbox>
+                  </template>
+                </el-table-column>
+                <el-table-column label="排序">
+                  <template #default="scope">
+                    <el-checkbox v-model="scope.row.sortable" :size="size"></el-checkbox>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <el-table
+                  v-show="!show"
+                  :data="columnArray"
+                  :size="size"
+                  border
+                  style="width: 100%"
+                  row-key="dataIndex"
+                  :header-cell-style="{'text-align':'center','background':'#845DFF','color':'#ffffff'}"
+                  :cell-style="{'text-align':'center'}"
+              >
+                <el-table-column prop="label" label="列名">
+                  <template #default="scope">
+                    <span v-if="!scope.row.children">{{ scope.row.configure || scope.row.label }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="隐藏">
@@ -119,7 +160,9 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, toRefs} from "vue";
+import {defineComponent, ref, toRefs, onMounted} from "vue";
+import {AppSwitch} from '@icon-park/vue-next';
+import {getFlatArr} from "../utils/methods/methods";
 
 export default defineComponent({
   name: "configuration-bar",
@@ -133,11 +176,14 @@ export default defineComponent({
       type: String
     }
   },
-  components:{},
+  components:{AppSwitch},
   setup: function (props: any, { emit }) {
+    const columnArray = ref([]);
+    const showDisabled = ref(true);
     const activeNames = ref(['1', '2', '3']);
     const actionBarDrawer = ref(false);
     const Size = ref(props.size);
+    const show = ref(true);
     const openDrawer = () => {
       actionBarDrawer.value = true;
     };
@@ -145,12 +191,31 @@ export default defineComponent({
       console.log(val)
       emit('update:size', val);
     };
+    const changeShow = () => {
+      show.value = !show.value;
+    };
+    onMounted(()=>{
+      const Array = getFlatArr(props.option.column);
+      columnArray.value = [];
+      showDisabled.value = true;
+      Array.forEach((item:any)=>{
+        if(!item.children) {
+          columnArray.value.push(item);
+        } else {
+          showDisabled.value = false
+        }
+      })
+    })
     return {
+      columnArray,
+      showDisabled,
       Size,
       activeNames,
       actionBarDrawer,
+      show,
       openDrawer,
-      changeRadio
+      changeRadio,
+      changeShow
     }
   },
 })

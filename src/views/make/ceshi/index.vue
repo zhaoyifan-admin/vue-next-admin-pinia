@@ -59,29 +59,7 @@ export default {
             label: '测试布局',
             type: 'input',
             dataIndex: 'ceshi',
-            searchSpan: 24,
-            formCollapse: true,
-            children: [{
-              label: "测试1",
-              type: 'input',
-              dataIndex: "ceshi1",
-              filter: true,
-              sortable: true,
-            }, {
-              label: "测试2",
-              type: 'input',
-              children: [{
-                label: "测试1",
-                type: 'input',
-                dataIndex: "ceshi1",
-                filter: true,
-                sortable: true,
-              }, {
-                label: "测试2",
-                type: 'input',
-                dataIndex: "ceshi2"
-              }]
-            }]
+            searchSpan: 24
           },
           {
             label: '燃油类型',
@@ -122,7 +100,7 @@ export default {
     const rowStyle = ({row, rowIndex}: any) => {
       if (rowIndex % 2 === 0) {
         return {
-          background: "#ECF5FF",
+          background: "#EED7BC",
         };
       }
     };

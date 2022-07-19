@@ -17,8 +17,8 @@
               v-model="row[colitem.dataIndex]"
               v-if="colitem.type === 'select'
                       && tabClickLabel === colitem.dataIndex
-                      && tabClickRowIndex === row.index
-                      && tabClickColIndex === column.index"
+                      && tabClickRowIndex === row.$index
+                      && tabClickColIndex === column.$index"
               :size="size"
               :placeholder="colitem.placeholder || '请选择 '"
               ref="editFlag"
@@ -43,8 +43,8 @@
               v-model="row[colitem.dataIndex]"
               v-if="colitem.type === 'input'
                       && tabClickLabel === colitem.dataIndex
-                      && tabClickRowIndex === row.index
-                      && tabClickColIndex === column.index"
+                      && tabClickRowIndex === row.$index
+                      && tabClickColIndex === column.$index"
               ref="editFlag"
               :size="size"
               @blur="blur"
@@ -74,8 +74,8 @@
               v-model="row[colitem.dataIndex]"
               v-if="colitem.type === 'select'
                       && tabClickLabel === colitem.dataIndex
-                      && tabClickRowIndex === row.index
-                      && tabClickColIndex === column.index"
+                      && tabClickRowIndex === row.$index
+                      && tabClickColIndex === column.$index"
               :size="size"
               :placeholder="colitem.placeholder || '请选择 '"
               ref="editFlag"
@@ -100,8 +100,8 @@
               v-model="row[colitem.dataIndex]"
               v-if="colitem.type === 'input'
                       && tabClickLabel === colitem.dataIndex
-                      && tabClickRowIndex === row.index
-                      && tabClickColIndex === column.index"
+                      && tabClickRowIndex === row.$index
+                      && tabClickColIndex === column.$index"
               ref="editFlag"
               :size="size"
               @blur="blur"

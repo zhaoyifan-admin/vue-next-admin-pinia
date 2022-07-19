@@ -9,5 +9,9 @@ export interface tableStates {
     editForm: object
     option: object
     page: object
+    small: Boolean
+    total: number
+    pagerCount: number
+    pageSizes: Array<any>
     viewshowData: object
 }
