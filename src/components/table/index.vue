@@ -15,16 +15,17 @@
         <el-button type="primary" :size="size" disabled>
           <i class="fa fa-pencil" aria-hidden="true"></i> 批量修改
         </el-button>
-        <el-button type="primary" :size="size" :disabled="rowRadioList.length === 0" @click="showEdit(rowRadioList)">
+        <el-button type="primary" :size="size" :disabled="rowRadioList === null" @click="showEditDialog(rowRadioList)">
           <i class="fa fa-pencil" aria-hidden="true"></i> 修改
         </el-button>
         <el-button type="danger" :size="size" disabled>
           <i class="fa fa-trash" aria-hidden="true"></i> 批量删除
         </el-button>
-        <el-button type="danger" :size="size" :disabled="rowRadioList.length === 0">
+        <el-button type="danger" :size="size" :disabled="rowRadioList === null"
+                   @click="handleDel(rowRadioList, 'menu')">
           <i class="fa fa-trash" aria-hidden="true"></i> 删除
         </el-button>
-        <el-button plain :size="size" :disabled="rowRadioList.length === 0" @click="clearRowList">
+        <el-button plain :size="size" :disabled="rowRadioList === null" @click="clearRowList">
           <i class="iconfont icon-qingkong" aria-hidden="true"></i> 取消选择
         </el-button>
       </div>
@@ -70,18 +71,19 @@
           :max-height="option.maxHeight?option.maxHeight:600"
           :table-layout="option.tableLayout?option.tableLayout:'fixed'"
           :stripe="option.stripe"
-          :border="option.border"
-          :header-cell-style="{'text-align':'center','background':'#409EFF','color':'#ffffff',}"
+          :header-cell-style="{'text-align':'center','background':'#409EFF','color':'#ffffff'}"
           :cell-style="{'text-align':'center'}"
           :cell-class-name="cellClassName"
           style="width: 100%"
-          @cell-dblclick="cellDblclick">
+          @cell-dblclick="cellDblclick"
+          @cell-mouse-enter="cellMouseEnter">
         <!--   自定义空数据   -->
         <template #empty>
           <el-empty :image="nullData" :image-size="200"/>
         </template>
+        <el-table-column type="index" label="序号" width="60" v-if="option.showIndex"
+                         :index="indexMethod"/>
         <el-table-column type="selection" width="55" v-if="option.showSelect"/>
-        <el-table-column type="index" label="序号" width="60" v-if="option.showIndex"/>
         <el-table-column type="redio" label="单选" width="60" v-if="option.showradio">
           <template #default="scope">
             <el-radio-group v-model="rowRadioList" :size="size">
@@ -89,65 +91,6 @@
             </el-radio-group>
           </template>
         </el-table-column>
-        <!--        <template v-for="(colitem, coli) in option.column" :key="coli">-->
-        <!--          <el-table-column-->
-        <!--              v-if="!colitem.hide"-->
-        <!--              :prop="colitem.dataIndex"-->
-        <!--              :label="colitem.label"-->
-        <!--              :fixed="colitem.fixed"-->
-        <!--              :sortable="colitem.sortable"-->
-        <!--              :filters="colitem.filter?filters:null"-->
-        <!--              :filter-method="colitem.filter?filterMethod:null"-->
-        <!--              :show-overflow-toolti="true">-->
-        <!--            <template #header="{ column, $index }">-->
-        <!--              <slot :name="colitem.dataIndex+'Header'" :scope="{ column, $index }">-->
-        <!--                {{ colitem.label }}-->
-        <!--              </slot>-->
-        <!--            </template>-->
-        <!--            <template #default="{ row, column, $index }">-->
-        <!--              <slot :name="colitem.dataIndex" :scope="{ row, column, $index }">-->
-        <!--                <div v-if="colitem.type === 'select'">-->
-        <!--                  <el-select-->
-        <!--                      v-model="row[colitem.dataIndex]"-->
-        <!--                      v-if="colitem.type === 'select'-->
-        <!--                      && tabClickLabel === colitem.dataIndex-->
-        <!--                      && tabClickRowIndex === row.index-->
-        <!--                      && tabClickColIndex === column.index"-->
-        <!--                      :size="size"-->
-        <!--                      :placeholder="colitem.placeholder || '请选择 '"-->
-        <!--                      ref="editinput"-->
-        <!--                      @visible-change="visibleChange"-->
-        <!--                      @change="selectChange"-->
-        <!--                      @blur="blur"-->
-        <!--                      clearable-->
-        <!--                      style="width: 100%">-->
-        <!--                    <el-option-->
-        <!--                        v-for="(item, index) in options[colitem.dataIndex]"-->
-        <!--                        :key="index"-->
-        <!--                        :label="item[colitem.props.label] || item.label"-->
-        <!--                        :value="colitem.dataType === 'number' ? Number(item[colitem.props.value]) || Number(item.value) :-->
-        <!--                         item[colitem.props.value] || item.value"-->
-        <!--                    />-->
-        <!--                  </el-select>-->
-        <!--                  <span v-else>{{ getpamentType(colitem.dataIndex, row[colitem.dataIndex]) }}</span>-->
-        <!--                </div>-->
-        <!--                <div v-else>-->
-        <!--                  <el-input-->
-        <!--                      v-model="row[colitem.dataIndex]"-->
-        <!--                      v-if="colitem.type === 'input'-->
-        <!--                      && tabClickLabel === colitem.dataIndex-->
-        <!--                      && tabClickRowIndex === row.index-->
-        <!--                      && tabClickColIndex === column.index"-->
-        <!--                      ref="editinput"-->
-        <!--                      :size="size"-->
-        <!--                      @blur="blur"-->
-        <!--                      clearable/>-->
-        <!--                  <span v-else>{{ row[colitem.dataIndex] }}</span>-->
-        <!--                </div>-->
-        <!--              </slot>-->
-        <!--            </template>-->
-        <!--          </el-table-column>-->
-        <!--        </template>-->
         <tableColumn v-for="(colitem, coli) in option.column"
                      ref="tableColumn"
                      :colitem="colitem"
@@ -157,20 +100,25 @@
                      :options="options"
                      :getpamentType="getpamentType"
                      :blur="blur"
-                     :size="size"></tableColumn>
+                     :filters="filters(colitem)"
+                     :filterMethod="filterMethod"
+                     :visibleChange="visibleChange"
+                     :selectChange="selectChange"
+                     v-model:size="size"
+                     :key="coli"></tableColumn>
         <el-table-column fixed="right" width="155">
           <template #header>
             <i class="fa fa-filter" aria-hidden="true"></i> 操作栏
           </template>
           <template #default="scope">
             <div class="action-bar">
-              <el-button type="info" :size="size" title="查看" @click="showView(scope.row)">
+              <el-button type="info" :size="size" title="查看" @click="showViewDialog(scope.row)">
                 <i class="fa fa-search-plus" aria-hidden="true"></i>
               </el-button>
-              <el-button type="primary" :size="size" title="编辑" @click="showEdit(scope.row)">
+              <el-button type="primary" :size="size" title="编辑" @click="showEditDialog(scope.row)">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </el-button>
-              <el-popconfirm title="是否确认删除当前选择数据？" @confirm="handleDel(scope.row)">
+              <el-popconfirm title="是否确认删除当前选择数据？" @confirm="handleDel(scope.row, 'column')">
                 <template #reference>
                   <el-button type="danger" :size="size" title="删除">
                     <i class="fa fa-trash-o" aria-hidden="true"></i>
@@ -181,265 +129,16 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-drawer v-model="actionBarDrawer" :size="option.actionBarDrawerWidth || '45%'" :show-close="false">
-        <template #header="{ close, titleId, titleClass }">
-          <h4 :id="titleId" :class="titleClass">
-            <i class="fa fa-table" aria-hidden="true"></i> 表格配置项
-          </h4>
-          <i class="fa fa-times" aria-hidden="true" title="关闭" @click="close"></i>
-        </template>
-        <template #default>
-          <div class="drawer-box">
-            <el-card class="box-card">
-              <el-collapse v-model="activeNames">
-                <el-collapse-item title="表格基础配置项" name="1">
-                  <el-row>
-                    <el-col :xs="24" :sm="12" :md="8" :lg="6" class="mt10">
-                      <span>显示索引：</span>
-                      <el-switch v-model="option.showIndex" :size="size" width="50" inline-prompt active-text="是"
-                                 inactive-text="否"></el-switch>
-                    </el-col>
-                    <el-col :xs="24" :sm="12" :md="8" :lg="6" class="mt10">
-                      <span>显示多选框：</span>
-                      <el-switch v-model="option.showSelect" :size="size" width="50" inline-prompt active-text="是"
-                                 inactive-text="否"></el-switch>
-                    </el-col>
-                    <el-col :xs="24" :sm="12" :md="8" :lg="6" class="mt10">
-                      <span>显示边框：</span>
-                      <el-switch v-model="option.border" :size="size" width="50" inline-prompt active-text="是"
-                                 inactive-text="否"></el-switch>
-                    </el-col>
-                    <el-col :xs="24" :sm="12" :md="8" :lg="6" class="mt10">
-                      <span>卡片模式：</span>
-                      <el-switch
-                          v-model="option.CardMode"
-                          :size="size"
-                          width="50"
-                          active-color="#01D06E"
-                          inactive-color="#EC372C"
-                          inline-prompt active-text="开启"
-                          inactive-text="关闭"></el-switch>
-                    </el-col>
-                    <el-col :span="24" class="mt10">
-                      <div style="display: flex;align-items: center">
-                        <span style="display: block;width: 130px;">显示大小：</span>
-                        <el-radio-group v-model="size" :size="size">
-                          <el-radio-button :size="size" :label="'large'">Large(大)</el-radio-button>
-                          <el-radio-button :size="size" :label="'default'">Default(中)</el-radio-button>
-                          <el-radio-button :size="size" :label="'small'">Small(小)</el-radio-button>
-                        </el-radio-group>
-                      </div>
-                    </el-col>
-                    <el-col :span="24" class="mt10">
-                      <div style="display: flex;align-items: center">
-                        <span style="display: block;width: 130px;">操作栏按钮类型：</span>
-                        <el-radio-group v-model="actionBar" :size="size">
-                          <el-radio-button :size="size" :label="'menu'">
-                            菜单按钮
-                          </el-radio-button>
-                          <el-radio-button :size="size" :label="'text'">
-                            文本按钮
-                          </el-radio-button>
-                          <el-radio-button :size="size" :label="'merge'">
-                            合并菜单
-                          </el-radio-button>
-                        </el-radio-group>
-                      </div>
-                    </el-col>
-                  </el-row>
-                </el-collapse-item>
-                <el-collapse-item title="表格列配置项" name="2">
-
-                </el-collapse-item>
-                <el-collapse-item title="表格其他配置项" name="3">
-
-                </el-collapse-item>
-              </el-collapse>
-            </el-card>
-          </div>
-        </template>
-      </el-drawer>
+      <configuration-bar ref="configurationbar" v-model:size="size" :option="option"/>
     </div>
-    <el-dialog v-model="viewDialog" :show-close="false" :close-on-click-modal="false" width="45%"
-               :top="option.top || '15vh'"
-               custom-class="table-dialog-flag">
-      <template #header="{ close, titleId, titleClass }">
-        <div class="my-view-dia-header dia-header">
-          <span :id="titleId" :class="titleClass">{{ option.viewTitle || '详情' }}</span>
-          <close theme="outline" size="15" fill="#606266" strokeLinejoin="miter" strokeLinecap="square"
-                 style="cursor: pointer" @click="close"/>
-        </div>
-      </template>
-      <el-descriptions class="margin-top" :column="2" :size="size" border>
-        <template v-for="(colitem, coli) in option.column" :key="coli">
-          <el-descriptions-item :label="colitem.label" :span="colitem.span" :min-width="colitem.width || 80">
-            <div v-if="colitem.type === 'select'">
-              {{ getpamentType(colitem.dataIndex, viewshowData[colitem.dataIndex]) }}
-            </div>
-            <div v-else>{{ viewshowData[colitem.dataIndex] }}</div>
-          </el-descriptions-item>
-        </template>
-      </el-descriptions>
-      <template #footer v-if="option.viewFooter || true">
-        <span class="dialog-footer">
-          <el-button :size="size" @click="viewDialog = false">
-            <template #icon>
-              <slot name="viewBtnIcon">
-                <i class="iconfont icon-guanbi"></i>
-              </slot>
-            </template>
-            {{ option.viewBtnText || '关 闭' }}
-          </el-button>
-          <slot name="viewBtn"></slot>
-        </span>
-      </template>
-    </el-dialog>
-    <el-dialog v-model="addDialog" :show-close="false" :close-on-click-modal="false" width="45%"
-               :top="option.top || '15vh'"
-               :before-close="handleClose" custom-class="table-dialog-flag">
-      <template #header="{ close, titleId, titleClass }">
-        <div class="my-view-dia-header dia-header">
-          <span :id="titleId" :class="titleClass">{{ option.addTitle || '新增' }}</span>
-          <close theme="outline" size="16" fill="#606266" strokeLinejoin="miter" strokeLinecap="square"
-                 style="cursor: pointer" @click="close"/>
-        </div>
-      </template>
-      <el-form :model="addForm" :size="size" label-width="120px" :disabled="addDisabled">
-        <el-row :gutter="20">
-          <template v-for="(colitem, coli) in option.column" :key="coli">
-            <el-col :span="colitem.searchSpan || 12">
-              <el-form-item :label="colitem.label + '：'">
-                <el-input
-                    v-model="addForm[colitem.dataIndex]"
-                    v-if="colitem.type === 'input'"
-                    :size="size"
-                    :placeholder="colitem.placeholder || '请输入 ' + colitem.label"
-                    clearable
-                    style="width: 100%"/>
-                <el-input
-                    v-model="addForm[colitem.dataIndex]"
-                    v-if="colitem.type === 'textarea'"
-                    :size="size"
-                    type="textarea"
-                    :placeholder="colitem.placeholder || '请输入 ' + colitem.label"
-                    clearable
-                    :autosize="{ minRows: 4, maxRows: 8}"
-                    style="width: 100%"/>
-                <el-select
-                    v-model="addForm[colitem.dataIndex]"
-                    v-if="colitem.type === 'select'"
-                    :size="size"
-                    :placeholder="colitem.placeholder || '请选择 ' + colitem.label"
-                    @visible-change="visibleChange"
-                    @change="selectChange"
-                    clearable
-                    style="width: 100%">
-                  <el-option
-                      v-for="(item, index) in options[colitem.dataIndex]"
-                      :key="index"
-                      :label="item[colitem.props.label] || item.label"
-                      :value="item[colitem.props.value] || item.value"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </template>
-        </el-row>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button :size="size" @click="handleClose">
-            <template #icon>
-              <slot name="addCancelBtnIcon">
-                <i class="iconfont icon-guanbi"></i>
-              </slot>
-            </template>
-            {{ option.addCancelBtnText || '关 闭' }}
-          </el-button>
-          <el-button :size="size" type="primary" :loading="addBtnLoading" @click="handleSave(addForm)">
-            <template #icon>
-              <slot name="addConfirmBtnIcon">
-                <i v-show="!addBtnLoading" class="iconfont icon-zhengque-correct"></i>
-              </slot>
-            </template>
-            {{ option.addConfirmBtnText || '提 交' }}
-          </el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <el-dialog v-model="editDialog" :show-close="false" :close-on-click-modal="false" width="45%"
-               :top="option.top || '15vh'"
-               :before-close="handleClose" custom-class="table-dialog-flag">
-      <template #header="{ close, titleId, titleClass }">
-        <div class="my-view-dia-header dia-header">
-          <span :id="titleId" :class="titleClass">{{ option.addTitle || '编辑' }}</span>
-          <close theme="outline" size="16" fill="#606266" strokeLinejoin="miter" strokeLinecap="square"
-                 style="cursor: pointer" @click="close"/>
-        </div>
-      </template>
-      <el-form :model="editForm" :size="size" label-width="120px" :disabled="editDisabled">
-        <el-row :gutter="20">
-          <template v-for="(colitem, coli) in option.column" :key="coli">
-            <el-col :span="colitem.searchSpan || 12">
-              <el-form-item :label="colitem.label + '：'">
-                <el-input
-                    v-model="editForm[colitem.dataIndex]"
-                    v-if="colitem.type === 'input'"
-                    :size="size"
-                    :placeholder="colitem.placeholder || '请输入 ' + colitem.label"
-                    clearable
-                    style="width: 100%"/>
-                <el-input
-                    v-model="editForm[colitem.dataIndex]"
-                    v-if="colitem.type === 'textarea'"
-                    :size="size"
-                    type="textarea"
-                    :placeholder="colitem.placeholder || '请输入 ' + colitem.label"
-                    clearable
-                    :autosize="{ minRows: 4, maxRows: 8}"
-                    style="width: 100%"/>
-                <el-select
-                    v-model="editForm[colitem.dataIndex]"
-                    v-if="colitem.type === 'select'"
-                    :size="size"
-                    :placeholder="colitem.placeholder || '请选择 ' + colitem.label"
-                    @visible-change="visibleChange"
-                    @change="selectChange"
-                    clearable
-                    style="width: 100%">
-                  <el-option
-                      v-for="(item, index) in options[colitem.dataIndex]"
-                      :key="index"
-                      :label="item[colitem.props.label] || item.label"
-                      :value="item[colitem.props.value] || item.value"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </template>
-        </el-row>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button :size="size" @click="handleClose">
-            <template #icon>
-              <slot name="editCancelBtnIcon">
-                <i class="iconfont icon-guanbi"></i>
-              </slot>
-            </template>
-            {{ option.editCancelBtnText || '关 闭' }}
-          </el-button>
-          <el-button :size="size" type="primary" :loading="editBtnLoading" @click="handleEdit(editForm)">
-            <template #icon>
-              <slot name="editConfirmBtnIcon">
-                <i v-show="!editBtnLoading" class="iconfont icon-zhengque-correct"></i>
-              </slot>
-            </template>
-            {{ option.editConfirmBtnText || '修 改' }}
-          </el-button>
-        </span>
-      </template>
-    </el-dialog>
+    <table-viewdialog ref="tableViewdialog" :option="option" :size="size" :viewshowData="viewshowData"
+                      :getpamentType="getpamentType" :handleClose="handleClose"></table-viewdialog>
+    <table-adddialog ref="tableAdddialog" :option="option" :options="options" :size="size" :addForm="addForm"
+                     :addDisabled="addDisabled" :addBtnLoading="addBtnLoading"
+                     :handleClose="handleClose" :handleSave="handleSave"></table-adddialog>
+    <table-editdialog ref="tableEditdialog" :option="option" :options="options" :size="size" :editForm="editForm"
+                      :editDisabled="editDisabled" :editBtnLoading="editBtnLoading" :handleClose="handleClose"
+                      :handleEdit="handleEdit"></table-editdialog>
   </div>
 </template>
 
@@ -447,10 +146,14 @@
 import {defineComponent, onMounted, reactive, ref, toRefs, watch} from "vue";
 import {tableStates} from "/@/components/table/index";
 import nullData from "/@/components/table/static/images/null.svg";
+import tableViewdialog from "./component/table-viewdialog.vue";
+import tableAdddialog from "./component/table-adddialog.vue";
+import tableEditdialog from "./component/table-editdialog.vue";
 import tableColumn from "./component/table-column.vue";
+import configurationBar from "./component/configuration-bar.vue";
 import {Close} from '@icon-park/vue-next';
 import request from "/@/utils/request";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 export default defineComponent({
   name: 'systemTable',
@@ -459,7 +162,7 @@ export default defineComponent({
       type: Object
     },
     page: {
-      type: Array<any>
+      type: Object
     },
     tableData: {
       type: Array<any>
@@ -471,7 +174,7 @@ export default defineComponent({
       type: Function
     }
   },
-  components: {Close, tableColumn},
+  components: {Close, tableViewdialog, tableAdddialog, tableEditdialog, tableColumn, configurationBar},
   setup: function (props: any, context) {
     const addDialog = ref(false);
     const addDisabled = ref(false);
@@ -479,17 +182,21 @@ export default defineComponent({
     const editDialog = ref(false);
     const editDisabled = ref(false);
     const editBtnLoading = ref(false);
-    const viewDialog = ref(false);
-    const actionBarDrawer = ref(false);
     const tableLoading = ref(false);
     const colcheckdList = ref([] as any[]);
-    const rowRadioList = ref([]);
-    const activeNames = ref(['1', '2', '3']);
+    const rowRadioList = ref(null);
     const tabClickLabel = ref("");
-    const tabClickRowIndex = ref("");
-    const tabClickColIndex = ref("");
+    const tabClickRowIndex = ref(0);
+    const tabClickColIndex = ref(0);
+    const mouseHoverLabel = ref("");
+    const mouseHoverRowIndex = ref(0);
+    const mouseHoverColIndex = ref(0);
     const editinput = ref(null);
-    const tableColumn = ref(null);
+    const tableColumn = ref([] as any[]);
+    const configurationbar = ref();
+    const tableViewdialog = ref();
+    const tableAdddialog = ref();
+    const tableEditdialog = ref();
     const svg = `
         <path class="path" d="
           M 30 15
@@ -513,6 +220,9 @@ export default defineComponent({
       page: props.page,
       viewshowData: {}
     });
+    const indexMethod = (index: number) => {
+      return index + 1;
+    };
     const rowStyle = ({row, rowIndex}: any) => {
       if (props.rowStyle != undefined) {
         return props.rowStyle({row, rowIndex});
@@ -537,8 +247,8 @@ export default defineComponent({
     };
     const blur = () => {
       tabClickLabel.value = "";
-      tabClickRowIndex.value = "";
-      tabClickColIndex.value = "";
+      tabClickRowIndex.value = 0;
+      tabClickColIndex.value = 0;
     };
     const cellClassName = ({
                              row,
@@ -546,16 +256,24 @@ export default defineComponent({
                              rowIndex,
                              columnIndex
                            }: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
-      row.index = rowIndex;
-      column.index = columnIndex;
+      row.index = rowIndex + 1;
+      column.index = columnIndex + 1;
     };
     const cellDblclick = (row: any, column: any, cell: any, event: any) => {
       tabClickLabel.value = column.property;
       tabClickRowIndex.value = row.index;
       tabClickColIndex.value = column.index;
       setTimeout(() => {
-        tableColumn.value[column.index -1].editFlag.focus();
+        const findEditNode = tableColumn.value.find((item: any) => {
+          return item.colitem.dataIndex == column.property
+        })
+        findEditNode.editFlag.focus();
       }, 10);
+    };
+    const cellMouseEnter = (row: any, column: any, cell: any, event: any) => {
+      mouseHoverLabel.value = column.property;
+      mouseHoverRowIndex.value = row.index;
+      mouseHoverColIndex.value = column.index;
     };
     onMounted(async () => {
       for (const v of props.option.column) {
@@ -593,7 +311,6 @@ export default defineComponent({
       state.tableData.forEach((item: any) => {
         Array.push({text: item[data.dataIndex], value: item[data.dataIndex]})
       })
-      console.log(Array)
       return Array;
     };
     const filterMethod = (value?: any, row?: any, column?: any) => {
@@ -601,10 +318,10 @@ export default defineComponent({
       return row[property] === value
     };
     const clearRowList = () => {
-      rowRadioList.value = [];
+      rowRadioList.value = null;
     };
     const showActionBarDrawer = () => {
-      actionBarDrawer.value = true;
+      configurationbar.value.openDrawer();
     };
     // 获取列表
     const onLoad = () => {
@@ -613,6 +330,7 @@ export default defineComponent({
       context.emit("onLoad", page, params);
     };
     const handleSave = (form: any) => {
+      console.log(form);
       addDisabled.value = true;
       addBtnLoading.value = true;
       context.emit("handleSave", form, Loading, done);
@@ -622,14 +340,43 @@ export default defineComponent({
       editBtnLoading.value = true;
       context.emit("handleSave", form, Loading, done);
     };
-    const handleDel = (row: object) => {
-      ElMessage({
-        message: '正在删除数据，请稍后...',
-        grouping: true,
-        type: 'warning',
-        duration: 0
-      });
-      context.emit("handleDel", row, callback);
+    const handleDel = (row: object, key: String) => {
+      if (key === 'column') {
+        ElMessage({
+          message: '正在删除数据，请稍后...',
+          grouping: true,
+          type: 'warning',
+          duration: 0
+        });
+        context.emit("handleDel", row, callback);
+      } else {
+        ElMessageBox.confirm(
+            '是否确认删除当前选择数据？该操作无法撤回。',
+            '再次确认',
+            {
+              confirmButtonText: '确认',
+              cancelButtonText: '取消',
+              type: 'warning',
+              center: true,
+            }
+        ).then(() => {
+          ElMessage({
+            message: '正在删除数据，请稍后...',
+            grouping: true,
+            type: 'warning',
+            duration: 0
+          });
+          context.emit("handleDel", row, callback);
+        }).catch(() => {
+          if (rowRadioList.value !== null) {
+            rowRadioList.value = null;
+          }
+          ElMessage({
+            type: 'info',
+            message: '已取消删除操作',
+          })
+        })
+      }
     };
     const refreshChange = () => {
       context.emit("refreshChange");
@@ -645,26 +392,31 @@ export default defineComponent({
       })
     };
     const showaddDialog = () => {
-      addDialog.value = true;
+      tableAdddialog.value.openDialog();
     };
-    const showView = (row: object) => {
-      viewDialog.value = true;
+    const showViewDialog = (row: object) => {
+      tableViewdialog.value.openDialog();
       state.viewshowData = row;
     };
-    const showEdit = (row: object) => {
-      console.log(row);
-      editDialog.value = true;
+    const showEditDialog = (row: object) => {
+      tableEditdialog.value.openDialog();
       state.editForm = row;
     };
     const handleClose = () => {
-      addDialog.value = false;
-      editDialog.value = false;
-      viewDialog.value = false;
+      if (rowRadioList.value !== null) {
+        rowRadioList.value = null;
+      }
       state.addForm = {};
       state.editForm = {};
+      tableViewdialog.value.closeDialog();
+      tableAdddialog.value.closeDialog();
+      tableEditdialog.value.closeDialog();
     };
     const callback = (code: number, message: string) => {
       ElMessage.closeAll();
+      if (rowRadioList.value !== null) {
+        rowRadioList.value = null;
+      }
       if (code === 0) {
         ElMessage({
           message: message || "操作成功。",
@@ -692,6 +444,7 @@ export default defineComponent({
       editBtnLoading.value = false;
     };
     return {
+      indexMethod,
       svg,
       tableLoading,
       addDialog,
@@ -700,19 +453,24 @@ export default defineComponent({
       editDialog,
       editDisabled,
       editBtnLoading,
-      viewDialog,
       colcheckdList,
       rowRadioList,
-      actionBarDrawer,
-      activeNames,
       tabClickLabel,
       tabClickRowIndex,
       tabClickColIndex,
+      mouseHoverLabel,
+      mouseHoverRowIndex,
+      mouseHoverColIndex,
       editinput,
       tableColumn,
+      configurationbar,
+      tableViewdialog,
+      tableAdddialog,
+      tableEditdialog,
       blur,
       cellClassName,
       cellDblclick,
+      cellMouseEnter,
       done,
       callback,
       Loading,
@@ -727,8 +485,8 @@ export default defineComponent({
       filterMethod,
       refreshChange,
       colcheckdListChanged,
-      showView,
-      showEdit,
+      showViewDialog,
+      showEditDialog,
       showaddDialog,
       handleClose,
       handleSave,

@@ -34,11 +34,11 @@ export default {
         searchLabelWidth: 150, // 搜索框的标题宽度 默认值：80
         stripe: true, // 斑马线
         showradio: true,
-        // ShowIndex: true, // table 索引
+        showIndex: true, // table 索引
         searchIcon: true, // 表单 (展示、收缩按钮)  显示
         operations: false, // 操作栏固定
         maxHeight: 450, // 表格最大高度（默认值： 600）
-        column: [
+        column:  [
           {
             label: '车型编号',
             type: 'input',
@@ -48,15 +48,39 @@ export default {
             addDisplay: true,
             filter: true,
             span: 24, // 栅栏布局（默认值： 6）
-            headerslot: true, // 自定义表头
-            columnSlot: true,  // (开启/关闭)自定义 列显隐配置 列名
-            columnSlotname: "测试自定义列名"  // 自定义 列显隐配置 列名
           },
           {
             label: '车型名称',
             type: 'input',
             dataIndex: 'modelName',
             sortable: true
+          },
+          {
+            label: '测试布局',
+            type: 'input',
+            dataIndex: 'ceshi',
+            searchSpan: 24,
+            children: [{
+              label: "测试1",
+              type: 'input',
+              dataIndex: "ceshi1",
+              filter: true,
+              sortable: true,
+            }, {
+              label: "测试2",
+              type: 'input',
+              children: [{
+                label: "测试1",
+                type: 'input',
+                dataIndex: "ceshi1",
+                filter: true,
+                sortable: true,
+              }, {
+                label: "测试2",
+                type: 'input',
+                dataIndex: "ceshi2"
+              }]
+            }]
           },
           {
             label: '燃油类型',
@@ -97,7 +121,7 @@ export default {
     const rowStyle = ({row, rowIndex}: any) => {
       if (rowIndex % 2 === 0) {
         return {
-          backgroundColor: "#FDF5E6",
+          background: "#ECF5FF",
         };
       }
     };

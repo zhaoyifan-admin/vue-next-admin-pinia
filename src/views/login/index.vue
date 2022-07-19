@@ -24,7 +24,7 @@
 import { toRefs, reactive, computed, defineComponent, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '/@/stores/themeConfig';
-import logoMini from '/@/assets/logo-mini.svg';
+import logoMini from '/@/assets/login_logo.jpg';
 import loginIconTwo from '/@/assets/login-icon-two.svg';
 import { NextLoading } from '/@/utils/loading';
 import Account from '/@/views/login/component/account.vue';
@@ -78,7 +78,7 @@ export default defineComponent({
   .login-box {
     width: 95%;
     height: 90%;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.35);
     border-radius: 10px;
     overflow: hidden;
     position: absolute;
@@ -92,13 +92,12 @@ export default defineComponent({
 		position: relative;
 		.login-icon-group-title {
 			position: absolute;
-			top: 50px;
-			left: 80px;
+			left: 25px;
 			display: flex;
 			align-items: center;
 			img {
-				width: 30px;
-				height: 30px;
+				width: 35%;
+				height: auto;
 			}
 			&-text {
 				padding-left: 15px;
@@ -113,8 +112,8 @@ export default defineComponent({
 			width: 60%;
 			overflow: hidden;
 			height: 80%;
-			-webkit-mask-box-image: url("data:image/svg+xml,%3Csvg width='1200' height='770' xmlns='http://www.w3.org/2000/svg' fill='none'%3E%3Cg%3E%3Cpath id='svg_1' d='M58.4 47.77C104.6 59.51 135.26 67.37 162.11 78.04C188.97 88.72 226.33 102.69 265.92 123.55C305.51 144.4 366.96 167.09 441.43 121.52C515.9 75.95 546.48 61.01 577.69 46.27C608.9 31.53 625.86 23.69 680.26 12.28C734.65 0.87 837.29 10.7 867.29 21.8C897.29 32.9 935.51 51.9 962.21 95.45C988.9 139.01 972.91 177.36 951.37 221.39C929.83 265.43 883.49 306 890.44 337.33C897.4 368.66 974.73 412.18 974.73 411.47C974.73 412.18 1066.36 457.62 1106.36 491.06C1146.36 524.5 1178.8 563.36 1184.03 579.63C1189.26 595.9 1200.4 622.49 1181.55 676.88C1162.71 731.26 1127.16 764.32 1115.31 778.64C1103.45 792.96 5.34 783.61 4.32 784.63C3.3 785.65 -172.34 2.38 1.13 35.04L58.4 47.77L58.4 47.77Z' fill='%23409eff'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
-      background: #1890ff;
+			//-webkit-mask-box-image: url("data:image/svg+xml,%3Csvg width='1200' height='770' xmlns='http://www.w3.org/2000/svg' fill='none'%3E%3Cg%3E%3Cpath id='svg_1' d='M58.4 47.77C104.6 59.51 135.26 67.37 162.11 78.04C188.97 88.72 226.33 102.69 265.92 123.55C305.51 144.4 366.96 167.09 441.43 121.52C515.9 75.95 546.48 61.01 577.69 46.27C608.9 31.53 625.86 23.69 680.26 12.28C734.65 0.87 837.29 10.7 867.29 21.8C897.29 32.9 935.51 51.9 962.21 95.45C988.9 139.01 972.91 177.36 951.37 221.39C929.83 265.43 883.49 306 890.44 337.33C897.4 368.66 974.73 412.18 974.73 411.47C974.73 412.18 1066.36 457.62 1106.36 491.06C1146.36 524.5 1178.8 563.36 1184.03 579.63C1189.26 595.9 1200.4 622.49 1181.55 676.88C1162.71 731.26 1127.16 764.32 1115.31 778.64C1103.45 792.96 5.34 783.61 4.32 784.63C3.3 785.65 -172.34 2.38 1.13 35.04L58.4 47.77L58.4 47.77Z' fill='%23409eff'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+      //background: #1890ff;
 			transition: all 0.3s ease;
 		}
 		&::after {
@@ -129,7 +128,7 @@ export default defineComponent({
 			transition: all 0.3s ease;
 		}
 		&-icon {
-			width: 60%;
+			//width: 60%;
 			height: 70%;
 			position: absolute;
 			left: 0;
