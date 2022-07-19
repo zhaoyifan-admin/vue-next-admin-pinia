@@ -60,6 +60,7 @@ export default {
             type: 'input',
             dataIndex: 'ceshi',
             searchSpan: 24,
+            formCollapse: true,
             children: [{
               label: "测试1",
               type: 'input',

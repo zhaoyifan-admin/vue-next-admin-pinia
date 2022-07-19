@@ -13,16 +13,18 @@
       <template v-for="(colitem, coli) in viewArray" :key="coli">
         <el-descriptions-item :label="colitem.label" :span="colitem.span" :min-width="colitem.width || 80">
           <template #label>
-            <slot :name="colitem.dataIndex + 'viewLabel'" :nhscope="{colitem}">
+            <slot :name="colitem.dataIndex + 'viewLabel'" :ehscope="{row:colitem, size:size, $index:coli}">
               {{colitem.label}}
             </slot>
           </template>
-          <slot :name="colitem.dataIndex + 'View'" :nhscope="{colitem}">
-            <div v-if="colitem.type === 'select'">
-              {{ getpamentType(colitem.dataIndex, viewshowData[colitem.dataIndex]) }}
-            </div>
-            <div v-else>{{ viewshowData[colitem.dataIndex] }}</div>
-          </slot>
+          <template #default>
+            <slot :name="colitem.dataIndex + 'View'" :ehscope="{row:colitem, size:size, $index:coli}">
+              <div v-if="colitem.type === 'select'">
+                {{ getpamentType(colitem.dataIndex, viewshowData[colitem.dataIndex]) }}
+              </div>
+              <div v-else>{{ viewshowData[colitem.dataIndex] }}</div>
+            </slot>
+          </template>
         </el-descriptions-item>
       </template>
     </el-descriptions>

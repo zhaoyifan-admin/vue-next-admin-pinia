@@ -13,42 +13,9 @@
       <el-row :gutter="20">
         <template v-for="(colitem, coli) in option.column" :key="coli">
           <el-col :span="colitem.searchSpan || 12">
-            <el-form-item :label="colitem.label + '：'">
-              <el-input
-                  v-model="editForm[colitem.dataIndex]"
-                  v-if="colitem.type === 'input'"
-                  :size="size"
-                  :placeholder="colitem.placeholder || '请输入 ' + colitem.label"
-                  clearable
-                  style="width: 100%"/>
-              <el-input
-                  v-model="editForm[colitem.dataIndex]"
-                  v-if="colitem.type === 'textarea'"
-                  :size="size"
-                  type="textarea"
-                  :placeholder="colitem.placeholder || '请输入 ' + colitem.label"
-                  clearable
-                  :autosize="{ minRows: 4, maxRows: 8}"
-                  style="width: 100%"/>
-              <el-select
-                  v-model="editForm[colitem.dataIndex]"
-                  v-if="colitem.type === 'select'"
-                  :size="size"
-                  :placeholder="colitem.placeholder || '请选择 ' + colitem.label"
-                  @visible-change="visibleChange"
-                  @change="selectChange"
-                  clearable
-                  style="width: 100%">
-                <el-option
-                    v-for="(item, index) in options[colitem.dataIndex]"
-                    :key="index"
-                    :label="item[colitem.props.label] || item.label"
-                    :value="colitem.dataType === 'number' ?
-                        Number(item[colitem.props.value]) || Number(item.value) :
-                        item[colitem.props.value] || item.value"
-                />
-              </el-select>
-            </el-form-item>
+            <table-editdialog-form-item :size="size" :option="option" :colitem="colitem" :editForm="editForm"
+                                        :options="options" :visibleChange="visibleChange"
+                                        :selectChange="selectChange"></table-editdialog-form-item>
           </el-col>
         </template>
       </el-row>
@@ -79,6 +46,7 @@
 <script lang="ts">
 import {defineComponent, ref} from "vue";
 import {Close} from "@icon-park/vue-next";
+import tableEditdialogFormItem from "./table-editdialog-form-item.vue";
 
 export default defineComponent({
   name: "table-editdialog",
@@ -110,7 +78,7 @@ export default defineComponent({
       required: true
     }
   },
-  components: {Close},
+  components: {Close, tableEditdialogFormItem},
   setup: function (props: any, context) {
     const editDialog = ref(false);
     const openDialog = () => {
