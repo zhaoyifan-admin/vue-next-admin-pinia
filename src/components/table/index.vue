@@ -1,5 +1,9 @@
 <template>
   <div class="system-menu-container">
+    <div class="system-table-forms">
+      <table-search-forms :searchForm="searchForm" :option="option" :options="options" :size="size"
+                          :selectChange="selectChange"/>
+    </div>
     <div class="system-table-btns">
       <div class="system-table-btns-left">
         <div class="system-table-btns-left-iconbtn">
@@ -87,7 +91,7 @@
         <el-table-column type="redio" label="单选" width="60" v-if="option.showradio">
           <template #default="scope">
             <el-radio-group v-model="rowRadioList" :size="size">
-              <el-radio :label="scope.row" size="large"></el-radio>
+              <el-radio :label="scope.$index" size="large"></el-radio>
             </el-radio-group>
           </template>
         </el-table-column>
@@ -163,6 +167,7 @@
 import {defineComponent, onMounted, reactive, ref, toRefs, watch} from "vue";
 import {tableStates} from "/@/components/table/index";
 import nullData from "/@/components/table/static/images/null.svg";
+import tableSearchForms from "./component/table-search-forms.vue";
 import tableViewdialog from "./component/table-viewdialog.vue";
 import tableAdddialog from "./component/table-adddialog.vue";
 import tableEditdialog from "./component/table-editdialog.vue";
@@ -191,7 +196,15 @@ export default defineComponent({
       type: Function
     }
   },
-  components: {Close, tableViewdialog, tableAdddialog, tableEditdialog, tableColumn, configurationBar},
+  components: {
+    Close,
+    tableSearchForms,
+    tableViewdialog,
+    tableAdddialog,
+    tableEditdialog,
+    tableColumn,
+    configurationBar
+  },
   setup: function (props: any, context) {
     const addDialog = ref(false);
     const addDisabled = ref(false);
@@ -242,7 +255,7 @@ export default defineComponent({
       viewshowData: {}
     });
     const indexMethod = (index: number) => {
-      if(props.page.pageNum && props.page.pageSize) {
+      if (props.page.pageNum && props.page.pageSize) {
         index = (index + 1) + (props.page.pageNum - 1) * props.page.pageSize
       } else {
         index = index + 1
@@ -659,6 +672,7 @@ export default defineComponent({
     ::v-deep(.el-radio__inner::after) {
       border-radius: 0;
     }
+
     ::v-deep(.el-pagination.is-background .el-pager li:not(.is-disabled).is-active) {
       background-color: #5872E4;
     }

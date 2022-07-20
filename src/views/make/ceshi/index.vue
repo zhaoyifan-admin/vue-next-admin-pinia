@@ -19,6 +19,8 @@ import {ElMessage, ElMessageBox} from 'element-plus';
 import {ref, toRefs, reactive, computed, defineComponent, onMounted, onBeforeMount, h, shallowRef} from 'vue';
 import {RouteRecordRaw} from 'vue-router';
 import {fetchList} from '/@/api/ceshi';
+import dayjs, { Dayjs } from 'dayjs';
+type RangeValue = [Dayjs, Dayjs];
 
 export default {
   name: "index",
