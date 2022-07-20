@@ -50,13 +50,13 @@ export default {
       default: false
     }
   },
-  created () {
+  created() {
     // 显示所有插槽
     // console.log(this.$slots)
   },
   methods: {
     // 定义一个点击事件，这个点击事件的作用是调用父组件中的点击事件，并且回调
-    handleClick (e) {
+    handleClick(e) {
       this.$emit('click', e)
     }
   }
@@ -64,7 +64,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.rtdp-button{
+.rtdp-button {
   display: inline-block;
   line-height: 1;
   white-space: nowrap;
@@ -77,8 +77,9 @@ export default {
   box-sizing: border-box;
   outline: none;
   margin: 0;
+  margin-right: 12px;
   transition: 0.1s;
-  font-weight: 500;
+  font-weight: 350;
   //禁止元素的文字被选中
   -moz-user-select: none;
   -webkit-user-select: none;
@@ -86,169 +87,213 @@ export default {
   -ms-user-select: none;
   padding: 12px 20px;
   font-size: 14px;
-  border-radius: 4px;
+  border-radius: 2px;
+
   &:hover,
-  &:focus{
+  &:focus {
     color: #409eff;
     border-color: #409eff;
     background-color: #ecf5ff;
   }
+
   span {
     display: inline-flex;
     align-items: center;
 
-    ::v-deep(i,.iconfont){
+    ::v-deep(i,.iconfont) {
       font-size: 14px !important;
       margin-right: 5px !important;
     }
   }
 }
-.rtdp-button-primary{
-  color:#fff;
-  background-color: #0A569A;
-  border-color: #0A569A;
+
+.rtdp-button-primary {
+  color: #fff;
+  background-color: #5872E4;
+  border-color: #5872E4;
+
   &:hover,
-  &:focus{
-    background: #0A569A;
-    border-color: #0A569A;
-    background-color: #0A569A;
+  &:focus {
+    background: #788DE4;
+    border-color: #788DE4;
+    background-color: #788DE4;
     color: #fff;
   }
 }
-.rtdp-button-success{
-  color:#fff;
+
+.rtdp-button-success {
+  color: #fff;
   background-color: #67c23a;
   border-color: #67c23a;
+
   &:hover,
-  &:focus{
+  &:focus {
     background: #85ce61;
     border-color: #85ce61;
     background-color: #85ce61;
     color: #fff;
   }
 }
-.rtdp-button-info{
-  color:#fff;
+
+.rtdp-button-info {
+  color: #fff;
   background-color: #909399;
   border-color: #909399;
+
   &:hover,
-  &:focus{
+  &:focus {
     background: #a6a9ad;
     border-color: #a6a9ad;
     background-color: #a6a9ad;
     color: #fff;
   }
 }
-.rtdp-button-warning{
-  color:#fff;
+
+.rtdp-button-warning {
+  color: #fff;
   background-color: #FDA200;
   border-color: #FDA200;
+
   &:hover,
-  &:focus{
+  &:focus {
     background: #FDA200;
     border-color: #FDA200;
     background-color: #FDA200;
     color: #fff;
   }
 }
-.rtdp-button-danger{
-  color:#fff;
+
+.rtdp-button-danger {
+  color: #fff;
   background-color: #FA3549;
   border-color: #FA3549;
+
   &:hover,
-  &:focus{
-    background: #FA3549;
-    border-color: #FA3549;
-    background-color: #FA3549;
+  &:focus {
+    background: #FA8E99;
+    border-color: #FA8E99;
+    background-color: #FA8E99;
     color: #fff;
   }
 }
+
 // 朴素按钮样式
-.rtdp-button.is-plain{
+.rtdp-button.is-plain {
   &:hover,
-  &:focus{
+  &:focus {
     color: #409eff;
     background: #fff;
     border-color: #489eff;
   }
 }
-.rtdp-button-primary.is-plain{
-  color: #0A569A;
+
+.rtdp-button-primary.is-plain {
+  color: #5872E4;
   background: #ecf5ff;
+
   &:hover,
-  &:focus{
+  &:focus {
     color: #fff;
-    background: #0A569A;
-    border-color: #0A569A;
+    background: #5872E4;
+    border-color: #5872E4;
   }
 }
-.rtdp-button-success.is-plain{
+
+.rtdp-button-success.is-plain {
   color: #67c23a;
   background: #c2e7b0;
+
   &:hover,
-  &:focus{
+  &:focus {
     color: #fff;
     background: #67c23a;
     border-color: #67c23a;
   }
 }
-.rtdp-button-info.is-plain{
+
+.rtdp-button-info.is-plain {
   color: #909399;
   background: #d3d4d6;
+
   &:hover,
-  &:focus{
+  &:focus {
     color: #fff;
     background: #909399;
     border-color: #909399;
   }
 }
-.rtdp-button-warning.is-plain{
+
+.rtdp-button-warning.is-plain {
   color: #FDA200;
   background: #f5dab1;
+
   &:hover,
-  &:focus{
+  &:focus {
     color: #fff;
     background: #FDA200;
     border-color: #FDA200;
   }
 }
-.rtdp-button-danger.is-plain{
+
+.rtdp-button-danger.is-plain {
   color: #FA3549;
-  background: #fbc4c4;
+  background: #FA8E99;
+
   &:hover,
-  &:focus{
+  &:focus {
     color: #fff;
     background: #FA3549;
     border-color: #FA3549;
   }
 }
+
 // size属性
-.rtdp-button-large{
+.rtdp-button-large {
   padding: 12px 20px;
 }
-.rtdp-button-default{
+
+.rtdp-button-default {
   padding: 8px 15px;
 }
-.rtdp-button-small{
+
+.rtdp-button-small {
   padding: 5px 11px;
 }
+
 // round属性
-.rtdp-button.is-round{
+.rtdp-button.is-round {
   border-radius: 20px;
   padding: 12px 23px;
 }
+
 // circle属性
-.rtdp-button.is-circle{
+.rtdp-button.is-circle {
   border-radius: 50%;
   padding: 12px;
 }
+
 // icon配套样式
-.rtdp-button [class*=one-icon-]+span{
+.rtdp-button [class*=one-icon-] + span {
   margin-left: 5px;
 }
-// disabled属性
-.rtdp-button.is-disabled{
+
+ //disabled属性
+.rtdp-button.is-disabled {
   cursor: no-drop;
+}
+
+.rtdp-button-primary.is-disabled {
+  color: #fff;
+  border-color: #788DE4;
+  background: #788DE4;
+  background-color: #788DE4;
+}
+
+.rtdp-button-danger.is-disabled {
+  color: #fff;
+  border-color: #FA8E99;
+  background: #FA8E99;
+  background-color: #FA8E99;
 }
 </style>
 

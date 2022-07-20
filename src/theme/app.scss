@@ -301,10 +301,14 @@ input[type='number'] {
 	border: 1px solid #BBBBBE;
 	overflow: hidden;
 	transition: all 0.6s ease-in-out;
+	ul {
+		margin: 0;
+	}
 	ul li {
 		p {
 			margin-top: 5px;
 			color: #ffffff;
+			margin-bottom: 0;
 		}
 		cursor: pointer;
 		list-style:none;

@@ -127,6 +127,18 @@
           </el-form-item>
         </el-col>
       </template>
+      <el-col :span="6">
+        <div style="height: 40px;line-height: 40px;text-align: center">
+          <a-button :size="size" type="primary" class="mr10">
+            <i class="fa fa-paper-plane" aria-hidden="true"></i>
+            <span class="ml6">搜 索</span>
+          </a-button>
+          <a-button :size="size">
+            <i class="fa fa-trash-o" aria-hidden="true"></i>
+            <span class="ml6">清 空</span>
+          </a-button>
+        </div>
+      </el-col>
     </el-row>
   </el-form>
 

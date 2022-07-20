@@ -13,25 +13,25 @@
             </el-button>
           </el-tooltip>
         </div>
-        <el-button type="primary" :size="size" @click="showaddDialog">
+        <rtdp-button type="primary" :size="size" @click="showaddDialog">
           <i class="fa fa-plus" aria-hidden="true"></i> 新 增
-        </el-button>
-        <el-button type="primary" :size="size" disabled>
+        </rtdp-button>
+        <rtdp-button type="primary" :size="size" disabled>
           <i class="fa fa-pencil" aria-hidden="true"></i> 批量修改
-        </el-button>
-        <el-button type="primary" :size="size" :disabled="rowRadioList === null" @click="showEditDialog(rowRadioList)">
+        </rtdp-button>
+        <rtdp-button type="primary" :size="size" :disabled="rowRadioList === null" @click="showEditDialog(rowRadioList)">
           <i class="fa fa-pencil" aria-hidden="true"></i> 修改
-        </el-button>
-        <el-button type="danger" :size="size" disabled>
+        </rtdp-button>
+        <rtdp-button type="danger" :size="size" disabled>
           <i class="fa fa-trash" aria-hidden="true"></i> 批量删除
-        </el-button>
-        <el-button type="danger" :size="size" :disabled="rowRadioList === null"
+        </rtdp-button>
+        <rtdp-button type="danger" :size="size" :disabled="rowRadioList === null"
                    @click="handleDel(rowRadioList, 'menu')">
           <i class="fa fa-trash" aria-hidden="true"></i> 删除
-        </el-button>
-        <el-button plain :size="size" :disabled="rowRadioList === null" @click="clearRowList">
+        </rtdp-button>
+        <rtdp-button plain :size="size" :disabled="rowRadioList === null" @click="clearRowList">
           <i class="iconfont icon-qingkong" aria-hidden="true"></i> 取消选择
-        </el-button>
+        </rtdp-button>
       </div>
       <div class="system-table-btns-right">
         <el-button type="primary" :size="size">Primary</el-button>
