@@ -47,7 +47,6 @@ export default {
             dataIndex: 'modelCode',
             search: true,
             labelslot: true,
-            addDisplay: true,
             filter: true,
             span: 24, // 栅栏布局（默认值： 6）
           },
@@ -59,9 +58,9 @@ export default {
           },
           {
             label: '测试布局',
-            type: 'input',
+            type: 'daterange',
             dataIndex: 'ceshi',
-            searchSpan: 24
+            searchSpan: 12
           },
           {
             label: '燃油类型',
@@ -86,6 +85,7 @@ export default {
             label: '备注',
             type: 'textarea',
             dataIndex: 'note',
+            search: false
           }
         ]
       },

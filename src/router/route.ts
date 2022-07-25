@@ -837,6 +837,20 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 						},
 					},
 					{
+						path: '/make/button',
+						name: 'button',
+						component: () => import('/@/views/make/button/index.vue'),
+						meta: {
+							title: 'message.router.button',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							icon: 'iconfont icon-xuanzeqi',
+						},
+					},
+					{
 						path: '/make/ceshi',
 						name: 'ceshi',
 						component: () => import('/@/views/make/ceshi/index.vue'),

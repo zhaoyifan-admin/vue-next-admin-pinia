@@ -1,10 +1,14 @@
 <template>
-  <el-dialog v-model="editDialog" :show-close="false" :close-on-click-modal="false" width="45%"
-             :top="option.top || '15vh'"
-             :before-close="handleClose" custom-class="table-dialog-flag">
-    <template #header="{ close, titleId, titleClass }">
+  <a-modal v-model:visible="editDialog"
+           :close-on-click-modal="false"
+           width="45%"
+           :top="option.top || '15vh'"
+           :closable="false"
+           :before-close="handleClose"
+           custom-class="table-dialog-flag">
+    <template #title>
       <div class="my-view-dia-header dia-header">
-        <span :id="titleId" :class="titleClass">{{ option.addTitle || '编辑' }}</span>
+        <span>{{ option.addTitle || '编辑' }}</span>
         <close theme="outline" size="16" fill="#606266" strokeLinejoin="miter" strokeLinecap="square"
                style="cursor: pointer" @click="handleClose"/>
       </div>
@@ -12,7 +16,7 @@
     <el-form :model="editForm" :size="size" label-width="120px" :disabled="editDisabled">
       <el-row :gutter="20">
         <template v-for="(colitem, coli) in option.column" :key="coli">
-          <el-col :span="colitem.searchSpan || 12">
+          <el-col :span="colitem.searchSpan || 12" v-if="!colitem.editDisplay">
             <table-editdialog-form-item :size="size" :option="option" :colitem="colitem" :editForm="editForm"
                                         :options="options" :visibleChange="visibleChange"
                                         :selectChange="selectChange"></table-editdialog-form-item>
@@ -40,7 +44,7 @@
           </el-button>
         </span>
     </template>
-  </el-dialog>
+  </a-modal>
 </template>
 
 <script lang="ts">

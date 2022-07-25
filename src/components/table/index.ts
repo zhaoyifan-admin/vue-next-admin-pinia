@@ -3,6 +3,7 @@ export interface tableStates {
     colcheckList: Array<any>
     size: string
     nullData: any
+    rowList: object
     tableData: Array<any>
     searchForm: object
     addForm: object

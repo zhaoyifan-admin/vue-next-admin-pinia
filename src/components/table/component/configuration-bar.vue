@@ -76,78 +76,80 @@
                 <span style="margin-right: 5px;">表格列配置项</span>
               </template>
               <span>极简布局：</span><el-switch :disabled="showDisabled" :size="size" v-model="show" />
-              <el-table
-                  v-show="show"
-                  :data="option.column"
-                  :size="size"
-                  border
-                  style="width: 100%"
-                  row-key="dataIndex"
-                  :header-cell-style="{'text-align':'center','background':'#845DFF','color':'#ffffff'}"
-                  :cell-style="{'text-align':'center'}"
-              >
-                <el-table-column prop="label" label="列名">
-                  <template #default="scope">
-                    <span>{{ scope.row.configure || scope.row.label }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="隐藏">
-                  <template #default="scope">
-                    <el-checkbox v-model="scope.row.hide" :size="size"></el-checkbox>
-                  </template>
-                </el-table-column>
-                <el-table-column label="冻结">
-                  <template #default="scope">
-                    <el-checkbox v-model="scope.row.fixed" :size="size"></el-checkbox>
-                  </template>
-                </el-table-column>
-                <el-table-column label="过滤(筛选)">
-                  <template #default="scope">
-                    <el-checkbox v-model="scope.row.filter" :size="size"></el-checkbox>
-                  </template>
-                </el-table-column>
-                <el-table-column label="排序">
-                  <template #default="scope">
-                    <el-checkbox v-model="scope.row.sortable" :size="size"></el-checkbox>
-                  </template>
-                </el-table-column>
-              </el-table>
-              <el-table
-                  v-show="!show"
-                  :data="columnArray"
-                  :size="size"
-                  border
-                  style="width: 100%"
-                  row-key="dataIndex"
-                  :header-cell-style="{'text-align':'center','background':'#845DFF','color':'#ffffff'}"
-                  :cell-style="{'text-align':'center'}"
-              >
-                <el-table-column prop="label" label="列名">
-                  <template #default="scope">
-                    <span v-if="!scope.row.children">{{ scope.row.configure || scope.row.label }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="隐藏">
-                  <template #default="scope">
-                    <el-checkbox v-model="scope.row.hide" :size="size"></el-checkbox>
-                  </template>
-                </el-table-column>
-                <el-table-column label="冻结">
-                  <template #default="scope">
-                    <el-checkbox v-model="scope.row.fixed" :size="size"></el-checkbox>
-                  </template>
-                </el-table-column>
-                <el-table-column label="过滤(筛选)">
-                  <template #default="scope">
-                    <el-checkbox v-model="scope.row.filter" :size="size"></el-checkbox>
-                  </template>
-                </el-table-column>
-                <el-table-column label="排序">
-                  <template #default="scope">
-                    <el-checkbox v-model="scope.row.sortable" :size="size"></el-checkbox>
-                  </template>
-                </el-table-column>
-              </el-table>
+              <div class="configuration-bar-table-stylebox">
+                <el-table
+                    v-show="show"
+                    :data="option.column"
+                    :size="size"
+                    border
+                    style="width: 100%"
+                    row-key="dataIndex"
+                    :header-cell-style="{'text-align':'center','background':'#5872E4','color':'#ffffff'}"
+                    :cell-style="{'text-align':'center'}"
+                >
+                  <el-table-column prop="label" label="列名">
+                    <template #default="scope">
+                      <span>{{ scope.row.configure || scope.row.label }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="隐藏">
+                    <template #default="scope">
+                      <el-checkbox v-model="scope.row.hide" :size="size"></el-checkbox>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="冻结">
+                    <template #default="scope">
+                      <el-checkbox v-model="scope.row.fixed" :size="size"></el-checkbox>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="过滤(筛选)">
+                    <template #default="scope">
+                      <el-checkbox v-model="scope.row.filter" :size="size"></el-checkbox>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="排序">
+                    <template #default="scope">
+                      <el-checkbox v-model="scope.row.sortable" :size="size"></el-checkbox>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <el-table
+                    v-show="!show"
+                    :data="columnArray"
+                    :size="size"
+                    border
+                    style="width: 100%"
+                    row-key="dataIndex"
+                    :header-cell-style="{'text-align':'center','background':'#5872E4','color':'#ffffff'}"
+                    :cell-style="{'text-align':'center'}"
+                >
+                  <el-table-column prop="label" label="列名">
+                    <template #default="scope">
+                      <span v-if="!scope.row.children">{{ scope.row.configure || scope.row.label }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="隐藏">
+                    <template #default="scope">
+                      <el-checkbox v-model="scope.row.hide" :size="size"></el-checkbox>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="冻结">
+                    <template #default="scope">
+                      <el-checkbox v-model="scope.row.fixed" :size="size"></el-checkbox>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="过滤(筛选)">
+                    <template #default="scope">
+                      <el-checkbox v-model="scope.row.filter" :size="size"></el-checkbox>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="排序">
+                    <template #default="scope">
+                      <el-checkbox v-model="scope.row.sortable" :size="size"></el-checkbox>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
             </el-collapse-item>
             <el-collapse-item title="表格其他配置项" name="3">
 
@@ -222,5 +224,8 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
+.configuration-bar-table-stylebox {
+  border-radius: 7px;
+  overflow: hidden;
+}
 </style>

@@ -8,8 +8,10 @@
           @click="handleClick"
           :disabled="disabled"
   >
-    <i v-if="icon" :class="`rtdp-icon-${icon}`"></i>
-    <!-- 如果没传入文本插槽，则不显示span内容 -->
+    <slot name="icon"></slot>
+    <!-- slot表示插槽，用于要用户自定义的内容 -->
+    <i v-if="icon" :class="`iconfont ${icon}`"></i>
+    <!-- 传了icon才使用图标，没有传icon属性则不使用 如果没传入文本插槽，则不显示span内容 -->
     <span v-if="$slots.default"><slot></slot></span>
   </button>
 </template>
@@ -77,7 +79,7 @@ export default {
   box-sizing: border-box;
   outline: none;
   margin: 0;
-  margin-right: 12px;
+  margin-right: 10px;
   transition: 0.1s;
   font-weight: 350;
   //禁止元素的文字被选中
@@ -91,8 +93,8 @@ export default {
 
   &:hover,
   &:focus {
-    color: #409eff;
-    border-color: #409eff;
+    color: #0084FF;
+    border-color: #0084FF;
     background-color: #ecf5ff;
   }
 
@@ -121,24 +123,38 @@ export default {
   }
 }
 
-.rtdp-button-success {
+.rtdp-button-secondary {
   color: #fff;
-  background-color: #67c23a;
-  border-color: #67c23a;
+  background-color: #1B8FFF;
+  border-color: #1B8FFF;
 
   &:hover,
   &:focus {
-    background: #85ce61;
-    border-color: #85ce61;
-    background-color: #85ce61;
+    color: #fff;
+    background: #5CAFFF;
+    border-color: #5CAFFF;
+    background-color: #5CAFFF;
+  }
+}
+
+.rtdp-button-success {
+  color: #fff;
+  background-color: #1EE17E;
+  border-color: #1EE17E;
+
+  &:hover,
+  &:focus {
+    background: #76E1AB;
+    border-color: #76E1AB;
+    background-color: #76E1AB;
     color: #fff;
   }
 }
 
 .rtdp-button-info {
   color: #fff;
-  background-color: #909399;
-  border-color: #909399;
+  background-color: #606266;
+  border-color: #D9D9DA;
 
   &:hover,
   &:focus {
@@ -156,9 +172,9 @@ export default {
 
   &:hover,
   &:focus {
-    background: #FDA200;
-    border-color: #FDA200;
-    background-color: #FDA200;
+    background: #FDDA9B;
+    border-color: #FDDA9B;
+    background-color: #FDDA9B;
     color: #fff;
   }
 }
@@ -181,7 +197,7 @@ export default {
 .rtdp-button.is-plain {
   &:hover,
   &:focus {
-    color: #409eff;
+    color: #0084FF;
     background: #fff;
     border-color: #489eff;
   }
@@ -199,27 +215,41 @@ export default {
   }
 }
 
-.rtdp-button-success.is-plain {
-  color: #67c23a;
-  background: #c2e7b0;
+.rtdp-button-secondary.is-plain {
+  color: #1B8FFF;
+  border-color: #1B8FFF;
+  background-color: #C0E0FF;
 
   &:hover,
   &:focus {
     color: #fff;
-    background: #67c23a;
-    border-color: #67c23a;
+    background: #1B8FFF;
+    border-color: #1B8FFF;
+    background-color: #1B8FFF;
+  }
+}
+
+.rtdp-button-success.is-plain {
+  color: #1EE17E;
+  background: #EBF9E2;
+
+  &:hover,
+  &:focus {
+    color: #fff;
+    background: #1EE17E;
+    border-color: #1EE17E;
   }
 }
 
 .rtdp-button-info.is-plain {
-  color: #909399;
+  color: #606266;
   background: #d3d4d6;
 
   &:hover,
   &:focus {
     color: #fff;
-    background: #909399;
-    border-color: #909399;
+    background: #606266;
+    border-color: #D9D9DA;
   }
 }
 
@@ -273,26 +303,99 @@ export default {
 }
 
 // icon配套样式
-.rtdp-button [class*=one-icon-] + span {
+.rtdp-button [class*=iconfont] + span {
+  margin-left: 5px;
+}
+.rtdp-button [class*=fa] + span {
   margin-left: 5px;
 }
 
- //disabled属性
+//disabled属性
 .rtdp-button.is-disabled {
   cursor: no-drop;
+  color: #606266;
+  border-color: #dcdfe6;
+  background-color: #ffffff;
+}
+
+.rtdp-button.is-plain.is-disabled {
+  cursor: no-drop;
+  color: #606266;
+  border-color: #dcdfe6;
+  background-color: #ffffff;
 }
 
 .rtdp-button-primary.is-disabled {
+  cursor: no-drop;
   color: #fff;
   border-color: #788DE4;
-  background: #788DE4;
   background-color: #788DE4;
+}
+
+.rtdp-button-primary.is-plain.is-disabled {
+  color: #98A7E4;
+  border-color: #98A7E4;
+  background-color: #ecf5ff;
+}
+
+.rtdp-button-secondary.is-disabled {
+  color: #fff;
+  border-color: #5CAFFF;
+  background-color: #5CAFFF;
+}
+
+.rtdp-button-secondary.is-plain.is-disabled {
+  color: #5BAEFF;
+  border-color: #5BAEFF;
+  background-color: #C0E0FF;
+}
+
+.rtdp-button-success.is-disabled {
+  color: #fff;
+  border-color: #76E1AB;
+  background-color: #76E1AB;
+}
+
+.rtdp-button-success.is-plain.is-disabled {
+  color: #93E1B9;
+  border-color: #93E1B9;
+  background-color: #EBF9E2;
+}
+
+.rtdp-button-info.is-disabled {
+  color: #fff;
+  border-color: #a6a9ad;
+  background-color: #a6a9ad;
+}
+
+.rtdp-button-info.is-plain.is-disabled {
+  color: #ADB1B8;
+  border-color: #ADB1B8;
+  background-color: #d3d4d6;
+}
+
+
+.rtdp-button-warning.is-disabled {
+  color: #fff;
+  border-color: #f5dab1;
+  background-color: #f5dab1;
+}
+
+.rtdp-button-warning.is-plain.is-disabled {
+  color: #FDB841;
+  border-color: #FDB841;
+  background-color: #f5dab1;
 }
 
 .rtdp-button-danger.is-disabled {
   color: #fff;
   border-color: #FA8E99;
-  background: #FA8E99;
+  background-color: #FA8E99;
+}
+
+.rtdp-button-danger.is-plain.is-disabled {
+  color: #FA6070;
+  border-color: #FA6070;
   background-color: #FA8E99;
 }
 </style>

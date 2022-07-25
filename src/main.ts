@@ -8,8 +8,10 @@ import other from '/@/utils/other';
 
 import ElementPlus from 'element-plus';
 import Antd from 'ant-design-vue';
+import rtdpButton from 'rtdp-button';
 import 'element-plus/dist/index.css';
 import 'ant-design-vue/dist/antd.css';
+import 'rtdp-button/style.css';
 import '/@/theme/index.scss';
 import mitt from 'mitt';
 import 'animate.css';

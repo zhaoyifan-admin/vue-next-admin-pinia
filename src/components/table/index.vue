@@ -1,25 +1,21 @@
 <template>
   <div class="system-menu-container">
-    <div class="system-table-forms">
+    <div v-show="searchDisplay" class="system-table-forms">
       <table-search-forms :searchForm="searchForm" :option="option" :options="options" :size="size"
                           :selectChange="selectChange"/>
     </div>
     <div class="system-table-btns">
       <div class="system-table-btns-left">
-        <div class="system-table-btns-left-iconbtn">
-          <el-tooltip class="box-item" effect="dark" content="刷新表格数据" placement="top">
-            <el-button :size="size" @click="refreshChange">
-              <i class="iconfont icon-shuaxin1"></i>
-            </el-button>
-          </el-tooltip>
-        </div>
+        <rtdp-button icon="icon-shuaxin1" :size="size" @click="refreshChange">
+<!--          <i class="iconfont "></i>-->
+        </rtdp-button>
         <rtdp-button type="primary" :size="size" @click="showaddDialog">
-          <i class="fa fa-plus" aria-hidden="true"></i> 新 增
+          <i class="fa fa-plus" aria-hidden="true"></i><span>新 增</span>
         </rtdp-button>
         <rtdp-button type="primary" :size="size" disabled>
           <i class="fa fa-pencil" aria-hidden="true"></i> 批量修改
         </rtdp-button>
-        <rtdp-button type="primary" :size="size" :disabled="rowRadioList === null" @click="showEditDialog(rowRadioList)">
+        <rtdp-button type="primary" :size="size" :disabled="rowRadioList === null" @click="showEditDialog(rowList)">
           <i class="fa fa-pencil" aria-hidden="true"></i> 修改
         </rtdp-button>
         <rtdp-button type="danger" :size="size" disabled>
@@ -34,7 +30,7 @@
         </rtdp-button>
       </div>
       <div class="system-table-btns-right">
-        <el-button type="primary" :size="size">Primary</el-button>
+        <rtdp-button type="primary" :size="size">Primary</rtdp-button>
         <div class="system-table-btns-right-setting">
           <el-button-group class="table-search-button-group">
             <el-dropdown>
@@ -52,7 +48,7 @@
                 </el-checkbox-group>
               </template>
             </el-dropdown>
-            <el-button :size="size" title="查询表单显隐">
+            <el-button :size="size" title="查询表单显隐" @click="searchDisplay = !searchDisplay">
               <i class="iconfont icon-sousuo"></i>
             </el-button>
             <el-button :size="size" title="表格配置" @click="showActionBarDrawer">
@@ -90,7 +86,7 @@
         <el-table-column type="selection" width="55" v-if="option.showSelect"/>
         <el-table-column type="redio" label="单选" width="60" v-if="option.showradio">
           <template #default="scope">
-            <el-radio-group v-model="rowRadioList" :size="size">
+            <el-radio-group v-model="rowRadioList" :size="size" @change="changerowRadio">
               <el-radio :label="scope.$index" size="large"></el-radio>
             </el-radio-group>
           </template>
@@ -116,17 +112,17 @@
           </template>
           <template #default="scope">
             <div class="action-bar">
-              <el-button type="info" :size="size" title="查看" @click="showViewDialog(scope.row)">
+              <rtdp-button type="info" :size="size" title="查看" @click="showViewDialog(scope.row)">
                 <i class="fa fa-search-plus" aria-hidden="true"></i>
-              </el-button>
-              <el-button type="primary" :size="size" title="编辑" @click="showEditDialog(scope.row)">
+              </rtdp-button>
+              <rtdp-button type="primary" :size="size" title="编辑" @click="showEditDialog(scope.row)">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
-              </el-button>
+              </rtdp-button>
               <el-popconfirm title="是否确认删除当前选择数据？" @confirm="handleDel(scope.row, 'column')">
                 <template #reference>
-                  <el-button type="danger" :size="size" title="删除">
+                  <rtdp-button type="danger" :size="size" title="删除">
                     <i class="fa fa-trash-o" aria-hidden="true"></i>
-                  </el-button>
+                  </rtdp-button>
                 </template>
               </el-popconfirm>
             </div>
@@ -166,7 +162,7 @@
 <script lang="ts">
 import {defineComponent, onMounted, reactive, ref, toRefs, watch} from "vue";
 import {tableStates} from "/@/components/table/index";
-import nullData from "/@/components/table/static/images/null.svg";
+import nullData from "./static/images/null.svg";
 import tableSearchForms from "./component/table-search-forms.vue";
 import tableViewdialog from "./component/table-viewdialog.vue";
 import tableAdddialog from "./component/table-adddialog.vue";
@@ -206,6 +202,7 @@ export default defineComponent({
     configurationBar
   },
   setup: function (props: any, context) {
+    const searchDisplay = ref(true);
     const addDialog = ref(false);
     const addDisabled = ref(false);
     const addBtnLoading = ref(false);
@@ -242,6 +239,7 @@ export default defineComponent({
       colcheckList: [],
       size: props.option.size || 'default',
       nullData: nullData,
+      rowList: {},
       tableData: [],
       searchForm: {},
       addForm: {},
@@ -277,6 +275,9 @@ export default defineComponent({
         })
       }
       return pamentTypeName
+    };
+    const changerowRadio = (index: number) => {
+      state.rowList = state.tableData[index];
     };
     const visibleChange = (val: any) => {
 
@@ -499,7 +500,7 @@ export default defineComponent({
       editBtnLoading.value = false;
     };
     return {
-      indexMethod,
+      searchDisplay,
       svg,
       tableLoading,
       addDialog,
@@ -522,6 +523,8 @@ export default defineComponent({
       tableViewdialog,
       tableAdddialog,
       tableEditdialog,
+      indexMethod,
+      changerowRadio,
       blur,
       cellClassName,
       cellDblclick,
@@ -677,14 +680,14 @@ export default defineComponent({
       background-color: #5872E4;
     }
 
-    border-radius: 8px;
+    border-radius: 6px;
     overflow: hidden;
 
     .action-bar {
       display: inline-flex;
       align-items: center;
 
-      .el-button {
+      .rtdp-button {
         padding: 5px 6px !important;
 
         i.fa {

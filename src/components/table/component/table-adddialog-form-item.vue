@@ -7,40 +7,12 @@
     </template>
     <template #default="scope">
       <slot :name="colitem.dataIndex + 'Edit'" :ehscope="{row:colitem, size:size}">
-        <!--        输入框-->
-        <el-input
-            v-model="addForm[colitem.dataIndex]"
-            v-if="colitem.type === 'input'"
-            :size="size"
-            :placeholder="colitem.placeholder || '请输入 ' + colitem.label"
-            clearable
-            style="width: 100%"/>
-        <el-input
-            v-model="addForm[colitem.dataIndex]"
-            v-if="colitem.type === 'textarea'"
-            :size="size"
-            type="textarea"
-            :placeholder="colitem.placeholder || '请输入 ' + colitem.label"
-            clearable
-            :autosize="{ minRows: 4, maxRows: 8}"
-            style="width: 100%"/>
-        <!--        下拉选-->
-        <el-select
-            v-model="addForm[colitem.dataIndex]"
-            v-if="colitem.type === 'select'"
-            :size="size"
-            :placeholder="colitem.placeholder || '请选择 ' + colitem.label"
-            @visible-change="visibleChange"
-            @change="selectChange"
-            clearable
-            style="width: 100%">
-          <el-option
-              v-for="(item, index) in options[colitem.dataIndex]"
-              :key="index"
-              :label="item[colitem.props.label] || item.label"
-              :value="item[colitem.props.value] || item.value"
-          />
-        </el-select>
+        <single-component :colitem="colitem"
+                          :Form="addForm"
+                          :size="size"
+                          :option="option"
+                          :options="options"
+                          :selectChange="selectChange"/>
       </slot>
     </template>
   </el-form-item>
@@ -78,6 +50,7 @@
 </template>
 
 <script>
+import singleComponent from "./single-component.vue";
 export default {
   name: "table-adddialog-form-item",
   props: {
@@ -104,7 +77,8 @@ export default {
       type: Function,
       required: true
     }
-  }
+  },
+  components: {singleComponent},
 }
 </script>
 
