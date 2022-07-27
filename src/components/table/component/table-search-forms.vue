@@ -1,12 +1,12 @@
 <template>
-  <el-form :model="searchForm" :label-width="option.searchLebal || '80px'" autocomplete="off">
-    <el-row :gutter="20">
+  <a-form :model="searchForm" :labelCol="{ style: { width: option.searchLebal ||'80px' } }" autocomplete="off">
+    <a-row :gutter="20">
       <template v-for="(colitem, coli) in option.column" :key="coli">
-        <el-col :span="colitem.searchSpan || 6" v-if="colitem.search">
-          <el-form-item>
+        <a-col :span="colitem.searchSpan || 6" v-if="colitem.search">
+          <a-form-item :name="colitem.dataIndex">
             <template #label>
               <slot>
-                {{ colitem.label + ':' }}
+                {{ colitem.label }}
               </slot>
             </template>
             <template #default>
@@ -16,13 +16,14 @@
                                   :size="size"
                                   :option="option"
                                   :options="options"
+                                  diaType="search"
                                   :selectChange="selectChange"/>
               </slot>
             </template>
-          </el-form-item>
-        </el-col>
+          </a-form-item>
+        </a-col>
       </template>
-      <el-col :span="6">
+      <a-col :span="6">
         <div style="height: 40px;line-height: 40px;text-align: center">
           <a-button :size="size" type="primary" class="mr10">
             <i class="fa fa-paper-plane" aria-hidden="true"></i>
@@ -33,9 +34,9 @@
             <span class="ml6">清 空</span>
           </a-button>
         </div>
-      </el-col>
-    </el-row>
-  </el-form>
+      </a-col>
+    </a-row>
+  </a-form>
 </template>
 
 <script lang="ts">

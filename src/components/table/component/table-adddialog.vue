@@ -13,17 +13,17 @@
                style="cursor: pointer" @click="handleClose"/>
       </div>
     </template>
-    <el-form :model="addForm" :size="size" label-width="120px" :disabled="addDisabled">
-      <el-row :gutter="20">
+    <a-form :model="Form" :size="size" :labelCol="{ style: { width: option.labelWidth ||'80px' } }" :disabled="addDisabled">
+      <a-row :gutter="20">
         <template v-for="(colitem, coli) in option.column" :key="coli">
-          <el-col :span="colitem.searchSpan || 12" v-if="!colitem.addDisplay">
-            <table-adddialog-form-item :size="size" :option="option" :colitem="colitem" :addForm="addForm"
+          <a-col :span="colitem.searchSpan || 12" v-if="!colitem.addDisplay">
+            <table-adddialog-form-item :size="size" :option="option" :colitem="colitem" :addForm="Form"
                                        :options="options" :visibleChange="visibleChange"
                                        :selectChange="selectChange"></table-adddialog-form-item>
-          </el-col>
+          </a-col>
         </template>
-      </el-row>
-    </el-form>
+      </a-row>
+    </a-form>
     <template #footer>
         <span class="dialog-footer">
           <rtdp-button :size="size" @click="handleClose">
@@ -34,7 +34,7 @@
             </template>
             {{ option.addCancelBtnText || '关 闭' }}
           </rtdp-button>
-          <rtdp-button :size="size" type="primary" :loading="addBtnLoading" @click="handleSave(addForm)">
+          <rtdp-button :size="size" type="primary" :disabled="addDisabled" :loading="addBtnLoading" @click="handleSave(Form)">
             <template #icon>
               <slot name="addConfirmBtnIcon">
                 <i v-show="!addBtnLoading" class="iconfont icon-zhengque-correct"></i>
@@ -64,31 +64,21 @@ export default defineComponent({
     options: {
       type: Object
     },
-    addForm: {
-      type: Object
-    },
     addDisabled: {
       type: Boolean
     },
     addBtnLoading: {
       type: Boolean
-    },
-    handleClose: {
-      type: Function,
-      required: true
-    },
-    handleSave: {
-      type: Function,
-      required: true
     }
   },
   components: {Close, tableAdddialogFormItem},
-  setup: function (props: any, context) {
+  setup: function (props: any, {emit}) {
     const addDialog = ref(false);
     const openDialog = () => {
       addDialog.value = true;
     };
     const closeDialog = () => {
+      state.Form = {};
       addDialog.value = false;
     };
     const visibleChange = (val: any) => {
@@ -97,13 +87,23 @@ export default defineComponent({
     const selectChange = (val: any) => {
       console.log(val)
     };
-    const state = reactive({});
+    const handleSave = () => {
+      emit("handleSave", state.Form);
+    };
+    const handleClose = () => {
+      emit("handleClose");
+    };
+    const state = reactive({
+      Form: {}
+    });
     return {
       addDialog,
       openDialog,
       closeDialog,
       visibleChange,
       selectChange,
+      handleSave,
+      handleClose,
       ...toRefs(state)
     }
   }

@@ -6,9 +6,7 @@
     </div>
     <div class="system-table-btns">
       <div class="system-table-btns-left">
-        <rtdp-button icon="icon-shuaxin1" :size="size" @click="refreshChange">
-<!--          <i class="iconfont "></i>-->
-        </rtdp-button>
+        <rtdp-button icon="icon-shuaxin1" :size="size" @click="refreshChange"/>
         <rtdp-button type="primary" :size="size" @click="showaddDialog">
           <i class="fa fa-plus" aria-hidden="true"></i><span>新 增</span>
         </rtdp-button>
@@ -22,7 +20,7 @@
           <i class="fa fa-trash" aria-hidden="true"></i> 批量删除
         </rtdp-button>
         <rtdp-button type="danger" :size="size" :disabled="rowRadioList === null"
-                   @click="handleDel(rowRadioList, 'menu')">
+                     @click="handleDel(rowRadioList, 'menu')">
           <i class="fa fa-trash" aria-hidden="true"></i> 删除
         </rtdp-button>
         <rtdp-button plain :size="size" :disabled="rowRadioList === null" @click="clearRowList">
@@ -112,19 +110,8 @@
           </template>
           <template #default="scope">
             <div class="action-bar">
-              <rtdp-button type="info" :size="size" title="查看" @click="showViewDialog(scope.row)">
-                <i class="fa fa-search-plus" aria-hidden="true"></i>
-              </rtdp-button>
-              <rtdp-button type="primary" :size="size" title="编辑" @click="showEditDialog(scope.row)">
-                <i class="fa fa-pencil" aria-hidden="true"></i>
-              </rtdp-button>
-              <el-popconfirm title="是否确认删除当前选择数据？" @confirm="handleDel(scope.row, 'column')">
-                <template #reference>
-                  <rtdp-button type="danger" :size="size" title="删除">
-                    <i class="fa fa-trash-o" aria-hidden="true"></i>
-                  </rtdp-button>
-                </template>
-              </el-popconfirm>
+              <table-action-bar :size="size" @showViewDialog="showViewDialog(scope.row)" @showEditDialog="showEditDialog(scope.row)"
+                                @handleDel="handleDel(scope.row, 'column')" />
             </div>
           </template>
         </el-table-column>
@@ -150,9 +137,9 @@
     </div>
     <table-viewdialog ref="tableViewdialog" :option="option" :size="size" :viewshowData="viewshowData"
                       :getpamentType="getpamentType" :handleClose="handleClose"></table-viewdialog>
-    <table-adddialog ref="tableAdddialog" :option="option" :options="options" :size="size" :addForm="addForm"
+    <table-adddialog ref="tableAdddialog" :option="option" :options="options" :size="size"
                      :addDisabled="addDisabled" :addBtnLoading="addBtnLoading"
-                     :handleClose="handleClose" :handleSave="handleSave"></table-adddialog>
+                     @handleClose="handleClose" @handleSave="handleSave"></table-adddialog>
     <table-editdialog ref="tableEditdialog" :option="option" :options="options" :size="size" :editForm="editForm"
                       :editDisabled="editDisabled" :editBtnLoading="editBtnLoading" :handleClose="handleClose"
                       :handleEdit="handleEdit"></table-editdialog>
@@ -169,6 +156,7 @@ import tableAdddialog from "./component/table-adddialog.vue";
 import tableEditdialog from "./component/table-editdialog.vue";
 import tableColumn from "./component/table-column.vue";
 import configurationBar from "./component/configuration-bar.vue";
+import tableActionBar from "./component/table-action-bar.vue";
 import {Close} from '@icon-park/vue-next';
 import request from "/@/utils/request";
 import {ElMessage, ElMessageBox} from "element-plus";
@@ -199,7 +187,8 @@ export default defineComponent({
     tableAdddialog,
     tableEditdialog,
     tableColumn,
-    configurationBar
+    configurationBar,
+    tableActionBar
   },
   setup: function (props: any, context) {
     const searchDisplay = ref(true);
@@ -242,7 +231,6 @@ export default defineComponent({
       rowList: {},
       tableData: [],
       searchForm: {},
-      addForm: {},
       editForm: {},
       option: props.option,
       page: props.page,
@@ -386,7 +374,6 @@ export default defineComponent({
       context.emit("onLoad", page, params);
     };
     const handleSave = (form: any) => {
-      console.log(form);
       addDisabled.value = true;
       addBtnLoading.value = true;
       context.emit("handleSave", form, Loading, done);
@@ -462,7 +449,6 @@ export default defineComponent({
       if (rowRadioList.value !== null) {
         rowRadioList.value = null;
       }
-      state.addForm = {};
       state.editForm = {};
       tableViewdialog.value.closeDialog();
       tableAdddialog.value.closeDialog();

@@ -56,7 +56,7 @@
                 <el-col :span="24" class="mt10">
                   <div style="display: flex;align-items: center">
                     <span style="display: block;width: 130px;">操作栏按钮类型：</span>
-                    <el-radio-group v-model="actionBar" :size="size">
+                    <el-radio-group v-model="actionBar" :size="size" @change="changeActionBar">
                       <el-radio-button :size="size" :label="'menu'">
                         菜单按钮
                       </el-radio-button>
@@ -190,11 +190,13 @@ export default defineComponent({
       actionBarDrawer.value = true;
     };
     const changeRadio = (val: string) => {
-      console.log(val)
       emit('update:size', val);
     };
     const changeShow = () => {
       show.value = !show.value;
+    };
+    const changeActionBar = () => {
+
     };
     onMounted(()=>{
       const Array = getFlatArr(props.option.column);
@@ -217,7 +219,8 @@ export default defineComponent({
       show,
       openDrawer,
       changeRadio,
-      changeShow
+      changeShow,
+      changeActionBar
     }
   },
 })

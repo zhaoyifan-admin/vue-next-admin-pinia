@@ -13,35 +13,35 @@
                style="cursor: pointer" @click="handleClose"/>
       </div>
     </template>
-    <el-form :model="editForm" :size="size" label-width="120px" :disabled="editDisabled">
-      <el-row :gutter="20">
+    <a-form :model="editForm" :size="size" :labelCol="{ style: { width: option.labelWidth ||'80px' } }" :disabled="editDisabled">
+      <a-row :gutter="20">
         <template v-for="(colitem, coli) in option.column" :key="coli">
-          <el-col :span="colitem.searchSpan || 12" v-if="!colitem.editDisplay">
+          <a-col :span="colitem.searchSpan || 12" v-if="!colitem.editDisplay">
             <table-editdialog-form-item :size="size" :option="option" :colitem="colitem" :editForm="editForm"
                                         :options="options" :visibleChange="visibleChange"
                                         :selectChange="selectChange"></table-editdialog-form-item>
-          </el-col>
+          </a-col>
         </template>
-      </el-row>
-    </el-form>
+      </a-row>
+    </a-form>
     <template #footer>
         <span class="dialog-footer">
-          <el-button :size="size" @click="handleClose">
+          <rtdp-button :size="size" @click="handleClose">
             <template #icon>
               <slot name="editCancelBtnIcon">
                 <i class="iconfont icon-guanbi"></i>
               </slot>
             </template>
             {{ option.editCancelBtnText || '关 闭' }}
-          </el-button>
-          <el-button :size="size" type="primary" :loading="editBtnLoading" @click="handleEdit(editForm)">
+          </rtdp-button>
+          <rtdp-button :size="size" type="primary" :loading="editBtnLoading" @click="handleEdit(editForm)">
             <template #icon>
               <slot name="editConfirmBtnIcon">
                 <i v-show="!editBtnLoading" class="iconfont icon-zhengque-correct"></i>
               </slot>
             </template>
             {{ option.editConfirmBtnText || '修 改' }}
-          </el-button>
+          </rtdp-button>
         </span>
     </template>
   </a-modal>

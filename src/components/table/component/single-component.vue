@@ -53,18 +53,19 @@
   </a-input-number>
 
   <!--            DatePicker 日期选择框-->
-  <a-date-picker v-if="colitem.type === 'date'"
-                 :size="size"
-                 v-model:value="Form[colitem.dataIndex]"
-                 :show-time="colitem.showTime"
-                 :picker="colitem.picker || 'date'"
-                 :disabled-date="colitem.disabledDate"
-                 :disabled-time="colitem.disabledDateTime"
-                 :format="colitem.format || 'YYYY-MM-DD HH:mm:ss'"
-                 :valueFormat="colitem.valueFormat || 'YYYY-MM-DD HH:mm:ss'"
-                 :placeholder="colitem.placeholder || colitem.label"
-                 style="width: 100%"/>
-  <a-range-picker v-if="colitem.type === 'daterange'"
+  <a-date-picker
+      v-if="colitem.type === 'date' || (colitem.type === 'daterange' && (diaType === 'add' || diaType === 'edit'))"
+      :size="size"
+      v-model:value="Form[colitem.dataIndex]"
+      :show-time="colitem.showTime"
+      :picker="colitem.picker || 'date'"
+      :disabled-date="colitem.disabledDate"
+      :disabled-time="colitem.disabledDateTime"
+      :format="colitem.format || 'YYYY-MM-DD HH:mm:ss'"
+      :valueFormat="colitem.valueFormat || 'YYYY-MM-DD HH:mm:ss'"
+      :placeholder="colitem.placeholder || colitem.label"
+      style="width: 100%"/>
+  <a-range-picker v-if="colitem.type === 'daterange' && diaType === 'search'"
                   :size="size"
                   v-model:value="Form[colitem.dataIndex]"
                   :ranges="colitem.ranges?ranges:null"
@@ -74,7 +75,6 @@
                   :disabled-time="colitem.disabledRangeTime"
                   :format="colitem.format || 'YYYY-MM-DD HH:mm:ss'"
                   :valueFormat="colitem.valueFormat || 'YYYY-MM-DD HH:mm:ss'"
-                  :placeholder="colitem.placeholder || colitem.label"
                   style="width: 100%"/>
 
   <!--            Select 选择器-->
@@ -92,7 +92,8 @@
       style="width: 100%"
   >
     <template v-for="(item, index) in options[colitem.dataIndex]" :key="index">
-      <a-select-option :value="item[colitem.props.value] || item.value">
+      <a-select-option
+          :value="colitem.dataType === 'number' ? Number(item[colitem.props.value]) || Number(item.value) : item[colitem.props.value] || item.value">
         <template #suffixIcon>
           <slot :name="colitem.dataIndex + 'SearchsuffixIcon'"></slot>
         </template>
@@ -121,11 +122,15 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import dayjs, {Dayjs} from 'dayjs';
+
 type RangeValue = [Dayjs, Dayjs];
 
 export default defineComponent({
   name: "single-component",
   props: {
+    diaType: {
+      type: String
+    },
     colitem: {
       type: Object
     },

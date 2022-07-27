@@ -1,8 +1,8 @@
 <template>
-  <el-form-item v-if="!colitem.children">
-    <template #label="{ label }">
+  <a-form-item v-if="!colitem.children">
+    <template #label>
       <slot :name="colitem.dataIndex + 'editLabel'" :ehscope="{row:colitem, size:size}">
-        {{ colitem.label + '：' }}
+        {{ colitem.label }}
       </slot>
     </template>
     <template #default="scope">
@@ -12,15 +12,16 @@
                           :size="size"
                           :option="option"
                           :options="options"
+                          diaType="edit"
                           :selectChange="selectChange"/>
       </slot>
     </template>
-  </el-form-item>
+  </a-form-item>
   <template v-if="colitem.children">
-    <el-form-item v-if="!colitem.formCollapse">
+    <a-form-item v-if="!colitem.formCollapse">
       <template #label>
         <slot :name="colitem.dataIndex + 'editLabel'" :ehscope="{row:colitem, size:size}">
-          {{ colitem.label + '：' }}
+          {{ colitem.label }}
         </slot>
       </template>
       <el-collapse :size="size" style="width: 100%;">
@@ -36,7 +37,7 @@
           </table-editdialog-form-item>
         </el-collapse-item>
       </el-collapse>
-    </el-form-item>
+    </a-form-item>
     <table-editdialog-form-item v-else v-for="(cochlitem, cochli) in colitem.children"
                                 :key="cochli"
                                 :size="size"

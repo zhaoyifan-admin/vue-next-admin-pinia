@@ -5,18 +5,18 @@
     'is-circle':circle,
     'is-disabled':disabled
   }]"
-          @click="handleClick"
           :disabled="disabled"
   >
     <slot name="icon"></slot>
     <!-- slot表示插槽，用于要用户自定义的内容 -->
-    <i v-if="icon" :class="`iconfont ${icon}`"></i>
+    <i v-if="loading" :class="[`fa fa-spinner`,{'is-loading':loading}]"></i>
+    <i v-if="icon && !loading" :class="`fa iconfont ${icon}`"></i>
     <!-- 传了icon才使用图标，没有传icon属性则不使用 如果没传入文本插槽，则不显示span内容 -->
     <span v-if="$slots.default"><slot></slot></span>
   </button>
 </template>
 
-<script>
+<script lang="ts">
 
 export default {
   name: 'rtdpButton',
@@ -50,17 +50,17 @@ export default {
     disabled: {
       type: Boolean,
       default: false
-    }
+    },
+    loading: {
+      type: Boolean,
+      default: false
+    },
   },
   created() {
-    // 显示所有插槽
-    // console.log(this.$slots)
+
   },
   methods: {
-    // 定义一个点击事件，这个点击事件的作用是调用父组件中的点击事件，并且回调
-    handleClick(e) {
-      this.$emit('click', e)
-    }
+
   }
 }
 </script>
@@ -102,7 +102,7 @@ export default {
     display: inline-flex;
     align-items: center;
 
-    ::v-deep(i,.iconfont) {
+    ::v-deep(i,.fa,.iconfont) {
       font-size: 14px !important;
       margin-right: 5px !important;
     }
@@ -302,11 +302,12 @@ export default {
   padding: 12px;
 }
 
+
 // icon配套样式
-.rtdp-button [class*=iconfont] + span {
+.rtdp-button [class*=fa] + span {
   margin-left: 5px;
 }
-.rtdp-button [class*=fa] + span {
+.rtdp-button [class*=iconfont] + span {
   margin-left: 5px;
 }
 
@@ -397,6 +398,16 @@ export default {
   color: #FA6070;
   border-color: #FA6070;
   background-color: #FA8E99;
+}
+
+// loading属性
+.fa.is-loading {
+  position:relative;
+  animation: rotating 1.5s linear infinite;
+}
+.iconfont.is-loading {
+  position:relative;
+  animation: rotating 1.5s linear infinite;
 }
 </style>
 
