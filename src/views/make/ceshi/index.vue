@@ -8,6 +8,7 @@
       @onLoad="getTable"
       @searchChange="searchChange"
       @handleSave="handleSave"
+      @handleUpdate="handleUpdate"
       @handleDel="handleDel"
       @refreshChange="refreshChange"
   >
@@ -68,7 +69,7 @@ export default {
             type: 'select',
             dataIndex: 'fuelType',
             dataType: 'number',
-            dicUrl: '/admin/dict/type/fuels_type',
+            dicUrl: '/api/admin/dict/type/fuels_type',
             props: {
               label: 'label',
               value: 'value'
@@ -123,6 +124,12 @@ export default {
       }, 3000)
       // getTable(state.page);
     };
+    const handleUpdate = async (form: object, Loading: any, done: any) => {
+      setTimeout(() => {
+        Loading();
+      }, 3000)
+      // getTable(state.page);
+    };
     const handleDel = async (form: object, callback: any) => {
       setTimeout(() => {
         callback(0);
@@ -170,6 +177,7 @@ export default {
     return {
       getTable,
       handleSave,
+      handleUpdate,
       handleDel,
       refreshChange,
       searchChange,

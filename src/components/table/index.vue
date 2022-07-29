@@ -5,56 +5,62 @@
                           :selectChange="selectChange"/>
     </div>
     <div class="system-table-btns">
-      <div class="system-table-btns-left">
-        <rtdp-button icon="icon-shuaxin1" :size="size" @click="refreshChange"/>
-        <rtdp-button type="primary" :size="size" @click="showaddDialog">
-          <i class="fa fa-plus" aria-hidden="true"></i><span>新 增</span>
-        </rtdp-button>
-        <rtdp-button type="primary" :size="size" disabled>
-          <i class="fa fa-pencil" aria-hidden="true"></i> 批量修改
-        </rtdp-button>
-        <rtdp-button type="primary" :size="size" :disabled="rowRadioList === null" @click="showEditDialog(rowList)">
-          <i class="fa fa-pencil" aria-hidden="true"></i> 修改
-        </rtdp-button>
-        <rtdp-button type="danger" :size="size" disabled>
-          <i class="fa fa-trash" aria-hidden="true"></i> 批量删除
-        </rtdp-button>
-        <rtdp-button type="danger" :size="size" :disabled="rowRadioList === null"
-                     @click="handleDel(rowRadioList, 'menu')">
-          <i class="fa fa-trash" aria-hidden="true"></i> 删除
-        </rtdp-button>
-        <rtdp-button plain :size="size" :disabled="rowRadioList === null" @click="clearRowList">
-          <i class="iconfont icon-qingkong" aria-hidden="true"></i> 取消选择
-        </rtdp-button>
-      </div>
-      <div class="system-table-btns-right">
-        <rtdp-button type="primary" :size="size">Primary</rtdp-button>
-        <div class="system-table-btns-right-setting">
-          <el-button-group class="table-search-button-group">
-            <el-dropdown>
-              <el-button :size="size" title="列显隐">
-                <el-icon>
-                  <Grid/>
-                </el-icon>
-              </el-button>
-              <template #dropdown>
-                <el-checkbox-group class="system-table-btns-right-setting-checkbox-group" :size="size"
-                                   v-model="colcheckdList" @change="colcheckdListChanged">
-                  <template v-for="(colcheck, index) in colcheckList" :key="index">
-                    <el-checkbox :label="colcheck"/>
+      <a-row>
+        <a-col :span="12">
+          <div class="system-table-btns-left">
+            <rtdp-button icon="icon-shuaxin1" :size="size" @click="refreshChange"/>
+            <rtdp-button type="primary" :size="size" @click="showaddDialog">
+              <i class="fa fa-plus" aria-hidden="true"></i><span>新 增</span>
+            </rtdp-button>
+            <rtdp-button type="primary" :size="size" disabled>
+              <i class="fa fa-pencil" aria-hidden="true"></i> 批量修改
+            </rtdp-button>
+            <rtdp-button type="primary" :size="size" :disabled="rowRadioList === null" @click="showEditDialog(rowList)">
+              <i class="fa fa-pencil" aria-hidden="true"></i> 修改
+            </rtdp-button>
+            <rtdp-button type="danger" :size="size" disabled>
+              <i class="fa fa-trash" aria-hidden="true"></i> 批量删除
+            </rtdp-button>
+            <rtdp-button type="danger" :size="size" :disabled="rowRadioList === null"
+                         @click="handleDel(rowRadioList, 'menu')">
+              <i class="fa fa-trash" aria-hidden="true"></i> 删除
+            </rtdp-button>
+            <rtdp-button plain :size="size" :disabled="rowRadioList === null" @click="clearRowList">
+              <i class="iconfont icon-qingkong" aria-hidden="true"></i> 取消选择
+            </rtdp-button>
+          </div>
+        </a-col>
+        <a-col :span="12">
+          <div class="system-table-btns-right">
+            <rtdp-button type="primary" icon="icon-cloud_download" :size="size" />
+            <span class="system-table-btns-right-setting">
+              <el-button-group class="table-search-button-group">
+                <el-button :size="size" title="查询表单显隐" @click="searchDisplay = !searchDisplay">
+                  <i class="iconfont icon-sousuo"></i>
+                </el-button>
+                <el-button :size="size" title="表格配置" @click="showActionBarDrawer">
+                  <i class="iconfont icon-kongzhi"></i>
+                </el-button>
+                <el-dropdown trigger="click">
+                  <el-button :size="size" title="列显隐">
+                    <el-icon>
+                      <Grid/>
+                    </el-icon>
+                  </el-button>
+                  <template #dropdown>
+                    <el-checkbox-group class="system-table-btns-right-setting-checkbox-group" :size="size"
+                                       v-model="colcheckdList" @change="colcheckdListChanged">
+                      <template v-for="(colcheck, index) in colcheckList" :key="index">
+                        <el-checkbox :label="colcheck"/>
+                      </template>
+                    </el-checkbox-group>
                   </template>
-                </el-checkbox-group>
-              </template>
-            </el-dropdown>
-            <el-button :size="size" title="查询表单显隐" @click="searchDisplay = !searchDisplay">
-              <i class="iconfont icon-sousuo"></i>
-            </el-button>
-            <el-button :size="size" title="表格配置" @click="showActionBarDrawer">
-              <i class="iconfont icon-kongzhi"></i>
-            </el-button>
-          </el-button-group>
-        </div>
-      </div>
+                </el-dropdown>
+              </el-button-group>
+            </span>
+          </div>
+        </a-col>
+      </a-row>
     </div>
     <div class="system-table-box">
       <el-table
@@ -110,8 +116,9 @@
           </template>
           <template #default="scope">
             <div class="action-bar">
-              <table-action-bar :size="size" @showViewDialog="showViewDialog(scope.row)" @showEditDialog="showEditDialog(scope.row)"
-                                @handleDel="handleDel(scope.row, 'column')" />
+              <table-action-bar :size="size" @showViewDialog="showViewDialog(scope.row)"
+                                @showEditDialog="showEditDialog(scope.row)"
+                                @handleDel="handleDel(scope.row, 'column')"/>
             </div>
           </template>
         </el-table-column>
@@ -141,14 +148,14 @@
                      :addDisabled="addDisabled" :addBtnLoading="addBtnLoading"
                      @handleClose="handleClose" @handleSave="handleSave"></table-adddialog>
     <table-editdialog ref="tableEditdialog" :option="option" :options="options" :size="size" :editForm="editForm"
-                      :editDisabled="editDisabled" :editBtnLoading="editBtnLoading" :handleClose="handleClose"
-                      :handleEdit="handleEdit"></table-editdialog>
+                      :editDisabled="editDisabled" :editBtnLoading="editBtnLoading" @handleClose="handleClose"
+                      @handleEdit="handleEdit"></table-editdialog>
   </div>
 </template>
 
 <script lang="ts">
 import {defineComponent, onMounted, reactive, ref, toRefs, watch} from "vue";
-import {tableStates} from "/@/components/table/index";
+import {tableStates} from "./index";
 import nullData from "./static/images/null.svg";
 import tableSearchForms from "./component/table-search-forms.vue";
 import tableViewdialog from "./component/table-viewdialog.vue";
@@ -158,7 +165,7 @@ import tableColumn from "./component/table-column.vue";
 import configurationBar from "./component/configuration-bar.vue";
 import tableActionBar from "./component/table-action-bar.vue";
 import {Close} from '@icon-park/vue-next';
-import request from "/@/utils/request";
+import axios from 'axios';
 import {ElMessage, ElMessageBox} from "element-plus";
 
 export default defineComponent({
@@ -328,13 +335,19 @@ export default defineComponent({
           let result: any = [];
 
           function f() {
-            return request({
-              url: v.dicUrl,
-              method: 'get',
+            return new Promise((resolve, reject) => {
+              axios({
+                url: v.dicUrl,
+                method: 'get'
+              }).then(res => {
+                resolve(res.data)
+              }).catch(err => {
+                reject(err)
+              })
             })
           }
 
-          await f().then((res) => {
+          await f().then((res: any) => {
             result = res.data;
           }).catch((error) => {
             console.log(error)
@@ -379,9 +392,10 @@ export default defineComponent({
       context.emit("handleSave", form, Loading, done);
     };
     const handleEdit = (form: any) => {
+      console.log(form)
       editDisabled.value = true;
       editBtnLoading.value = true;
-      context.emit("handleSave", form, Loading, done);
+      context.emit("handleUpdate", form, Loading, done);
     };
     const handleDel = (row: object, key: String) => {
       if (key === 'column') {
@@ -435,6 +449,8 @@ export default defineComponent({
       })
     };
     const showaddDialog = () => {
+      addDisabled.value = false;
+      addBtnLoading.value = false;
       tableAdddialog.value.openDialog();
     };
     const showViewDialog = (row: object) => {
@@ -442,14 +458,16 @@ export default defineComponent({
       state.viewshowData = row;
     };
     const showEditDialog = (row: object) => {
+      state.editForm = {};
+      editDisabled.value = false;
+      editBtnLoading.value = false;
+      Object.assign(state.editForm, row);
       tableEditdialog.value.openDialog();
-      state.editForm = row;
     };
     const handleClose = () => {
       if (rowRadioList.value !== null) {
         rowRadioList.value = null;
       }
-      state.editForm = {};
       tableViewdialog.value.closeDialog();
       tableAdddialog.value.closeDialog();
       tableEditdialog.value.closeDialog();
@@ -550,6 +568,13 @@ export default defineComponent({
   .el-checkbox {
     margin: 0 15px 0 10px !important;
   }
+  ::v-deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
+    background-color: #5872E4;
+    border-color: #5872E4;
+  }
+  ::v-deep(.el-checkbox__input.is-checked+.el-checkbox__label) {
+    color: #5872E4;
+  }
 }
 
 .dia-header {
@@ -586,49 +611,35 @@ export default defineComponent({
   background-color: #ffffff;
   padding: 20px;
 
+  ::v-deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
+    background-color: #5872E4;
+    border-color: #5872E4;
+  }
+  ::v-deep(.el-checkbox__input.is-checked+.el-checkbox__label) {
+    color: #5872E4;
+  }
+  ::v-deep(.el-switch.is-checked .el-switch__core) {
+    background-color: #5872E4;
+  }
+
+  .system-table-forms {
+    margin-bottom: 10px;
+  }
+
   .system-table-btns {
-    display: flex;
-    align-items: center;
     margin-bottom: 10px;
 
-    .system-table-btns-left,
-    .system-table-btns-right {
-      flex: 1;
-    }
-
     .system-table-btns-left {
-      display: flex;
-      align-items: center;
 
-      .system-table-btns-left-iconbtn {
-        margin-right: 10px;
-
-        .iconfont,
-        .el-icon {
-          margin: 0 !important;
-        }
-      }
     }
 
     .system-table-btns-right {
       text-align: right;
-      display: contents;
+      display: flex;
       align-items: center;
+      justify-content: end;
 
       .system-table-btns-right-setting {
-        .table-search-button-group {
-          display: flex;
-
-          .el-dropdown {
-            .el-button {
-              border-radius: 4px 0 0 4px;
-              border-right: none !important;
-            }
-          }
-        }
-
-        margin-left: 10px;
-
         .iconfont,
         .el-icon {
           margin: 0 !important;

@@ -13,17 +13,19 @@
                style="cursor: pointer" @click="handleClose"/>
       </div>
     </template>
-    <a-form :model="Form" :size="size" :labelCol="{ style: { width: option.labelWidth ||'80px' } }" :disabled="addDisabled">
-      <a-row :gutter="20">
-        <template v-for="(colitem, coli) in option.column" :key="coli">
-          <a-col :span="colitem.searchSpan || 12" v-if="!colitem.addDisplay">
-            <table-adddialog-form-item :size="size" :option="option" :colitem="colitem" :addForm="Form"
-                                       :options="options" :visibleChange="visibleChange"
-                                       :selectChange="selectChange"></table-adddialog-form-item>
-          </a-col>
-        </template>
-      </a-row>
-    </a-form>
+    <a-spin :spinning="addBtnLoading" :indicator="indicator" tip="Loading...">
+      <a-form :model="Form" :size="size" :labelCol="{ style: { width: option.labelWidth ||'80px' } }" :disabled="addDisabled">
+        <a-row :gutter="20">
+          <template v-for="(colitem, coli) in option.column" :key="coli">
+            <a-col :span="colitem.searchSpan || 12" v-if="!colitem.addDisplay">
+              <table-adddialog-form-item :size="size" :option="option" :colitem="colitem" :addForm="Form"
+                                         :options="options" :visibleChange="visibleChange"
+                                         :selectChange="selectChange"></table-adddialog-form-item>
+            </a-col>
+          </template>
+        </a-row>
+      </a-form>
+    </a-spin>
     <template #footer>
         <span class="dialog-footer">
           <rtdp-button :size="size" @click="handleClose">
@@ -48,8 +50,9 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, reactive, ref, toRefs} from "vue";
+import {defineComponent, h, reactive, ref, toRefs} from "vue";
 import {Close} from "@icon-park/vue-next";
+import { LoadingOutlined } from '@ant-design/icons-vue';
 import tableAdddialogFormItem from "./table-adddialog-form-item.vue";
 
 export default defineComponent({
@@ -73,6 +76,15 @@ export default defineComponent({
   },
   components: {Close, tableAdddialogFormItem},
   setup: function (props: any, {emit}) {
+    const indicator = h(LoadingOutlined, {
+      style: {
+        fontSize: '24px',
+      },
+      spin: true,
+    });
+    const state = reactive({
+      Form: {}
+    });
     const addDialog = ref(false);
     const openDialog = () => {
       addDialog.value = true;
@@ -93,10 +105,8 @@ export default defineComponent({
     const handleClose = () => {
       emit("handleClose");
     };
-    const state = reactive({
-      Form: {}
-    });
     return {
+      indicator,
       addDialog,
       openDialog,
       closeDialog,

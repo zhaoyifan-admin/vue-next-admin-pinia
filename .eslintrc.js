@@ -27,6 +27,7 @@ module.exports = {
 		'@typescript-eslint/no-non-null-assertion': 'off',
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		'vue/custom-event-name-casing': 'off',
+		"vue/no-unused-components": "off",
 		'vue/attributes-order': 'off',
 		'vue/one-component-per-file': 'off',
 		'vue/html-closing-bracket-newline': 'off',

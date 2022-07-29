@@ -8,9 +8,11 @@ import other from '/@/utils/other';
 
 import ElementPlus from 'element-plus';
 import Antd from 'ant-design-vue';
+import ArcoVue from '@arco-design/web-vue';
 import rtdpButton from 'rtdp-button';
 import 'element-plus/dist/index.css';
 import 'ant-design-vue/dist/antd.css';
+import '@arco-design/web-vue/dist/arco.css';
 import 'rtdp-button/style.css';
 import '/@/theme/index.scss';
 import mitt from 'mitt';
@@ -19,8 +21,6 @@ import VueGridLayout from 'vue-grid-layout';
 import '@smallwei/avue/lib/index.css';
 import '@icon-park/vue/styles/index.css';
 import install from '/@/components/index';
-import ArcoVue from '@arco-design/web-vue';
-import '@arco-design/web-vue/dist/arco.css';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import VueBMap, {initBMapApiLoader} from 'vue-bmap-gl';
 import 'vue-bmap-gl/dist/style.css'

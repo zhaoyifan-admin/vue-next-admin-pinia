@@ -13,17 +13,19 @@
                style="cursor: pointer" @click="handleClose"/>
       </div>
     </template>
-    <a-form :model="editForm" :size="size" :labelCol="{ style: { width: option.labelWidth ||'80px' } }" :disabled="editDisabled">
-      <a-row :gutter="20">
-        <template v-for="(colitem, coli) in option.column" :key="coli">
-          <a-col :span="colitem.searchSpan || 12" v-if="!colitem.editDisplay">
-            <table-editdialog-form-item :size="size" :option="option" :colitem="colitem" :editForm="editForm"
-                                        :options="options" :visibleChange="visibleChange"
-                                        :selectChange="selectChange"></table-editdialog-form-item>
-          </a-col>
-        </template>
-      </a-row>
-    </a-form>
+    <a-spin :spinning="editBtnLoading" :indicator="indicator" tip="Loading...">
+      <a-form :model="editForm" :size="size" :labelCol="{ style: { width: option.labelWidth ||'80px' } }">
+        <a-row :gutter="20">
+          <template v-for="(colitem, coli) in option.column" :key="coli">
+            <a-col :span="colitem.searchSpan || 12" v-if="!colitem.editDisplay">
+              <table-editdialog-form-item :size="size" :option="option" :colitem="colitem" :editForm="editForm"
+                                          :options="options" :visibleChange="visibleChange"
+                                          :selectChange="selectChange"></table-editdialog-form-item>
+            </a-col>
+          </template>
+        </a-row>
+      </a-form>
+    </a-spin>
     <template #footer>
         <span class="dialog-footer">
           <rtdp-button :size="size" @click="handleClose">
@@ -34,7 +36,7 @@
             </template>
             {{ option.editCancelBtnText || '关 闭' }}
           </rtdp-button>
-          <rtdp-button :size="size" type="primary" :loading="editBtnLoading" @click="handleEdit(editForm)">
+          <rtdp-button :size="size" type="primary" :disabled="editDisabled" :loading="editBtnLoading" @click="handleEdit(editForm)">
             <template #icon>
               <slot name="editConfirmBtnIcon">
                 <i v-show="!editBtnLoading" class="iconfont icon-zhengque-correct"></i>
@@ -48,9 +50,10 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from "vue";
+import {defineComponent, h, ref} from "vue";
 import {Close} from "@icon-park/vue-next";
 import tableEditdialogFormItem from "./table-editdialog-form-item.vue";
+import {LoadingOutlined} from "@ant-design/icons-vue";
 
 export default defineComponent({
   name: "table-editdialog",
@@ -72,23 +75,22 @@ export default defineComponent({
     },
     editBtnLoading: {
       type: Boolean
-    },
-    handleClose: {
-      type: Function,
-      required: true
-    },
-    handleEdit: {
-      type: Function,
-      required: true
     }
   },
   components: {Close, tableEditdialogFormItem},
-  setup: function (props: any, context) {
+  setup: function (props: any, {emit}) {
+    const indicator = h(LoadingOutlined, {
+      style: {
+        fontSize: '24px',
+      },
+      spin: true,
+    });
     const editDialog = ref(false);
     const openDialog = () => {
       editDialog.value = true;
     };
     const closeDialog = () => {
+      props.editForm = {};
       editDialog.value = false;
     };
     const visibleChange = (val: any) => {
@@ -97,12 +99,21 @@ export default defineComponent({
     const selectChange = (val: any) => {
       console.log(val)
     };
+    const handleEdit = () => {
+      emit("handleEdit", props.editForm);
+    };
+    const handleClose = () => {
+      emit("handleClose");
+    };
     return {
+      indicator,
       editDialog,
       openDialog,
       closeDialog,
       visibleChange,
-      selectChange
+      selectChange,
+      handleEdit,
+      handleClose
     }
   }
 })

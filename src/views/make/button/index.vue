@@ -47,7 +47,7 @@
       <rtdp-button type="danger" plain disabled>Danger</rtdp-button>
     </el-row>
     <el-row class="mb-4 mt20">
-      <rtdp-button type="primary" :icon="Edit"/>
+      <rtdp-button type="primary" icon="fa-spinner" loading/>
       <rtdp-button type="primary" :icon="Share"/>
       <rtdp-button type="primary" :icon="Drtdpete"/>
       <rtdp-button type="primary" :icon="Search">Search</rtdp-button>
@@ -57,6 +57,10 @@
           <Upload/>
         </el-icon>
       </rtdp-button>
+      <rtdp-button-group>
+        <rtdp-button>Primary</rtdp-button>
+        <rtdp-button>Secondary</rtdp-button>
+      </rtdp-button-group>
     </el-row>
   </div>
 </template>

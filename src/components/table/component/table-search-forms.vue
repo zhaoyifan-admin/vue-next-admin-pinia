@@ -23,11 +23,11 @@
           </a-form-item>
         </a-col>
       </template>
-      <a-col :span="6">
+      <a-col :span="24">
         <div style="height: 40px;line-height: 40px;text-align: center">
           <a-button :size="size" type="primary" class="mr10">
             <i class="fa fa-paper-plane" aria-hidden="true"></i>
-            <span class="ml6">搜 索</span>
+            <span class="ml6">搜 询</span>
           </a-button>
           <a-button :size="size">
             <i class="fa fa-trash-o" aria-hidden="true"></i>
@@ -76,5 +76,9 @@ export default defineComponent({
 ::v-deep(.arco-picker:hover) {
   border: 1px solid #5872E4;
   background-color: transparent;
+}
+
+::v-deep(.ant-form-item) {
+  margin-bottom: 10px!important;
 }
 </style>

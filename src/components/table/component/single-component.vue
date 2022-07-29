@@ -2,7 +2,7 @@
   <!--            Input 输入框-->
   <a-input v-if="colitem.type === 'input'" :size="size" v-model:value="Form[colitem.dataIndex]"
            :placeholder="colitem.placeholder || colitem.label" allow-clear :show-count="colitem.showCount"
-           :maxlength="colitem.maxlength"
+           :maxlength="colitem.maxlength" :disabled="disabled"
            style="width: 100%">
     <template #prefix>
       <slot :name="colitem.dataIndex + 'Searchprefix'"></slot>
@@ -25,12 +25,14 @@
       :show-count="colitem.showCount"
       :maxlength="colitem.maxlength"
       :placeholder="colitem.placeholder || colitem.label"
+      :disabled="disabled"
       style="width: 100%"
   />
   <a-input-password v-if="colitem.type === 'password'"
                     :size="size"
                     v-model:value="Form[colitem.dataIndex]"
                     :placeholder="colitem.placeholder || colitem.label"
+                    :disabled="disabled"
                     allow-clear/>
   <a-input-number v-if="colitem.type === 'number'"
                   :size="size"
@@ -43,7 +45,8 @@
                   :string-mode="colitem.stringMode"
                   :min="colitem.min"
                   :max="colitem.max"
-                  :placeholder="colitem.placeholder || colitem.label">
+                  :placeholder="colitem.placeholder || colitem.label"
+                  :disabled="disabled">
     <template #addonBefore>
       <slot :name="colitem.dataIndex + 'SearchaddonBefore'"></slot>
     </template>
@@ -64,6 +67,7 @@
       :format="colitem.format || 'YYYY-MM-DD HH:mm:ss'"
       :valueFormat="colitem.valueFormat || 'YYYY-MM-DD HH:mm:ss'"
       :placeholder="colitem.placeholder || colitem.label"
+      :disabled="disabled"
       style="width: 100%"/>
   <a-range-picker v-if="colitem.type === 'daterange' && diaType === 'search'"
                   :size="size"
@@ -75,6 +79,7 @@
                   :disabled-time="colitem.disabledRangeTime"
                   :format="colitem.format || 'YYYY-MM-DD HH:mm:ss'"
                   :valueFormat="colitem.valueFormat || 'YYYY-MM-DD HH:mm:ss'"
+                  :disabled="disabled"
                   style="width: 100%"/>
 
   <!--            Select 选择器-->
@@ -89,6 +94,7 @@
       :placeholder="colitem.placeholder || colitem.label"
       @change="selectChange"
       allowClear
+      :disabled="disabled"
       style="width: 100%"
   >
     <template v-for="(item, index) in options[colitem.dataIndex]" :key="index">
@@ -116,6 +122,7 @@
       :format="colitem.format"
       :value-format="colitem.valueFormat"
       :placeholder="colitem.placeholder || colitem.label"
+      :disabled="disabled"
       style="width: 100%"/>
 </template>
 
@@ -145,6 +152,9 @@ export default defineComponent({
     },
     options: {
       type: Object
+    },
+    disabled: {
+      type: Boolean
     },
     selectChange: {
       type: Function,

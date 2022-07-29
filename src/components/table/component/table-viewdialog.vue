@@ -1,8 +1,8 @@
 <template>
-  <el-dialog v-model="viewDialog" :show-close="false" :close-on-click-modal="false" width="45%"
+  <a-modal v-model:visible="viewDialog" :show-close="false" :closable="false" width="45%"
              :top="option.top || '15vh'"
              custom-class="table-dialog-flag">
-    <template #header="{ close, titleId, titleClass }">
+    <template #title>
       <div class="my-view-dia-header dia-header">
         <span :id="titleId" :class="titleClass">{{ option.viewTitle || '详情' }}</span>
         <close theme="outline" size="15" fill="#606266" strokeLinejoin="miter" strokeLinecap="square"
@@ -30,18 +30,18 @@
     </el-descriptions>
     <template #footer v-if="option.viewFooter || true">
         <span class="dialog-footer">
-          <el-button :size="size" @click="handleClose">
+          <rtdp-button :size="size" @click="handleClose">
             <template #icon>
-              <slot name="viewBtnIcon">
+              <slot name="editCancelBtnIcon">
                 <i class="iconfont icon-guanbi"></i>
               </slot>
             </template>
-            {{ option.viewBtnText || '关 闭' }}
-          </el-button>
+            {{ option.editCancelBtnText || '关 闭' }}
+          </rtdp-button>
           <slot name="viewBtn"></slot>
         </span>
     </template>
-  </el-dialog>
+  </a-modal>
 </template>
 
 <script lang="ts">

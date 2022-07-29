@@ -1,9 +1,10 @@
 import {App} from 'vue';
 import icon from '/@/components/icon/index.vue';
 import rtdpButton from '/@/components/button/index.vue';
+import rtdpButtonGroup from '/@/components/buttongroup/index.vue';
 import systemTable from '/@/components/table/index.vue';
 // 所有组件列表
-const components = [icon, rtdpButton, systemTable]
+const components = [icon, rtdpButton, rtdpButtonGroup, systemTable]
 
 // 定义 install 方法， App 作为参数
 const install = (app: App): void => {
