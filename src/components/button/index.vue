@@ -10,7 +10,7 @@
     <slot name="icon"></slot>
     <!-- slot表示插槽，用于要用户自定义的内容 -->
     <i v-if="loading" :class="[`fa fa-spinner`,{'is-loading':loading}]"></i>
-    <i v-if="icon && !loading" :class="`fa iconfont ${icon}`"></i>
+    <i v-if="icon && !loading" :class="`rtdp fa ${icon}`"></i>
     <!-- 传了icon才使用图标，没有传icon属性则不使用 如果没传入文本插槽，则不显示span内容 -->
     <span v-if="$slots.default"><slot></slot></span>
   </button>
@@ -102,7 +102,7 @@ export default {
     display: inline-flex;
     align-items: center;
 
-    ::v-deep(i,.fa,.iconfont) {
+    ::v-deep(i,.fa,.rtdp) {
       font-size: 14px !important;
       margin-right: 5px !important;
     }
@@ -307,7 +307,7 @@ export default {
 .rtdp-button [class*=fa] + span {
   margin-left: 5px;
 }
-.rtdp-button [class*=iconfont] + span {
+.rtdp-button [class*=rtdp] + span {
   margin-left: 5px;
 }
 
@@ -405,7 +405,7 @@ export default {
   position:relative;
   animation: rotating 1.5s linear infinite;
 }
-.iconfont.is-loading {
+.rtdp.is-loading {
   position:relative;
   animation: rotating 1.5s linear infinite;
 }

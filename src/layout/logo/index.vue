@@ -1,7 +1,7 @@
 <template>
 	<div class="layout-logo" v-if="setShowLogo" @click="onThemeConfigChange">
-    <windows theme="filled" size="28" fill="#ffffff" strokeLinecap="butt"/>
-		<span style="margin-left: 5px">{{ themeConfig.globalTitle }}</span>
+    <img :src="logoMini" class="layout-logo-size-img" />
+    <span style="margin-left: 5px">{{ themeConfig.globalTitle }}</span>
 	</div>
 	<div class="layout-logo-size" v-else @click="onThemeConfigChange">
 		<img :src="logoMini" class="layout-logo-size-img" />
@@ -62,7 +62,8 @@ export default defineComponent({
 	}
 	&:hover {
 		span {
-			color: var(--color-primary-light-2);
+			color: #51A3FC;
+      font-weight: bold;
 		}
 	}
 	&-medium-img {

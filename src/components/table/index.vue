@@ -1,14 +1,15 @@
 <template>
-  <div class="system-menu-container">
-    <div v-show="searchDisplay" class="system-table-forms">
-      <table-search-forms :searchForm="searchForm" :option="option" :options="options" :size="size"
-                          :selectChange="selectChange"/>
-    </div>
+  <div class="system-container system-menu-container">
+    <el-collapse-transition>
+      <div v-show="searchDisplay" class="system-table-forms">
+        <table-search-forms :searchForm="searchForm" :option="option" :options="options" :size="size"
+                            :selectChange="selectChange"/>
+      </div>
+    </el-collapse-transition>
     <div class="system-table-btns">
       <a-row>
-        <a-col :span="12">
+        <a-col :span="15">
           <div class="system-table-btns-left">
-            <rtdp-button icon="icon-shuaxin1" :size="size" @click="refreshChange"/>
             <rtdp-button type="primary" :size="size" @click="showaddDialog">
               <i class="fa fa-plus" aria-hidden="true"></i><span>新 增</span>
             </rtdp-button>
@@ -25,38 +26,30 @@
                          @click="handleDel(rowRadioList, 'menu')">
               <i class="fa fa-trash" aria-hidden="true"></i> 删除
             </rtdp-button>
-            <rtdp-button plain :size="size" :disabled="rowRadioList === null" @click="clearRowList">
-              <i class="iconfont icon-qingkong" aria-hidden="true"></i> 取消选择
+            <rtdp-button plain :size="size" icon="qingkong" :disabled="rowRadioList === null" @click="clearRowList">
+              取消选择
             </rtdp-button>
           </div>
         </a-col>
-        <a-col :span="12">
+        <a-col :span="9">
           <div class="system-table-btns-right">
-            <rtdp-button type="primary" icon="icon-cloud_download" :size="size" />
-            <span class="system-table-btns-right-setting">
-              <el-button-group class="table-search-button-group">
-                <el-button :size="size" title="查询表单显隐" @click="searchDisplay = !searchDisplay">
-                  <i class="iconfont icon-sousuo"></i>
-                </el-button>
-                <el-button :size="size" title="表格配置" @click="showActionBarDrawer">
-                  <i class="iconfont icon-kongzhi"></i>
-                </el-button>
-                <el-dropdown trigger="click">
-                  <el-button :size="size" title="列显隐">
-                    <el-icon>
-                      <Grid/>
-                    </el-icon>
-                  </el-button>
-                  <template #dropdown>
-                    <el-checkbox-group class="system-table-btns-right-setting-checkbox-group" :size="size"
-                                       v-model="colcheckdList" @change="colcheckdListChanged">
-                      <template v-for="(colcheck, index) in colcheckList" :key="index">
-                        <el-checkbox :label="colcheck"/>
-                      </template>
-                    </el-checkbox-group>
+            <el-dropdown trigger="click">
+              <rtdp-button :size="size" icon="grid" type="primary" title="列显隐" />
+              <template #dropdown>
+                <el-checkbox-group class="system-table-btns-right-setting-checkbox-group" :size="size"
+                                   v-model="colcheckdList" @change="colcheckdListChanged">
+                  <template v-for="(colcheck, index) in colcheckList" :key="index">
+                    <el-checkbox :label="colcheck"/>
                   </template>
-                </el-dropdown>
-              </el-button-group>
+                </el-checkbox-group>
+              </template>
+            </el-dropdown>
+            <span class="system-table-btns-right-setting">
+              <rtdp-button-group class="table-search-button-group">
+                <rtdp-button icon="refresh" :loading="tableLoading" :size="size" @click="refreshChange"/>
+                <rtdp-button :size="size" icon="sousuo" title="查询表单显隐" @click="searchDisplay = !searchDisplay" />
+                <rtdp-button :size="size" icon="peizhi" title="表格配置" @click="showActionBarDrawer" />
+              </rtdp-button-group>
             </span>
           </div>
         </a-col>
@@ -247,6 +240,46 @@ export default defineComponent({
       pageSizes: props.page.pageSizes || [10, 20, 30],
       viewshowData: {}
     });
+
+    onMounted(async () => {
+      for (const v of props.option.column) {
+        state.colcheckList.push(v.label);
+      }
+      colcheckdList.value = state.colcheckList;
+      onLoad();
+      for (const v of props.option.column) {
+        if (v.type === 'select' && typeof (v.dicUrl) == 'string') {
+          let result: any = [];
+
+          function f() {
+            return new Promise((resolve, reject) => {
+              axios({
+                url: v.dicUrl,
+                method: 'get'
+              }).then(res => {
+                resolve(res.data)
+              }).catch(err => {
+                reject(err)
+              })
+            })
+          }
+
+          await f().then((res: any) => {
+            result = res.data;
+          }).catch((error) => {
+            console.log(error)
+          })
+          state.options[v.dataIndex] = result;
+        }
+      }
+    });
+    /*监听props*/
+    watch(props, (newProps, oldProps) => {
+      tableLoading.value = props.tableLoading;
+      state.tableData = newProps.tableData;
+      state.total = newProps.page.total;
+      state.page = newProps.page;
+    }, {immediate: true});
     const indexMethod = (index: number) => {
       if (props.page.pageNum && props.page.pageSize) {
         index = (index + 1) + (props.page.pageNum - 1) * props.page.pageSize
@@ -324,45 +357,6 @@ export default defineComponent({
       let page = state.page;
       context.emit("onLoad", page, params);
     };
-    onMounted(async () => {
-      for (const v of props.option.column) {
-        state.colcheckList.push(v.label);
-      }
-      colcheckdList.value = state.colcheckList;
-      onLoad();
-      for (const v of props.option.column) {
-        if (v.type === 'select' && typeof (v.dicUrl) == 'string') {
-          let result: any = [];
-
-          function f() {
-            return new Promise((resolve, reject) => {
-              axios({
-                url: v.dicUrl,
-                method: 'get'
-              }).then(res => {
-                resolve(res.data)
-              }).catch(err => {
-                reject(err)
-              })
-            })
-          }
-
-          await f().then((res: any) => {
-            result = res.data;
-          }).catch((error) => {
-            console.log(error)
-          })
-          state.options[v.dataIndex] = result;
-        }
-      }
-    });
-    /*监听props*/
-    watch(props, (newProps, oldProps) => {
-      tableLoading.value = props.tableLoading;
-      state.tableData = newProps.tableData;
-      state.total = newProps.page.total;
-      state.page = newProps.page;
-    }, {immediate: true});
     const filters = (data: any) => {
       let Array: any = [];
       state.tableData.forEach((item: any) => {
@@ -606,10 +600,7 @@ export default defineComponent({
 .system-menu-container {
   width: 100%;
   height: 100%;
-  border-radius: 7px;
-  overflow: hidden;
   background-color: #ffffff;
-  padding: 20px;
 
   ::v-deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
     background-color: #5872E4;
@@ -622,15 +613,12 @@ export default defineComponent({
     background-color: #5872E4;
   }
 
-  .system-table-forms {
-    margin-bottom: 10px;
-  }
-
   .system-table-btns {
-    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 17px;
 
     .system-table-btns-left {
-
+      text-align: left;
     }
 
     .system-table-btns-right {

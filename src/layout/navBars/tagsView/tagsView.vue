@@ -604,7 +604,7 @@ export default defineComponent({
 <style scoped lang="scss">
 .layout-navbars-tagsview {
 	background-color: var(--el-color-white);
-  border-radius: 0 0 7px 7px;
+  border-radius: 0 0 3px 3px;
   box-shadow: 0px 0px 10px #888888 !important;
 	position: relative;
 	z-index: 4;

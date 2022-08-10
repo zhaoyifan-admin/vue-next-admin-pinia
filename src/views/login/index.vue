@@ -45,7 +45,7 @@ export default defineComponent({
 		const storesThemeConfig = useThemeConfig();
 		const { themeConfig } = storeToRefs(storesThemeConfig);
 		const state = reactive<LoginState>({
-      circleUrl: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1813762643,1914315241&fm=26&gp=0.jpg',
+      circleUrl: 'https://s2.loli.net/2022/08/09/DGSRpqkTdPyiCWx.jpg',
 			tabsActiveName: 'account',
 			isScan: false,
 		});
@@ -73,7 +73,7 @@ export default defineComponent({
 	height: 100%;
 	position: relative;
   background-image: url("@public/login_background.jpg");
-  background-size: cover;
+  background-size: 100% 100%;
   background-repeat: no-repeat;
   .login-box {
     width: 95%;

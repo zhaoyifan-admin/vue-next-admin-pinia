@@ -30,12 +30,7 @@
     </el-descriptions>
     <template #footer v-if="option.viewFooter || true">
         <span class="dialog-footer">
-          <rtdp-button :size="size" @click="handleClose">
-            <template #icon>
-              <slot name="editCancelBtnIcon">
-                <i class="iconfont icon-guanbi"></i>
-              </slot>
-            </template>
+          <rtdp-button :size="size" icon="guanbi" @click="handleClose">
             {{ option.editCancelBtnText || '关 闭' }}
           </rtdp-button>
           <slot name="viewBtn"></slot>

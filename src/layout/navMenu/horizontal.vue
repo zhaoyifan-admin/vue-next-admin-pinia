@@ -1,7 +1,7 @@
 <template>
 	<div class="el-menu-horizontal-warp">
 		<el-scrollbar @wheel.native.prevent="onElMenuHorizontalScroll" ref="elMenuHorizontalScrollRef">
-			<el-menu router :default-active="defaultActive" :ellipsis="false" background-color="transparent" mode="horizontal">
+			<el-menu router :default-active="defaultActive" :ellipsis="false" background-color="transparent" mode="horizontal" menu-trigger="click">
 				<template v-for="val in menuLists">
 					<el-sub-menu :index="val.path" v-if="val.children && val.children.length > 0" :key="val.path">
 						<template #title>

@@ -30,7 +30,7 @@ export const useThemeConfig = defineStore('themeConfig', {
 			 * 代码位置：/@/layout/navBars/breadcrumb/setings.vue
 			 */
 			// 默认顶栏导航背景颜色
-			topBar: '#5872E4',
+			topBar: '#535C64',
 			// 默认顶栏导航字体颜色
 			topBarColor: '#ffffff',
 			// 是否开启顶栏背景颜色渐变

@@ -155,8 +155,7 @@
 	}
 	// 横向菜单
 	.el-menu--horizontal {
-		border-radius: 5px !important;
-		overflow: hidden;
+		border-radius: 3px !important;
 		background: var(--next-bg-topBar);
 		.el-menu-item,
 		.el-sub-menu {

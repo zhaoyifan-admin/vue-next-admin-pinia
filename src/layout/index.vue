@@ -2,19 +2,24 @@
   <div class="tips">
     <ul>
       <li @click="helpBtn">
-        <helpcenter theme="outline" size="20" fill="#FFFFFF" strokeLinejoin="miter" strokeLinecap="square"/>
+        <i class="rtdp shiyongbangzhu"></i>
         <p>帮助文档</p>
       </li>
       <li @click="systemBtn">
-        <windows theme="outline" size="20" fill="#FFFFFF" strokeLinejoin="miter" strokeLinecap="square"/>
+        <i class="rtdp xitong"></i>
         <p>选择系统</p>
+        <a-modal v-model:visible="systemvisible" class="systemDialog" width="65%" title="系 统" :footer="null" @ok="handleOk">
+          <div class="systems">
+            <a-skeleton /><a-skeleton /><a-skeleton />
+          </div>
+        </a-modal>
       </li>
       <li @click="otherBtn">
-        <neutral-face theme="outline" size="20" fill="#FFFFFF" strokeLinejoin="miter" strokeLinecap="square"/>
+        <i class="rtdp wujiedu"></i>
         <p>暂无功能</p>
       </li>
       <li @click="otherBtn">
-        <neutral-face theme="outline" size="20" fill="#FFFFFF" strokeLinejoin="miter" strokeLinecap="square"/>
+        <i class="rtdp wujiedu"></i>
         <p>暂无功能</p>
       </li>
     </ul>
@@ -23,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { onBeforeMount, onUnmounted, getCurrentInstance, defineComponent, defineAsyncComponent } from 'vue';
+import { onBeforeMount, onUnmounted, getCurrentInstance, defineComponent, defineAsyncComponent, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '/@/stores/themeConfig';
 import { Local } from '/@/utils/storage';
@@ -42,10 +47,11 @@ export default defineComponent({
 		columns: defineAsyncComponent(() => import('/@/layout/main/columns.vue')),
 	},
 	setup() {
+    const systemvisible = ref<boolean>(false);
 		const { proxy } = <any>getCurrentInstance();
 		const storesThemeConfig = useThemeConfig();
 		const { themeConfig } = storeToRefs(storesThemeConfig);
-		// 窗口大小改变时(适配移动端)
+		/** 窗口大小改变时(适配移动端) */
 		const onLayoutResize = () => {
 			if (!Local.get('oldLayout')) Local.set('oldLayout', themeConfig.value.layout);
 			const clientWidth = document.body.clientWidth;
@@ -62,6 +68,10 @@ export default defineComponent({
 				});
 			}
 		};
+    const handleOk = (e: MouseEvent) => {
+      console.log(e);
+      systemvisible.value = false;
+    };
 		const helpBtn = () => {
       ElMessage({
         message: '正在开发中...敬请期待！',
@@ -69,10 +79,7 @@ export default defineComponent({
       })
     };
 		const systemBtn = () => {
-      ElMessage({
-        message: '正在开发中...敬请期待！',
-        type: 'warning',
-      })
+      systemvisible.value = true;
     };
 		const otherBtn = () => {
       ElMessage({
@@ -90,6 +97,8 @@ export default defineComponent({
 			window.removeEventListener('resize', onLayoutResize);
 		});
 		return {
+      systemvisible,
+      handleOk,
       helpBtn,
       systemBtn,
       otherBtn,
@@ -105,5 +114,13 @@ export default defineComponent({
 }
 ::v-deep(.el-menu-item:hover) {
   border-radius: 5px;
+}
+.rtdp {
+  font-weight: bold;
+  font-size: 22px;
+  color: #ffffff;
+}
+.systems {
+  min-height: 450px;
 }
 </style>

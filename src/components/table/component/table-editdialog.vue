@@ -28,20 +28,10 @@
     </a-spin>
     <template #footer>
         <span class="dialog-footer">
-          <rtdp-button :size="size" @click="handleClose">
-            <template #icon>
-              <slot name="editCancelBtnIcon">
-                <i class="iconfont icon-guanbi"></i>
-              </slot>
-            </template>
+          <rtdp-button :size="size" icon="guanbi" @click="handleClose">
             {{ option.editCancelBtnText || '关 闭' }}
           </rtdp-button>
-          <rtdp-button :size="size" type="primary" :disabled="editDisabled" :loading="editBtnLoading" @click="handleEdit(editForm)">
-            <template #icon>
-              <slot name="editConfirmBtnIcon">
-                <i v-show="!editBtnLoading" class="iconfont icon-zhengque-correct"></i>
-              </slot>
-            </template>
+          <rtdp-button :size="size" type="primary" icon="zhengque-correct" :disabled="editDisabled" :loading="editBtnLoading" @click="handleEdit(editForm)">
             {{ option.editConfirmBtnText || '修 改' }}
           </rtdp-button>
         </span>
