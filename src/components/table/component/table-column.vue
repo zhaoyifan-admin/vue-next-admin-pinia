@@ -151,59 +151,55 @@
   </el-table-column>
 </template>
 
-<script lang="ts">
-import {defineComponent, onMounted, ref} from 'vue';
+<script lang="ts" setup name="table-column">
+/**
+ * @auther zyf
+ * @example 引入 vue.js 的语法、参数等
+ */
+import {defineProps, ref} from "vue";
 
-export default defineComponent({
-  name: "table-column",
-  props: {
-    colitem: {
-      type: Object
-    },
-    tabClickLabel: {
-      type: String
-    },
-    tabClickRowIndex: {
-      type: Number
-    },
-    tabClickColIndex: {
-      type: Number
-    },
-    options: {
-      type: Object
-    },
-    filters: {
-      type: Array<any>
-    },
-    filterMethod: {
-      type: Function,
-      required: true
-    },
-    visibleChange: {
-      type: Function,
-      required: true
-    },
-    selectChange: {
-      type: Function,
-      required: true
-    },
-    size: {
-      type: String
-    },
-    getpamentType: {
-      type: Function,
-      required: true
-    },
-    blur: {
-      type: Function,
-      required: true
-    },
+const props = defineProps({
+  colitem: {
+    type: Object
   },
-  setup: function (props: any, context) {
-    const editFlag = ref(null);
-    return {
-      editFlag
-    }
+  tabClickLabel: {
+    type: String
   },
-})
+  tabClickRowIndex: {
+    type: Number
+  },
+  tabClickColIndex: {
+    type: Number
+  },
+  options: {
+    type: Object
+  },
+  filters: {
+    type: Array<any>
+  },
+  filterMethod: {
+    type: Function,
+    required: true
+  },
+  visibleChange: {
+    type: Function,
+    required: true
+  },
+  selectChange: {
+    type: Function,
+    required: true
+  },
+  size: {
+    type: String
+  },
+  getpamentType: {
+    type: Function,
+    required: true
+  },
+  blur: {
+    type: Function,
+    required: true
+  },
+});
+const editFlag = ref(null);
 </script>

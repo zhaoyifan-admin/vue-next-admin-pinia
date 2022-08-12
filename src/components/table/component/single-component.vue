@@ -142,7 +142,8 @@ export default defineComponent({
       type: Object
     },
     Form: {
-      type: Object
+      type: Object,
+      default: {}
     },
     size: {
       type: String

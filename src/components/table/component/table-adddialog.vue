@@ -14,7 +14,8 @@
       </div>
     </template>
     <a-spin :spinning="addBtnLoading" :indicator="indicator" tip="Loading...">
-      <a-form :model="Form" :size="size" :labelCol="{ style: { width: option.labelWidth ||'80px' } }" :disabled="addDisabled">
+      <a-form :model="Form" :size="size" :labelCol="{ style: { width: option.labelWidth ||'80px' } }"
+              :disabled="addDisabled">
         <a-row :gutter="20">
           <template v-for="(colitem, coli) in option.column" :key="coli">
             <a-col :span="colitem.searchSpan || 12" v-if="!colitem.addDisplay">
@@ -31,83 +32,95 @@
           <rtdp-button :size="size" icon="guanbi" @click="handleClose">
             {{ option.addCancelBtnText || '关 闭' }}
           </rtdp-button>
-          <rtdp-button :size="size" type="primary" icon="zhengque-correct" :disabled="addDisabled" :loading="addBtnLoading" @click="handleSave(Form)">
+          <rtdp-button :size="size" type="primary" icon="zhengque-correct" :disabled="addDisabled"
+                       :loading="addBtnLoading" @click="handleSave(Form)">
             {{ option.addConfirmBtnText || '提 交' }}
           </rtdp-button>
         </span>
     </template>
-    </a-modal>
+  </a-modal>
 </template>
 
-<script lang="ts">
-import {defineComponent, h, reactive, ref, toRefs} from "vue";
+<script lang="ts" setup name="table-adddialog">
+/**
+ * @auther zyf
+ * @example 引入 vue.js 的语法、参数等
+ */
+import {defineEmits, defineExpose, defineProps, h, reactive, ref} from "vue";
+
+/**
+ * @auther zyf
+ * @example 引入第三方图标、组件 或 自定义组件等
+ */
 import {Close} from "@icon-park/vue-next";
-import { LoadingOutlined } from '@ant-design/icons-vue';
+import {LoadingOutlined} from '@ant-design/icons-vue';
 import tableAdddialogFormItem from "./table-adddialog-form-item.vue";
 
-export default defineComponent({
-  name: "table-adddialog",
-  props: {
-    size: {
-      type: String
-    },
-    option: {
-      type: Object
-    },
-    options: {
-      type: Object
-    },
-    addDisabled: {
-      type: Boolean
-    },
-    addBtnLoading: {
-      type: Boolean
-    }
-  },
-  components: {Close, tableAdddialogFormItem},
-  setup: function (props: any, {emit}) {
-    const indicator = h(LoadingOutlined, {
-      style: {
-        fontSize: '24px',
-      },
-      spin: true,
-    });
-    const state = reactive({
-      Form: {}
-    });
-    const addDialog = ref(false);
-    const openDialog = () => {
-      addDialog.value = true;
-    };
-    const closeDialog = () => {
-      state.Form = {};
-      addDialog.value = false;
-    };
-    const visibleChange = (val: any) => {
+// emit
+const emit = defineEmits(['handleSave', 'handleClose']);
 
-    };
-    const selectChange = (val: any) => {
-      console.log(val)
-    };
-    const handleSave = () => {
-      emit("handleSave", state.Form);
-    };
-    const handleClose = () => {
-      emit("handleClose");
-    };
-    return {
-      indicator,
-      addDialog,
-      openDialog,
-      closeDialog,
-      visibleChange,
-      selectChange,
-      handleSave,
-      handleClose,
-      ...toRefs(state)
-    }
+const Form = ref({});
+const props = defineProps({
+  size: {
+    type: String
+  },
+  option: {
+    type: Object
+  },
+  options: {
+    type: Object
+  },
+  addDisabled: {
+    type: Boolean
+  },
+  addBtnLoading: {
+    type: Boolean
   }
-})
+});
+const data = reactive({
+  Form: {}
+});
+const indicator = h(LoadingOutlined, {
+  style: {
+    fontSize: '24px',
+  },
+  spin: true,
+});
+
+const addDialog = ref(false);
+const openDialog = () => {
+  addDialog.value = true;
+};
+const closeDialog = () => {
+  data.Form = {};
+  addDialog.value = false;
+};
+const visibleChange = (val: any) => {
+
+};
+const selectChange = (val: any) => {
+  console.log(val);
+};
+const handleSave = () => {
+  emit("handleSave", data.Form);
+};
+const handleClose = () => {
+  emit("handleClose");
+};
+
+/**
+ * @auther  zyf
+ * @method  defineExpose  ===>  暴露方法(自定义参数向外导出)
+ * @link    参考:https://cn.vuejs.org/api/sfc-script-setup.html#defineexpose
+ */
+defineExpose({
+  openDialog,
+  closeDialog,
+  visibleChange,
+  selectChange,
+  handleSave,
+  handleClose
+});
 </script>
 
 <style scoped>

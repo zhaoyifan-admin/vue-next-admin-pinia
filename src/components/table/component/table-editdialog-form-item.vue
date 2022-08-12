@@ -50,38 +50,42 @@
   </template>
 </template>
 
-<script>
+<script lang="ts" setup name="table-editdialog-form-item">
+/**
+ * @auther zyf
+ * @example 引入 vue.js 的语法、参数等
+ */
+import {defineProps} from "vue";
+/**
+ * @auther zyf
+ * @example 引入第三方图标、组件 或 自定义组件等
+ */
 import singleComponent from "./single-component.vue";
-import {defineComponent} from "vue";
 
-export default defineComponent({
-  name: "table-editdialog-form-item",
-  props: {
-    size: {
-      type: String
-    },
-    option: {
-      type: Object
-    },
-    colitem: {
-      type: Object
-    },
-    editForm: {
-      type: Object
-    },
-    options: {
-      type: Object
-    },
-    visibleChange: {
-      type: Function,
-      required: true
-    },
-    selectChange: {
-      type: Function,
-      required: true
-    }
+const props = defineProps({
+  size: {
+    type: String
   },
-  components: {singleComponent}
+  option: {
+    type: Object
+  },
+  colitem: {
+    type: Object
+  },
+  editForm: {
+    type: Object
+  },
+  options: {
+    type: Object
+  },
+  visibleChange: {
+    type: Function,
+    required: true
+  },
+  selectChange: {
+    type: Function,
+    required: true
+  }
 })
 </script>
 

@@ -7,22 +7,25 @@
   </el-descriptions-item>
 </template>
 
-<script>
-export default {
-  name: "table-viewdialog-desc-item",
-  props: {
-    colitem: {
-      type: Object
-    },
-    viewshowData: {
-      type: Object
-    },
-    getpamentType: {
-      type: Function,
-      required: true
-    },
-  }
-}
+<script lang="ts" setup name="table-viewdialog-desc-item">
+/**
+ * @auther zyf
+ * @example 引入 vue.js 的语法、参数等
+ */
+import {defineProps} from "vue";
+
+const props = defineProps({
+  colitem: {
+    type: Object
+  },
+  viewshowData: {
+    type: Object
+  },
+  getpamentType: {
+    type: Function,
+    required: true
+  },
+})
 </script>
 
 <style scoped>

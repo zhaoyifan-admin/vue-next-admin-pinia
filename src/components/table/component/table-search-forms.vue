@@ -39,31 +39,35 @@
   </a-form>
 </template>
 
-<script lang="ts">
-import {computed, defineComponent} from "vue";
+<script lang="ts" setup name="table-search-forms">
+/**
+ * @auther zyf
+ * @example 引入 vue.js 的语法、参数等
+ */
+import {defineProps} from "vue";
+/**
+ * @auther zyf
+ * @example 引入第三方图标、组件 或 自定义组件等
+ */
 import singleComponent from "./single-component.vue";
 
-export default defineComponent({
-  name: "table-search-forms",
-  props: {
-    searchForm: {
-      type: Object
-    },
-    size: {
-      type: String
-    },
-    option: {
-      type: Object
-    },
-    options: {
-      type: Object
-    },
-    selectChange: {
-      type: Function,
-      required: true
-    }
+const props = defineProps({
+  searchForm: {
+    type: Object
   },
-  components: {singleComponent}
+  size: {
+    type: String
+  },
+  option: {
+    type: Object
+  },
+  options: {
+    type: Object
+  },
+  selectChange: {
+    type: Function,
+    required: true
+  }
 })
 </script>
 
@@ -79,6 +83,6 @@ export default defineComponent({
 }
 
 ::v-deep(.ant-form-item) {
-  margin-bottom: 10px!important;
+  margin-bottom: 10px !important;
 }
 </style>

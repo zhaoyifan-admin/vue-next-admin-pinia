@@ -2,7 +2,7 @@
   <a-form-item v-if="!colitem.children">
     <template #label>
       <slot :name="colitem.dataIndex + 'addLabel'" :ehscope="{row:colitem, size:size}">
-        {{ colitem.label}}
+        {{ colitem.label }}
       </slot>
     </template>
     <template #default="scope">
@@ -21,7 +21,7 @@
     <a-form-item v-if="!colitem.formCollapse">
       <template #label>
         <slot :name="colitem.dataIndex + 'addLabel'" :ehscope="{row:colitem, size:size}">
-          {{ colitem.label}}
+          {{ colitem.label }}
         </slot>
       </template>
       <el-collapse :size="size" style="width: 100%;">
@@ -50,39 +50,46 @@
   </template>
 </template>
 
-<script>
-import singleComponent from "./single-component.vue";
-export default {
-  name: "table-adddialog-form-item",
-  props: {
-    size: {
-      type: String
-    },
-    option: {
-      type: Object
-    },
-    colitem: {
-      type: Object
-    },
-    addForm: {
-      type: Object
-    },
-    options: {
-      type: Object
-    },
-    visibleChange: {
-      type: Function,
-      required: true
-    },
-    selectChange: {
-      type: Function,
-      required: true
-    }
-  },
-  components: {singleComponent},
-}
-</script>
+<script lang="ts" setup name="table-adddialog-form-item">
+/**
+ * @auther zyf
+ * @example 引入 vue.js 的语法、参数等
+ */
+import {defineProps, ref} from "vue";
 
+/**
+ * @auther zyf
+ * @example 引入第三方图标、组件 或 自定义组件等
+ */
+import singleComponent from "./single-component.vue";
+
+const props = defineProps({
+  size: {
+    type: String
+  },
+  option: {
+    type: Object
+  },
+  colitem: {
+    type: Object
+  },
+  addForm: {
+    type: Object
+  },
+  options: {
+    type: Object
+  },
+  visibleChange: {
+    type: Function,
+    required: true
+  },
+  selectChange: {
+    type: Function,
+    required: true
+  }
+});
+const addForm = ref(props.addForm);
+</script>
 <style lang="scss" scoped>
 ::v-deep(.el-collapse-item__header) {
   height: 30px !important;

@@ -39,73 +39,84 @@
   </a-modal>
 </template>
 
-<script lang="ts">
-import {defineComponent, h, ref} from "vue";
+<script lang="ts" setup name="table-editdialog">
+/**
+ * @auther zyf
+ * @example 引入 vue.js 的语法、参数等
+ */
+import {defineExpose, defineProps, defineEmits, h, ref, watch} from "vue";
+
+/**
+ * @auther zyf
+ * @example 引入第三方图标、组件 或 自定义组件等
+ */
+import {LoadingOutlined} from "@ant-design/icons-vue";
 import {Close} from "@icon-park/vue-next";
 import tableEditdialogFormItem from "./table-editdialog-form-item.vue";
-import {LoadingOutlined} from "@ant-design/icons-vue";
+import {getFlatArr} from "/@/components/table/utils/methods/methods";
 
-export default defineComponent({
-  name: "table-editdialog",
-  props: {
-    size: {
-      type: String
-    },
-    option: {
-      type: Object
-    },
-    options: {
-      type: Object
-    },
-    editForm: {
-      type: Object
-    },
-    editDisabled: {
-      type: Boolean
-    },
-    editBtnLoading: {
-      type: Boolean
-    }
+// emit
+const emit = defineEmits(['handleEdit', 'handleClose']);
+const props = defineProps({
+  size: {
+    type: String
   },
-  components: {Close, tableEditdialogFormItem},
-  setup: function (props: any, {emit}) {
-    const indicator = h(LoadingOutlined, {
-      style: {
-        fontSize: '24px',
-      },
-      spin: true,
-    });
-    const editDialog = ref(false);
-    const openDialog = () => {
-      editDialog.value = true;
-    };
-    const closeDialog = () => {
-      props.editForm = {};
-      editDialog.value = false;
-    };
-    const visibleChange = (val: any) => {
-
-    };
-    const selectChange = (val: any) => {
-      console.log(val)
-    };
-    const handleEdit = () => {
-      emit("handleEdit", props.editForm);
-    };
-    const handleClose = () => {
-      emit("handleClose");
-    };
-    return {
-      indicator,
-      editDialog,
-      openDialog,
-      closeDialog,
-      visibleChange,
-      selectChange,
-      handleEdit,
-      handleClose
-    }
+  option: {
+    type: Object
+  },
+  options: {
+    type: Object
+  },
+  editForm: {
+    type: Object,
+    default: null
+  },
+  editDisabled: {
+    type: Boolean
+  },
+  editBtnLoading: {
+    type: Boolean
   }
+});
+const indicator = h(LoadingOutlined, {
+  style: {
+    fontSize: '24px',
+  },
+  spin: true,
+});
+const editDialog = ref(false);
+const editForm = ref({});
+const openDialog = () => {
+  editDialog.value = true;
+};
+const closeDialog = () => {
+  editForm.value = {};
+  editDialog.value = false;
+};
+const visibleChange = (val: any) => {
+
+};
+const selectChange = (val: any) => {
+  console.log(val)
+};
+const handleEdit = () => {
+  emit("handleEdit", props.editForm);
+};
+const handleClose = () => {
+  emit("handleClose");
+};
+watch(()=>props.editForm,(newValue,oldValue)=>{
+  editForm.value = {};
+  editForm.value = newValue;
+},{deep:true});
+
+defineExpose({
+  openDialog,
+  closeDialog,
+  visibleChange,
+  selectChange,
+  handleEdit,
+  handleClose
 })
 </script>
 

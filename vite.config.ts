@@ -1,6 +1,7 @@
 import vue from '@vitejs/plugin-vue';
 import {resolve} from 'path';
 import {defineConfig, loadEnv, ConfigEnv} from 'vite';
+import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 
 const pathResolve = (dir: string): any => {
     return resolve(__dirname, '.', dir);
@@ -17,6 +18,7 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
     const env = loadEnv(mode.mode, process.cwd());
     return {
         plugins: [
+            VueSetupExtend(),
             vue(),
             [
                 {
