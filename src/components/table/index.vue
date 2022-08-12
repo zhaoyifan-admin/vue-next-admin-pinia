@@ -380,12 +380,12 @@ export default defineComponent({
       let params = state.searchForm;
       context.emit("onLoad", page, params);
     };
-    const handleSave = (form: any) => {
+    const handleSave = (form: object) => {
       addDisabled.value = true;
       addBtnLoading.value = true;
       context.emit("handleSave", form, Loading, done);
     };
-    const handleEdit = (form: any) => {
+    const handleEdit = (form: object) => {
       console.log(form)
       editDisabled.value = true;
       editBtnLoading.value = true;

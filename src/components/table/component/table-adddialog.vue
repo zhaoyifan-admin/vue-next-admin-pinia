@@ -77,9 +77,6 @@ const props = defineProps({
     type: Boolean
   }
 });
-const data = reactive({
-  Form: {}
-});
 const indicator = h(LoadingOutlined, {
   style: {
     fontSize: '24px',
@@ -92,7 +89,7 @@ const openDialog = () => {
   addDialog.value = true;
 };
 const closeDialog = () => {
-  data.Form = {};
+  Form.value = {};
   addDialog.value = false;
 };
 const visibleChange = (val: any) => {
@@ -102,7 +99,7 @@ const selectChange = (val: any) => {
   console.log(val);
 };
 const handleSave = () => {
-  emit("handleSave", data.Form);
+  emit("handleSave", Form);
 };
 const handleClose = () => {
   emit("handleClose");

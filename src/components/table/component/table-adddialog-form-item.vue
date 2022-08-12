@@ -88,7 +88,6 @@ const props = defineProps({
     required: true
   }
 });
-const addForm = ref(props.addForm);
 </script>
 <style lang="scss" scoped>
 ::v-deep(.el-collapse-item__header) {
