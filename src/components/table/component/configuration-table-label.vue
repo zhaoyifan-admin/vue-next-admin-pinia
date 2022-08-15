@@ -9,13 +9,13 @@
   </div>
 </template>
 
-<script>
-import {defineComponent} from "vue";
+<script lang="ts" setup name="configuration-table-label">
+import {defineProps} from "vue";
 
-export default defineComponent({
-  name: "configuration-table-label",
-  props: {
-    row: Object,
+const props = defineProps({
+  row: {
+    type: Object,
+    default: null
   },
 })
 </script>

@@ -190,7 +190,8 @@ const props = defineProps({
     required: true
   },
   size: {
-    type: String
+    type: String,
+    default: "default"
   },
   getpamentType: {
     type: Function,

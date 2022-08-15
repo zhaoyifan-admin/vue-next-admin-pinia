@@ -61,6 +61,7 @@ export default {
             label: '测试布局',
             type: 'daterange',
             dataIndex: 'ceshi',
+            ranges: true,
             search: true,
             searchSpan: 12
           },

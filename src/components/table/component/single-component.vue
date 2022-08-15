@@ -64,8 +64,8 @@
       :picker="colitem.picker || 'date'"
       :disabled-date="colitem.disabledDate"
       :disabled-time="colitem.disabledDateTime"
-      :format="colitem.format || 'YYYY-MM-DD HH:mm:ss'"
-      :valueFormat="colitem.valueFormat || 'YYYY-MM-DD HH:mm:ss'"
+      :format="colitem.format || 'YYYY-MM-DD'"
+      :valueFormat="colitem.valueFormat || 'YYYY-MM-DD'"
       :placeholder="colitem.placeholder || colitem.label"
       :disabled="disabled"
       style="width: 100%"/>
@@ -77,8 +77,8 @@
                   :picker="colitem.picker || 'date'"
                   :disabled-date="colitem.disabledDate"
                   :disabled-time="colitem.disabledRangeTime"
-                  :format="colitem.format || 'YYYY-MM-DD HH:mm:ss'"
-                  :valueFormat="colitem.valueFormat || 'YYYY-MM-DD HH:mm:ss'"
+                  :format="colitem.format || 'YYYY-MM-DD'"
+                  :valueFormat="colitem.valueFormat || 'YYYY-MM-DD'"
                   :disabled="disabled"
                   style="width: 100%"/>
 
@@ -126,51 +126,54 @@
       style="width: 100%"/>
 </template>
 
-<script lang="ts">
-import {defineComponent} from "vue";
-import dayjs, {Dayjs} from 'dayjs';
+<script lang="ts" setup name="single-component">
+/**
+ * @auther zyf
+ * @example 引入 vue.js 的语法、参数等
+ */
+import {defineProps} from "vue";
 
+/**
+ * @auther zyf
+ * @example 引入第三方图标、组件 或 自定义组件等
+ */
+import dayjs, {Dayjs} from 'dayjs';
 type RangeValue = [Dayjs, Dayjs];
 
-export default defineComponent({
-  name: "single-component",
-  props: {
-    diaType: {
-      type: String
-    },
-    colitem: {
-      type: Object
-    },
-    Form: {
-      type: Object,
-      default: {}
-    },
-    size: {
-      type: String
-    },
-    option: {
-      type: Object
-    },
-    options: {
-      type: Object
-    },
-    disabled: {
-      type: Boolean
-    },
-    selectChange: {
-      type: Function,
-      required: true
-    }
+const props = defineProps({
+  diaType: {
+    type: String
   },
-  setup(props) {
-    return {
-      ranges: {
-        '今天': [dayjs(), dayjs()] as RangeValue,
-        '当前月': [dayjs(), dayjs().endOf('month')] as RangeValue,
-      },
-    }
+  colitem: {
+    type: Object
+  },
+  Form: {
+    type: Object,
+    default: {}
+  },
+  size: {
+    type: String,
+    default: "default"
+  },
+  option: {
+    type: Object
+  },
+  options: {
+    type: Object
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  selectChange: {
+    type: Function,
+    required: true
   }
 })
+const ranges = {
+  '今天': [dayjs(), dayjs()] as RangeValue,
+  '当前月': [dayjs(), dayjs().endOf('month')] as RangeValue,
+};
 </script>
 
 <style scoped>

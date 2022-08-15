@@ -65,7 +65,8 @@ import singleComponent from "./single-component.vue";
 
 const props = defineProps({
   size: {
-    type: String
+    type: String,
+    default: "default"
   },
   option: {
     type: Object

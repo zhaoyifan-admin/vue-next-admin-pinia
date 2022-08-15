@@ -161,68 +161,72 @@
   </el-drawer>
 </template>
 
-<script lang="ts">
-import {defineComponent, ref, toRefs, onMounted} from "vue";
+<script lang="ts" setup name="configuration-bar">
+/**
+ * @auther zyf
+ * @example 引入 vue.js 的语法、参数等
+ */
+import {defineProps, defineEmits, ref, onMounted, defineExpose} from "vue";
+
+/**
+ * @auther zyf
+ * @example 引入第三方图标、组件 或 自定义组件等
+ */
 import {AppSwitch} from '@icon-park/vue-next';
 import {getFlatArr} from "../utils/methods/methods";
 
-export default defineComponent({
-  name: "configuration-bar",
-  emits: ['update:size'],
-  props: {
-    size: String,
-    option: {
-      type: Object
-    },
-    actionBar: {
-      type: String
-    }
+const emit = defineEmits<{
+  (e: 'update:size', params: string): void
+}>()
+const props = defineProps({
+  size: {
+    type: String,
+    default: "default"
   },
-  components:{AppSwitch},
-  setup: function (props: any, { emit }) {
-    const columnArray = ref([]);
-    const showDisabled = ref(true);
-    const activeNames = ref(['1', '2', '3']);
-    const actionBarDrawer = ref(false);
-    const Size = ref(props.size);
-    const show = ref(true);
-    const openDrawer = () => {
-      actionBarDrawer.value = true;
-    };
-    const changeRadio = (val: string) => {
-      emit('update:size', val);
-    };
-    const changeShow = () => {
-      show.value = !show.value;
-    };
-    const changeActionBar = () => {
+  option: {
+    type: Object
+  },
+  actionBar: {
+    type: String
+  }
+});
+const columnArray = ref([]);
+const showDisabled = ref(true);
+const activeNames = ref(['1', '2', '3']);
+const actionBarDrawer = ref(false);
+const Size = ref();
+const show = ref(true);
 
-    };
-    onMounted(()=>{
-      const Array = getFlatArr(props.option.column);
-      columnArray.value = [];
-      showDisabled.value = true;
-      Array.forEach((item:any)=>{
-        if(!item.children) {
-          columnArray.value.push(item);
-        } else {
-          showDisabled.value = false
-        }
-      })
-    })
-    return {
-      columnArray,
-      showDisabled,
-      Size,
-      activeNames,
-      actionBarDrawer,
-      show,
-      openDrawer,
-      changeRadio,
-      changeShow,
-      changeActionBar
+onMounted(()=>{
+  const Array = getFlatArr(props.option.column);
+  columnArray.value = [];
+  showDisabled.value = true;
+  Size.value = props.size;
+  Array.forEach((item:any)=>{
+    if(!item.children) {
+      columnArray.value.push(item);
+    } else {
+      showDisabled.value = false
     }
-  },
+  })
+});
+const openDrawer = () => {
+  actionBarDrawer.value = true;
+};
+const changeRadio = (val: string) => {
+  emit('update:size', val);
+};
+const changeShow = () => {
+  show.value = !show.value;
+};
+const changeActionBar = () => {
+
+};
+defineExpose({
+  openDrawer,
+  changeRadio,
+  changeShow,
+  changeActionBar
 })
 </script>
 

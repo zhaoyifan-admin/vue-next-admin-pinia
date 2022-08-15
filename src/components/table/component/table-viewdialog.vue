@@ -64,7 +64,7 @@ import {getFlatArr} from "../utils/methods/methods";
 const props = defineProps({
   size: {
     type: String,
-    default: ""
+    default: "default"
   },
   option: {
     type: Object,

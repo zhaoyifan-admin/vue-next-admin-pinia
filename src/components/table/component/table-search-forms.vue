@@ -56,7 +56,8 @@ const props = defineProps({
     type: Object
   },
   size: {
-    type: String
+    type: String,
+    default: "default"
   },
   option: {
     type: Object

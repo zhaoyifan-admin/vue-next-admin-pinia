@@ -16,10 +16,12 @@ import {defineProps} from "vue";
 
 const props = defineProps({
   colitem: {
-    type: Object
+    type: Object,
+    default: null
   },
   viewshowData: {
-    type: Object
+    type: Object,
+    default: null
   },
   getpamentType: {
     type: Function,

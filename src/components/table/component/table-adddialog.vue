@@ -46,7 +46,7 @@
  * @auther zyf
  * @example 引入 vue.js 的语法、参数等
  */
-import {defineEmits, defineExpose, defineProps, h, reactive, ref} from "vue";
+import {defineEmits, defineExpose, defineProps, h, ref} from "vue";
 
 /**
  * @auther zyf
@@ -62,7 +62,8 @@ const emit = defineEmits(['handleSave', 'handleClose']);
 const Form = ref({});
 const props = defineProps({
   size: {
-    type: String
+    type: String,
+    default: "default"
   },
   option: {
     type: Object
@@ -71,10 +72,12 @@ const props = defineProps({
     type: Object
   },
   addDisabled: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   addBtnLoading: {
-    type: Boolean
+    type: Boolean,
+    default: false
   }
 });
 const indicator = h(LoadingOutlined, {

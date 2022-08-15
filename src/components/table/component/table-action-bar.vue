@@ -14,39 +14,39 @@
       </template>
     </el-popconfirm>
   </div>
-
 </template>
 
-<script lang="ts">
-import {defineComponent} from "vue";
+<script lang="ts" setup name="table-action-bar">
+/**
+ * @auther zyf
+ * @example 引入 vue.js 的语法、参数等
+ */
+import {defineExpose, defineProps, defineEmits} from "vue";
 
-export default defineComponent({
-  name: "table-action-bar",
-  props: {
-    size: {
-      type: String
-    },
-    btnType: {
-      type: String
-    }
+const emit = defineEmits(['showViewDialog','showEditDialog', 'handleDel'])
+const props = defineProps({
+  size: {
+    type: String,
+    default: "default"
   },
-  setup: function (props: any, context) {
-    const showViewDialog = () => {
-      context.emit("showViewDialog");
-    };
-    const showEditDialog = () => {
-      context.emit("showEditDialog");
-
-    };
-    const handleDel = () => {
-      context.emit("handleDel");
-    };
-    return {
-      showViewDialog,
-      showEditDialog,
-      handleDel
-    }
+  btnType: {
+    type: String
   }
+});
+const showViewDialog = () => {
+  emit("showViewDialog");
+};
+const showEditDialog = () => {
+  emit("showEditDialog");
+};
+const handleDel = () => {
+  emit("handleDel");
+};
+
+defineExpose({
+  showViewDialog,
+  showEditDialog,
+  handleDel
 })
 </script>
 

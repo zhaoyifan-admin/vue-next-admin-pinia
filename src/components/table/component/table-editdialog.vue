@@ -59,7 +59,8 @@ import {getFlatArr} from "/@/components/table/utils/methods/methods";
 const emit = defineEmits(['handleEdit', 'handleClose']);
 const props = defineProps({
   size: {
-    type: String
+    type: String,
+    default: "default"
   },
   option: {
     type: Object
