@@ -127,7 +127,6 @@ export const useUserInfo = defineStore('userInfo', {
 				key: 'pigxpigxpigxpigx',
 				param: ['password']
 			})
-			console.log(user)
 			return new Promise<void>((resolve, reject) => {
 				loginByUsername({
 					username: user.userName,
@@ -136,7 +135,7 @@ export const useUserInfo = defineStore('userInfo', {
 					randomStr: user.randomStr
 				}).then(response => {
 					const data:any = response;
-					Session.set('userInfo', JSON.stringify(data))
+					Session.set('userInfo', JSON.stringify(data));
 					const list:any = {};
 					for (let i = 0; i < data.user_info.authorities.length; i++) {
 						list[data.user_info.authorities[i].authority] = true
@@ -172,7 +171,7 @@ export const useUserInfo = defineStore('userInfo', {
 					})
 					setStore({
 						name: 'userInfo',
-						content: data.userInfo,
+						content: this.userInfo,
 						type: 'session'
 					})
 					setStore({

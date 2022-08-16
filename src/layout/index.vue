@@ -1,6 +1,10 @@
 <template>
   <div class="tips">
     <ul>
+      <li @click="otherBtn">
+        <i class="rtdp taishidaping"></i>
+        <p>监控大屏</p>
+      </li>
       <li @click="helpBtn">
         <i class="rtdp shiyongbangzhu"></i>
         <p>帮助文档</p>

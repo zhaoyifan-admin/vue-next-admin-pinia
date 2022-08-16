@@ -847,7 +847,7 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 							isKeepAlive: true,
 							isAffix: false,
 							isIframe: false,
-							icon: 'iconfont icon-xuanzeqi',
+							icon: 'rtdp anniu',
 						},
 					},
 					{
@@ -861,7 +861,7 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 							isKeepAlive: true,
 							isAffix: false,
 							isIframe: false,
-							icon: 'iconfont icon-xuanzeqi',
+							icon: 'rtdp table',
 						},
 					},
 					{

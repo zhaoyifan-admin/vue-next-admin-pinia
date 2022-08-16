@@ -74,13 +74,24 @@ export function formatTwoStageRoutes(arr: any) {
 			newArr[0].children.push({ ...v });
 			// 存 name 值，keep-alive 中 include 使用，实现路由的缓存
 			// 路径：/@/layout/routerView/parent.vue
-			if (newArr[0].meta.isKeepAlive && v.meta.isKeepAlive) {
+			if (newArr[0].meta.keepAlive && v.meta.keepAlive) {
 				cacheList.push(v.name);
 				const stores = useKeepALiveNames(pinia);
 				stores.setCacheKeepAlive(cacheList);
 			}
 		}
 	});
+	newArr[0].children.forEach((v:any)=>{
+		v.component = () => import('/@/views' + v.path +'.vue'),
+		v.meta = Object.assign({
+			title: v.label,
+			isLink: '',
+			isHide: false,
+			isKeepAlive: true,
+			isAffix: false,
+			isIframe: false,
+		})
+	})
 	return newArr;
 }
 
@@ -93,6 +104,7 @@ router.beforeEach(async (to, from, next) => {
 		next();
 		NProgress.done();
 	} else {
+		console.log(token)
 		if (!token) {
 			next(`/login`);
 			Session.clear();
