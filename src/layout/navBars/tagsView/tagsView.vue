@@ -159,6 +159,7 @@ export default defineComponent({
 		};
 		// 存储 tagsViewList 到浏览器临时缓存中，页面刷新时，保留记录
 		const addBrowserSetSession = (tagsViewList: Array<object>) => {
+      console.log(tagsViewList)
 			Session.set('tagsViewList', tagsViewList);
 		};
 		// 获取 vuex 中的 tagsViewRoutes 列表
@@ -171,6 +172,7 @@ export default defineComponent({
 		};
 		// vuex 中获取路由信息：如果是设置了固定的（isAffix），进行初始化显示
 		const initTagsView = async () => {
+      console.log(2312312)
 			if (Session.get('tagsViewList') && getThemeConfig.value.isCacheTagsView) {
 				state.tagsViewList = await Session.get('tagsViewList');
 			} else {

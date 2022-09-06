@@ -38,6 +38,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 directive(app);
 other.elSvg(app);
+other.iconfont(app);
 
 app.use(pinia).use(router).use(VueBMap).use(ArcoVue).use(ArcoVueIcon).use(Antd)
     .use(install).use(ElementPlus, { i18n: i18n.global.t }).use(i18n).use(VueGridLayout).mount('#app');

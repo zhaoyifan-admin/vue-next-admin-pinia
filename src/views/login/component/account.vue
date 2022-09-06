@@ -182,8 +182,6 @@ export default defineComponent({
       state.ruleForm.code = params.captchaVerification;
       store.LoginByUsername(state.ruleForm).then(async () => {
         state.loading.signIn = true;
-        // 存储 token 到浏览器缓存
-        Session.set('token', Math.random().toString(36).substr(0));
         // 模拟数据，对接接口时，记得删除多余代码及对应依赖的引入。用于 `/src/stores/userInfo.ts` 中不同用户登录判断（模拟数据）
         Cookies.set('userName', state.ruleForm.userName);
         if (!themeConfig.value.isRequestRoutes) {

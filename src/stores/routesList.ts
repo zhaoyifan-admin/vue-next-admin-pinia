@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { RoutesListState } from './interface';
+import {setStore} from "/@/utils/storage";
 
 /**
  * 路由列表
@@ -15,6 +16,11 @@ export const useRoutesList = defineStore('routesList', {
 	}),
 	actions: {
 		async setRoutesList(data: Array<string>) {
+			setStore({
+				name: "system_router",
+				content: data,
+				type: 'session'
+			})
 			this.routesList = data;
 		},
 		async setColumnsMenuHover(bool: Boolean) {

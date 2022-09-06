@@ -1,6 +1,6 @@
 <template>
   <!-- 封装 iconfont 图标便签器 -->
-  <i class="iconfont "></i>
+  <i class="rtdp"></i>
 </template>
 
 <script>

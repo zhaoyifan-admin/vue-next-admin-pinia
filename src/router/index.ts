@@ -6,7 +6,7 @@ import { storeToRefs } from 'pinia';
 import { useKeepALiveNames } from '/@/stores/keepAliveNames';
 import { useRoutesList } from '/@/stores/routesList';
 import { useThemeConfig } from '/@/stores/themeConfig';
-import { Session } from '/@/utils/storage';
+import {getCookie, getStore, Session} from '/@/utils/storage';
 import { staticRoutes } from '/@/router/route';
 import { initFrontEndControlRoutes } from '/@/router/frontEnd';
 import { initBackEndControlRoutes } from '/@/router/backEnd';
@@ -63,6 +63,7 @@ export function formatTwoStageRoutes(arr: any) {
 	const cacheList: Array<string> = [];
 	arr.forEach((v: any) => {
 		if (v.path === '/') {
+			console.log(v)
 			newArr.push({ component: v.component, name: v.name, path: v.path, redirect: v.redirect, meta: v.meta, children: [] });
 		} else {
 			// 判断是否是动态路由（xx/:id/:name），用于 tagsView 等中使用
@@ -71,6 +72,15 @@ export function formatTwoStageRoutes(arr: any) {
 				v.meta['isDynamic'] = true;
 				v.meta['isDynamicPath'] = v.path;
 			}
+			v.component = () => import('/@/views' + v.path +'.vue'),
+			v.meta = Object.assign({
+				title: v.label,
+				isLink: '',
+				isHide: false,
+				isKeepAlive: true,
+				isAffix: false,
+				isIframe: false,
+			})
 			newArr[0].children.push({ ...v });
 			// 存 name 值，keep-alive 中 include 使用，实现路由的缓存
 			// 路径：/@/layout/routerView/parent.vue
@@ -81,30 +91,19 @@ export function formatTwoStageRoutes(arr: any) {
 			}
 		}
 	});
-	newArr[0].children.forEach((v:any)=>{
-		v.component = () => import('/@/views' + v.path +'.vue'),
-		v.meta = Object.assign({
-			title: v.label,
-			isLink: '',
-			isHide: false,
-			isKeepAlive: true,
-			isAffix: false,
-			isIframe: false,
-		})
-	})
 	return newArr;
 }
 
 // 路由加载前
 router.beforeEach(async (to, from, next) => {
+	console.log(to)
 	NProgress.configure({ showSpinner: false });
 	if (to.meta.title) NProgress.start();
-	const token = Session.get('token');
+	const token = getCookie({name:'access_token'});
 	if (to.path === '/login' && !token) {
 		next();
 		NProgress.done();
 	} else {
-		console.log(token)
 		if (!token) {
 			next(`/login`);
 			Session.clear();
@@ -118,7 +117,7 @@ router.beforeEach(async (to, from, next) => {
 			if (routesList.value.length === 0) {
 				if (isRequestRoutes) {
 					// 后端控制路由：路由数据初始化，防止刷新时丢失
-					await initBackEndControlRoutes();
+					await initBackEndControlRoutes(getStore({name: 'systemId'}));
 					// 动态添加路由：防止非首页刷新时跳转回首页的问题
 					// 确保 addRoute() 时动态添加的路由已经被完全加载上去
 					next({ ...to, replace: true });

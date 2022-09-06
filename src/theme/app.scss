@@ -398,7 +398,7 @@ input[type='number'] {
   }
 }
 
-/* ant design vue 全局样式
+/* 系统右侧浮动框样、 ant design vue 全局样式
 ------------------------------- */
 .systemDialog {
   .ant-modal-header {
@@ -407,5 +407,22 @@ input[type='number'] {
     .ant-modal-title {
       color: #ffffff !important;
     }
+  }
+  .ant-modal-body {
+    padding: 10px 20px;
+    max-height: 700px;
+    overflow: auto;
+  }
+  .image {
+    width: 100%;
+    height: 170px;
+    background-size: contain;
+    background-position: 50% center;
+    background-repeat: no-repeat;
+  }
+  .name {
+    padding: 7px 0;
+    font-weight: bold;
+    font-size: 17px;
   }
 }

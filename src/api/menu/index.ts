@@ -1,4 +1,6 @@
 import request from '/@/utils/request';
+import {useUserInfo} from "/@/stores/userInfo";
+import {getStore} from "/@/utils/storage";
 
 /**
  * 后端控制菜单模拟json，路径在 https://gitee.com/lyt-top/vue-next-admin-images/tree/master/menu
@@ -7,20 +9,16 @@ import request from '/@/utils/request';
  * @method getMenuTest 获取后端动态路由菜单(test)
  */
 export function useMenuApi() {
-	return {
-		getMenuAdmin: (params?: object) => {
-			return request({
-				url: '/admin/menu?systemId=3',
-				method: 'get',
-				params,
-			});
-		},
-		getMenuTest: (params?: object) => {
-			return request({
-				url: '/gitee/lyt-top/vue-next-admin-images/raw/master/menu/testMenu.json',
-				method: 'get',
-				params,
-			});
-		},
-	};
+    return {
+        getMenuAdmin: (params: any) => {
+            let systemId = 3;
+            if (params) {
+                systemId = params
+            }
+            return request({
+                url: '/admin/menu?systemId=' + systemId,
+                method: 'get'
+            });
+        }
+    };
 }

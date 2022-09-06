@@ -3,7 +3,7 @@ import {storeToRefs} from 'pinia';
 import pinia from '/@/stores/index';
 import {useUserInfo} from '/@/stores/userInfo';
 import {useRequestOldRoutes} from '/@/stores/requestOldRoutes';
-import {Session} from '/@/utils/storage';
+import {getCookie, getStore, Session} from '/@/utils/storage';
 import {NextLoading} from '/@/utils/loading';
 import {dynamicRoutes, notFoundAndNoPower} from '/@/router/route';
 import {formatTwoStageRoutes, formatFlatteningRoutes, router} from '/@/router/index';
@@ -33,32 +33,35 @@ const dynamicViewsModules: Record<string, Function> = Object.assign({}, {...layo
  * @method setAddRoute 添加动态路由
  * @method setFilterMenuAndCacheTagsViewRoutes 设置路由到 vuex routesList 中（已处理成多级嵌套路由）及缓存多级嵌套数组处理后的一维数组
  */
-export async function initBackEndControlRoutes() {
+export async function initBackEndControlRoutes(params?:number) {
     // 界面 loading 动画开始执行
     if (window.nextLoading === undefined) NextLoading.start();
     // 无 token 停止执行下一步
-    if (!Session.get('token')) return false;
+    if(!getCookie({name:'access_token'})) return false;
     // 触发初始化用户信息 pinia
     // https://gitee.com/lyt-top/vue-next-admin/issues/I5F1HP
     await useUserInfo().setUserInfos();
     // 获取路由菜单数据
-    const res = await getBackEndControlRoutes();
-    res.data.forEach((v:any)=>{
-        v.component = () => import('/@/views' + v.path +'.vue'),
-        v.meta = Object.assign({
-            title: v.label,
-            isLink: '',
-            isHide: false,
-            isKeepAlive: true,
-            isAffix: false,
-            isIframe: false,
+    const res = await getBackEndControlRoutes(params);
+    if (res.data.length != 0) {
+        res.data.forEach((v: any) => {
+            v.component = `() => import('/@/views` + v.path +`.vue')`;
+            v.meta = Object.assign({
+                title: v.label,
+                isLink: '',
+                isHide: false,
+                isKeepAlive: true,
+                isAffix: false,
+                isIframe: false,
+            });
         })
-    })
+    } else {
+        return false;
+    }
     // 存储接口原始路由（未处理component），根据需求选择使用
     useRequestOldRoutes().setRequestOldRoutes(JSON.parse(JSON.stringify(res.data)));
     // 处理路由（component），替换 dynamicRoutes（/@/router/route）第一个顶级 children 的路由
     dynamicRoutes[0].children = await backEndComponent(res.data);
-    console.log(dynamicRoutes)
     // 添加动态路由
     await setAddRoute();
     // 设置路由到 vuex routesList 中（已处理成多级嵌套路由）及缓存多级嵌套数组处理后的一维数组
@@ -113,20 +116,8 @@ export async function setAddRoute() {
  * @description isRequestRoutes 为 true，则开启后端控制路由
  * @returns 返回后端路由菜单数据
  */
-export function getBackEndControlRoutes() {
-    /**
-     * // 模拟 admin 与 test
-     const stores = useUserInfo(pinia);
-     console.log(useUserInfo)
-     const { userInfos } = storeToRefs(stores);
-     const auth = userInfos.value.roles[0];
-     // 管理员 admin
-     if (auth === 'admin') return menuApi.getMenuAdmin();
-     // 其它用户 test
-     else return menuApi.getMenuTest();
-     */
-
-    return menuApi.getMenuAdmin()
+export function getBackEndControlRoutes(params:any) {
+    return menuApi.getMenuAdmin(params)
 }
 
 /**
@@ -135,7 +126,7 @@ export function getBackEndControlRoutes() {
  * @description 路径：/src/views/system/menu/component/addMenu.vue
  */
 export function setBackEndControlRefreshRoutes() {
-    getBackEndControlRoutes();
+    getBackEndControlRoutes(getStore({name:'systemId'}));
 }
 
 /**

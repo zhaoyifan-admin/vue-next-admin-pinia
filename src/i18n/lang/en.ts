@@ -3,6 +3,7 @@ export default {
 	router: {
 		home: 'home',
 		system: 'system',
+		basic: 'Basic information summary',
 		systemMenu: 'systemMenu',
 		systemRole: 'systemRole',
 		systemUser: 'systemUser',

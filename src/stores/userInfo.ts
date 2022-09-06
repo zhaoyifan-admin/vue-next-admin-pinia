@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import Cookies from 'js-cookie';
 import { UserInfosStates } from './interface';
-import {getStore, Session, setStore} from '/@/utils/storage';
+import {getStore, Session, setCookie, setStore} from '/@/utils/storage';
 import { encryption } from '/@/utils/util';
 import {authLogin, loginByUsername} from '/@/api/login/index';
 
@@ -23,6 +23,7 @@ export const useUserInfo = defineStore('userInfo', {
 			opcard: getStore({name: 'opcard'}) || {},
 			permissions: getStore({name: 'permissions'}) || {},
 			systemlist: getStore({name: 'system_list'}),
+			systemId: getStore({name: 'systemId'}) || 3,
 			userInfos: {
 				userName: '',
 				photo: '',
@@ -158,6 +159,11 @@ export const useUserInfo = defineStore('userInfo', {
 						name: 'access_token',
 						content: this.access_token,
 						type: 'session'
+					})
+					// 存储 token 到浏览器缓存
+					setCookie({
+						name: 'access_token',
+						content: this.access_token
 					})
 					setStore({
 						name: 'refresh_token',

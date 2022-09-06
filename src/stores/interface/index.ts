@@ -22,6 +22,7 @@ export interface UserInfosStates {
 	opcard: object;
 	permissions: object;
 	systemlist: string;
+	systemId: string;
 	userInfos: UserInfosState;
 }
 

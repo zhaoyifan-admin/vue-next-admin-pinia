@@ -1031,20 +1031,6 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 				},
 			},
 			{
-				path: '/personal',
-				name: 'personal',
-				component: () => import('/@/views/personal/index.vue'),
-				meta: {
-					title: 'message.router.personal',
-					isLink: '',
-					isHide: false,
-					isKeepAlive: true,
-					isAffix: false,
-					isIframe: false,
-					icon: 'iconfont icon-gerenzhongxin',
-				},
-			},
-			{
 				path: '/tools',
 				name: 'tools',
 				component: () => import('/@/views/tools/index.vue'),
@@ -1096,6 +1082,48 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
  */
 export const notFoundAndNoPower = [
 	{
+		path: '/home',
+		name: 'home',
+		component: () => import('/@/views/home/index.vue'),
+		meta: {
+			title: 'message.router.home',
+			isLink: '',
+			isHide: false,
+			isKeepAlive: true,
+			isAffix: true,
+			isIframe: false,
+			icon: 'iconfont icon-shouye',
+		},
+	},
+	{
+		path: '/wel',
+		name: 'wel',
+		component: () => import('/@/views/wel/index.vue'),
+		meta: {
+			title: 'message.router.wel',
+			isLink: '',
+			isHide: false,
+			isKeepAlive: true,
+			isAffix: true,
+			isIframe: false,
+			icon: 'iconfont icon-shouye',
+		},
+	},
+	{
+		path: '/wel/basic',
+		name: 'basic',
+		component: () => import('/@/views/wel/basic.vue'),
+		meta: {
+			title: 'message.router.basic',
+			isLink: '',
+			isHide: false,
+			isKeepAlive: true,
+			isAffix: true,
+			isIframe: false,
+			icon: 'iconfont icon-shouye',
+		},
+	},
+	{
 		path: '/:path(.*)*',
 		name: 'notFound',
 		component: () => import('/@/views/error/404.vue'),
@@ -1111,6 +1139,20 @@ export const notFoundAndNoPower = [
 		meta: {
 			title: 'message.staticRoutes.noPower',
 			isHide: true,
+		},
+	},
+	{
+		path: '/personal',
+		name: 'personal',
+		component: () => import('/@/views/personal/index.vue'),
+		meta: {
+			title: 'message.router.personal',
+			isLink: '',
+			isHide: false,
+			isKeepAlive: true,
+			isAffix: false,
+			isIframe: false,
+			icon: 'iconfont icon-gerenzhongxin',
 		},
 	},
 ];

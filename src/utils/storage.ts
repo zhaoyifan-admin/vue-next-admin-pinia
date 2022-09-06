@@ -59,13 +59,37 @@ export const Session = {
 	},
 };
 /**
+ * document.cookie 浏览器临时缓存
+ * @author zyf
+ * @method setCookie 设置临时缓存
+ * @method getCookie 获取临时缓存
+ * @method removeCookie 移除临时缓存
+ * @method getAllCookie 获取全部临时缓存
+ * @method clearCookie 移除全部临时缓存
+ */
+export const setCookie = (params:any = {}) => {
+	let {name, content} = params;
+	name = StorageKeyName + name;
+	Cookies.set(name, content);
+}
+export const getCookie = (params:any = {}) => {
+	let {name} = params;
+	name = StorageKeyName + name;
+	return Cookies.get(name);
+}
+export const clearCookie = (params:any = {}) => {
+	let {name, content} = params;
+	name = StorageKeyName + name;
+	Cookies.remove("access_token");
+}
+/**
  * window.sessionStorage 浏览器临时缓存
+ * @author zyf
  * @method setStore 设置临时缓存
  * @method getStore 获取临时缓存
  * @method removeStore 移除临时缓存
  * @method getAllStore 获取全部临时缓存
  * @method clearStore 移除全部临时缓存
- * 存储localStorage
  */
 export const setStore = (params:any = {}) => {
 	let {name, content, type} = params;

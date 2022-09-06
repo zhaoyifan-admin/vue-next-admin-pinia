@@ -2,6 +2,8 @@
 export default {
 	router: {
 		home: '首页',
+		wel: '首页',
+		basic: '基础信息概要',
 		system: '系统设置',
 		systemMenu: '菜单管理',
 		systemRole: '角色管理',
